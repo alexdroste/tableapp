@@ -1,0 +1,85 @@
+{
+    "_id": {"$oid":"552786262cec76ed95fd61cd"},
+    "roles": [{
+		"id": "1",
+        "color": "violet",
+        "name": "Dozent"
+    },
+    {
+        "id": "2",
+        "name": "Übungsleiter",
+        "color": "blue"
+    },
+    {
+        "id": "3",
+        "name": "Tutor",
+        "color": "green"
+    }],
+    "isArchived": false,
+    "name": "Grundlagen der Programmierung WS2017/18",
+    "users": {
+        "dWlkPWF2ZDE1LG91PXBlb3BsZSxkYz10dS1jbGF1c3RoYWwsZGM9ZGU=": {
+            "permissionLevel": 1,
+            "roleId": "3"
+        },
+        "dWlkPW1wcjE2LG91PXBlb3BsZSxkYz10dS1jbGF1c3RoYWwsZGM9ZGU=": {
+            "permissionLevel": 3,
+            "roleId": "1"
+        },
+        "dWlkPW9iMTYsb3U9cGVvcGxlLGRjPXR1LWNsYXVzdGhhbCxkYz1kZQ==": {
+            "permissionLevel": 2,
+            "roleId": "2"
+        }
+    }
+}
+{
+    "_id": {"$oid":"552786262cec76ed95fd61ce"},
+    "roles": [{
+		"_id": "1",
+        "color": "violet",
+        "name": "Dozent"
+    }],
+    "isArchived": false,
+    "name": "Integrierte Anwendungssysteme WS2017/18",
+    "users": {
+        "dWlkPWF2ZDE1LG91PXBlb3BsZSxkYz10dS1jbGF1c3RoYWwsZGM9ZGU=": {
+            "permissionLevel": 1
+        }
+    }
+}
+{
+    "_id": {"$oid":"552786262cec76ed95fd61cf"},
+    "roles": [{
+		"_id": "1",
+        "color": "violet",
+        "name": "Dozent"
+    }],
+    "isArchived": false,
+    "name": "Ingenieursstatistik WS2017/18",
+    "users": {
+    }
+}
+{
+    "_id": {"$oid":"552786262cec76ed95fd61d0"},
+    "roles": [{
+		"_id": "1",
+        "color": "violet",
+        "name": "Dozent"
+    }],
+    "isArchived": false,
+    "name": "Mensch-Maschine-Interaktion SS18",
+    "users": {
+    }
+}
+{
+    "_id": {"$oid":"552786262cec76ed95fd61d1"},
+    "roles": [{
+		"_id": "1",
+        "color": "violet",
+        "name": "Dozent"
+    }],
+    "isArchived": false,
+    "name": "Informatik II SS18",
+    "users": {
+    }
+}

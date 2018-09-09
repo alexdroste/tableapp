@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+import concurrent.futures
+import os
+import re
+import subprocess
+import sys
+
+# configure projects
+docsPath = "docs"
+projects = [
+    {
+        "name": "Client",
+        "src": os.path.join("client", "src"), 
+        "excludedDirs": ['components', 'containers'] # only works for path.parts ('folder/subfolder' will not work)
+    },
+    {
+        "name": "Client-Desktop",
+        "src": os.path.join("client_desktop", "src"), 
+        "excludedDirs": [] 
+    },
+    {
+        "name": "Backend",
+        "src": os.path.join("backend", "src"),
+        "excludedDirs": [] 
+    },
+]
+
+# change working dir to location of this file
+os.chdir(sys.path[0])
+
+
+def getProjectDocsFolder(project):
+    return project["name"] + "_code"
+
+
+def printSidebarHint():
+    print("You may use following links in your root _sidebar.md")
+    for project in projects:
+        link = os.path.normpath(getProjectDocsFolder(project)) + "/"
+        print("* [{} Code Docs]({})".format(project["name"], link))
+
+
+def createReadmeForProjectIfNotExists(project):
+    readmepath = os.path.join(docsPath, getProjectDocsFolder(project), "README.md")
+    if os.path.exists(readmepath):
+        print("README.md already exists for project: {} - {}, skipped creation".format(project["name"], readmepath))
+        return
+    print("README.md")
+    with open(readmepath, "w") as f:
+        f.write("# {} Code Documentation\n".format(project["name"]))
+        f.write('''
+Following documentation is generated from in-code docs.
+
+Upgrade documentation by running `generate-docs` script.
+
+Please navigate using the sidebar.''')
+
+
+
+def createSidebarForProject(project, mdpaths):
+    sidebar = {}
+    for mdpath in mdpaths:
+        mdpath = os.path.normpath(mdpath)
+        # filename without extension
+        filename = os.path.splitext(os.path.basename(mdpath))[0]
+        dirname = os.path.dirname(mdpath)
+        if dirname in sidebar:
+            sidebar[dirname].append(filename)
+        else:
+            sidebar[dirname] = [filename]
+
+    projectDocsFolder = getProjectDocsFolder(project)
+    with open(os.path.join(docsPath, projectDocsFolder, "_sidebar.md"), "w") as f:
+        f.write("* [‹ Go Back](../)\n")
+        for dirname in sorted(sidebar):
+            indent = ""
+            if dirname != "":
+                f.write("* {}\n".format(dirname))
+                indent = "  "
+            for filename in sorted(sidebar[dirname]):
+                # creates rel path to md file: this maybe will not work on windows due to reasons
+                relmdpath = os.path.join(projectDocsFolder, dirname, filename) 
+                f.write("{}* [{}]({})\n".format(indent, filename, relmdpath))
+
+
+# Converts markdown anchor identifiers to lowercase, removes symbols
+# and saves identifier as anchor id instead of name
+def fixMarkdownAnchors(md):
+    def fixAnchorName(name):
+        return re.sub(r'[^a-zA-Z0-9]', lambda m: str(ord(m.group(0))), name).lower()
+
+    def fixAnchorTag(m):
+        newId = fixAnchorName(m.group(1))
+        return '<a id="{}"></a>'.format(newId)
+    
+    def fixMdLink(m):
+        newId = fixAnchorName(m.group(2))
+        return '[{}](#{})'.format(m.group(1), newId)
+
+    res = re.sub(r'<a name="(.+)"><\/a>', fixAnchorTag, md, flags=re.MULTILINE)
+    res = re.sub(r'\[(.+?)\]\(#([^\)]+)\)', fixMdLink, res, flags=re.MULTILINE)
+    return res
+
+
+# Removes links from headings
+# needs to be applied as long as https://github.com/docsifyjs/docsify/issues/591 is unfixed
+def fixMarkdownLinksInHeadings(md):
+    def removeLink(m):
+        return "{}{}".format(m.group(1), m.group(2))
+
+    prevRes = md
+    while True:
+        res = re.sub(r'(# .*)\[(.+)\]\(#.+\)', removeLink, prevRes, flags=re.MULTILINE)
+        if prevRes == res:
+            return res
+        prevRes = res
+
+
+# Converts escaped pipe-symbols \| to &#124;
+# needs to be applied as long as https://github.com/docsifyjs/docsify/issues/592 is unfixed
+def fixEscapedPipeSymbols(md):
+    return re.sub(r'\\\|', "&#124;", md, flags=re.MULTILINE)
+
+
+def createDocForPath(project, path):
+    # documentation.js:
+    # cmd = [
+    #     "documentation", 
+    #     "build", 
+    #     path,
+    #     "-f", "md", # markdown output
+    #     "-a", "private", "public", "protected", "undefined",
+    #     "--shallow", # dont follow imports
+    #     "--markdown-toc", "false"
+    # ]
+    # jsdoc-to-markdown:
+    cmd = [
+        "jsdoc2md",
+        "--private",  # include private members, modules, ...
+        "-m", "none", # disable index generation if multiple modules are found
+        "-g", "none", # disable index generation if multiple global scope identifiers are found
+        path,
+    ]
+    proc = subprocess.run(cmd, stdout=subprocess.PIPE)
+    # if current documentation is empty => skip
+    # documentation.js: if proc.stdout == b'<!-- Generated by documentation.js. Update this documentation by updating the source code. -->\n':
+    if not proc.stdout:
+        return
+    md = proc.stdout.decode("utf-8") # convert byte string to string
+    md = fixMarkdownAnchors(md)
+    md = fixMarkdownLinksInHeadings(md)
+    md = fixEscapedPipeSymbols(md)
+    # create rel path (to docs folder) for markdown file: project-name/folder-inside-src/.../filename.md
+    mdpath = str(path)[len(src)+1:-2] + "md"
+    fullmdpath = os.path.join(docsPath, getProjectDocsFolder(project), mdpath)
+    os.makedirs(os.path.dirname(fullmdpath), exist_ok=True)
+    with open(fullmdpath, "w") as f:
+        f.write(md)
+    return mdpath
+
+
+for project in projects:
+    src = os.path.normpath(project['src'])
+    pathlist = []
+    # grab all js files in src, filter excluded parts
+    for p in Path(src).glob('**/*.js'):
+        includePath = True
+        for excludedDir in project['excludedDirs']:
+            if excludedDir in p.parts:
+                includePath = False
+                break
+        if includePath:
+            pathlist.append(p)
+    mdpaths = []
+    print("=== Project: {} - {} ===".format(project["name"], os.path.join(docsPath, getProjectDocsFolder(project))))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=30) as executor:
+        for mdpath in executor.map(lambda path: createDocForPath(project, path), pathlist):
+            if mdpath:
+                print(mdpath)
+                mdpaths.append(mdpath)
+    if len(mdpaths) != 0:
+        createSidebarForProject(project, mdpaths)
+        createReadmeForProjectIfNotExists(project)
+
+printSidebarHint()

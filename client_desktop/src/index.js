@@ -1,0 +1,63 @@
+const electron = require('electron');
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const path = require('path');
+const url = require('url');
+const isDev = require('electron-is-dev');
+const setupIpc = require('./ipc');
+const serve = require('electron-serve');
+
+
+let loadUrl;
+let ipc;
+let mainWindow;
+
+
+if (!isDev)
+    loadUrl = serve({directory: 'app'});
+
+
+// TODO only hide window on close to keep app running in bg (on osx only)
+/**
+ * Create main window and fully initialize context.
+ * Includes preloading state and setting up ipc.
+ * @function
+ */
+function createWindow() {
+    mainWindow = new BrowserWindow({ 
+        width: 900, 
+        height: 680,
+        webPreferences: {
+            nodeIntegration: false,
+            preload: path.join(__dirname, 'preload.js')
+        }
+    });
+    ipc = setupIpc(mainWindow);
+
+    if (isDev)
+        mainWindow.loadURL('http://localhost:3000/');
+    else
+        loadUrl(mainWindow);
+
+    mainWindow.on('closed', () => mainWindow = null);
+
+    if (isDev)
+        mainWindow.webContents.openDevTools({mode: 'detach'});
+}
+
+
+app.on('ready', createWindow);
+
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
+
+
+app.on('activate', () => {
+    if (mainWindow === null) {
+        createWindow();
+    }
+});

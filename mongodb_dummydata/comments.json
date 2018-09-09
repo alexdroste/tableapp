@@ -1,0 +1,12 @@
+{
+    "_id": {"$oid":"552786262cec76ed95fd61cb"},
+    "authorId": "dWlkPWF2ZDE1LG91PXBlb3BsZSxkYz10dS1jbGF1c3RoYWwsZGM9ZGU=",
+    "content": "L magna aliquyam erat, sed diam voluptua. At vero eos et accusalandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.",     
+    "downvotes": ["dWlkPWF2ZDE1LG91PXBlb3BsZSxkYz10dS1jbGF1c3RoYWwsZGM9ZGU="],
+    "entryId": {"$oid":"552786262cec76ed95fd61cc"},
+    "eventId": {"$oid":"552786262cec76ed95fd61cd"},
+    "parentId": null,
+    "postedById": "dWlkPWF2ZDE1LG91PXBlb3BsZSxkYz10dS1jbGF1c3RoYWwsZGM9ZGU=",
+    "timestamp": 1525548658272,
+    "upvotes": []
+}

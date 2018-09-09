@@ -1,0 +1,30 @@
+{
+  "name": "table-desktop-client",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "author": "Alexander Droste",
+  "license": "MIT",
+  "private": true,
+  "build": {
+    "appId": "net.tableapp.desktopclient",
+    "asarUnpack": "src/screenshot/**/*",
+    "mac": {
+      "identity": null
+    }
+  },
+  "devDependencies": {
+    "electron": "^2.0.1",
+    "electron-builder": "^20.13.4"
+  },
+  "dependencies": {
+    "electron-is-dev": "^0.3.0",
+    "electron-serve": "^0.1.0",
+    "jimp": "^0.2.28"
+  },
+  "scripts": {
+    "start": "electron .",
+    "prebuild": "./prebuild.sh",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  }
+}
