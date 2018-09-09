@@ -1,4 +1,4 @@
-* [‹ Go Back](../)
+* [‹ Go Back](/)
 * [Client](Backend_code/Client)
 * [ClientBroker](Backend_code/ClientBroker)
 * [EntryListSubscription](Backend_code/EntryListSubscription)

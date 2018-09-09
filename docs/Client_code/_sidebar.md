@@ -1,4 +1,4 @@
-* [‹ Go Back](../)
+* [‹ Go Back](/)
 * [PermissionLevelEnum](Client_code/PermissionLevelEnum)
 * [colors](Client_code/colors)
 * [config](Client_code/config)

@@ -73,7 +73,7 @@ def createSidebarForProject(project, mdpaths):
 
     projectDocsFolder = getProjectDocsFolder(project)
     with open(os.path.join(docsPath, projectDocsFolder, "_sidebar.md"), "w") as f:
-        f.write("* [‹ Go Back](../)\n")
+        f.write("* [‹ Go Back](/)\n")
         for dirname in sorted(sidebar):
             indent = ""
             if dirname != "":
