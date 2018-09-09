@@ -2,7 +2,7 @@
 
 __The docs are not meant to be viewed as plain .md files inside this repo.__
 
-Please open the hosted pages: *links coming soon*
+Please open the hosted pages: https://progmem64.github.io/tableapp/
 
 or serve the docs folder via a local webserver.
 
@@ -14,7 +14,7 @@ Docs are made with docsify. You can serve them via `docsify serve docs`.
 
 
 * official repo: https://github.com/progmem64/tableapp
-* docs: link coming soon
+* docs: https://progmem64.github.io/tableapp/
 
 
 ## General Information

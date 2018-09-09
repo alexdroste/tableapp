@@ -1,7 +1,7 @@
 # table 
 
 * official repo: https://github.com/progmem64/tableapp
-* docs: link coming soon
+* docs: https://progmem64.github.io/tableapp/
 
 ![Logo](./logo/logo-table.svg)
 
@@ -41,7 +41,7 @@
 
 ### view
 
-visit: link coming soon
+visit: https://progmem64.github.io/tableapp/
 
 **or:**
 
