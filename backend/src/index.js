@@ -13,11 +13,14 @@ const utils = require('./utils');
 if (utils.isAppInDevelopmentMode())
     console.log('launching in development/debug mode');
 
-MongoClient.connect(config.db.url).then((client) => {
+MongoClient.connect(config.db.url).then(client => {
     console.log('mongodb connected');
     const db = client.db(config.db.name);
     const controller = configureController(db);
     const broker = new ClientBroker(io, controller);
+}, reason => {
+    console.error(reason);
+    process.exit();
 });
 
 
