@@ -13,6 +13,7 @@ const Jimp = require('jimp');
  */
 function createError(msg, statusCode = statusCodes.INTERNAL_SERVER_ERROR) {
     const err = new Error(msg);
+    Error.captureStackTrace(err, createError);
     err.statusCode = statusCode;
     return err;
 };
