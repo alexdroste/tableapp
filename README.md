@@ -10,15 +10,19 @@
 ### high priority / before use
 
 - [ ] entry moderation options (edit, delete)
-- [ ] fully implement manage-event view
-- [ ] automation scripts / or view for creating/removing events, etc.
 - [ ] screencapture module for windows / desktop-app for windows
 - [ ] fix: screenshots of active window not working sometimes => allow screenshots per screen (& maybe screenshot preview for presenter)
 - [ ] ssl
+- [ ] data-tracking
+- [ ] surveys
+- [ ] fully implement manage-event view
+- [ ] automation scripts / or view for creating/removing events, etc.
+- [ ] opt-in/opt-out
 
 
 ### normal priority
 
+- [ ] feed sorting / filter options
 - [ ] notifications (in-app/email)
 - [ ] option to add tag to entry -> "discussed in lecture"
 - [ ] improve (really bad atm) container/presentational component split (https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
