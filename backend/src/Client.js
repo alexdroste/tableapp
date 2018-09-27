@@ -109,43 +109,41 @@ class Client {
         this._broker = broker;
 
         // setup listeners
-        this._socket.on('disconnect', () => this._handleDisconnect());
-
-        // TODO FIXME IMPORTANT authenticatedHandler & activeEventHandler
+        this.on('disconnect',                           false,  false,  this._handleDisconnect);
 
         // comments
-        this._socket.on('comments/changeVote',                  (...args) => this._handleChangeVoteForComment(...args));
-        this._socket.on('comments/postComment',                 (...args) => this._handlePostComment(...args));
-        this._socket.on('comments/subscribeCommentsForEntry',   (...args) => this._handleSubscribeCommentsForEntry(...args));
-        this._socket.on('comments/unsubscribeCommentsForEntry', (...args) => this._handleUnsubscribeCommentsForEntry(...args));
+        this.on('comments/changeVote',                  true,   true,   this._handleChangeVoteForComment);
+        this.on('comments/postComment',                 true,   true,   this._handlePostComment);
+        this.on('comments/subscribeCommentsForEntry',   true,   true,   this._handleSubscribeCommentsForEntry);
+        this.on('comments/unsubscribeCommentsForEntry', true,   true,   this._handleUnsubscribeCommentsForEntry);
 
         // desktopApp
-        this._socket.on('desktopApp/broadcastNewImage', (...args) => this._handleBroadcastNewImage(...args));
+        this.on('desktopApp/broadcastNewImage',         true,   true,   this._handleBroadcastNewImage);
 
         // entries
-        this._socket.on('entries/changeBookmark',       (...args) => this._handleChangeBookmark(...args));
-        this._socket.on('entries/changeFollow',         (...args) => this._handleChangeFollow(...args));
-        this._socket.on('entries/changeVote',           (...args) => this._handleChangeVote(...args));
-        this._socket.on('entries/loadMoreEntries',      (...args) => this._handleLoadMoreEntries(...args));
-        this._socket.on('entries/postEntry',            (...args) => this._handlePostEntry(...args));
-        this._socket.on('entries/subscribeEntries',     (...args) => this._handleSubscribeEntries(...args));
-        this._socket.on('entries/subscribeEntryList',   (...args) => this._handleSubscribeEntryList(...args));
-        this._socket.on('entries/unsubscribeEntries',   (...args) => this._handleUnsubscribeEntries(...args));
-        this._socket.on('entries/unsubscribeEntryList', (...args) => this._handleUnsubscribeEntryList(...args));
+        this.on('entries/changeBookmark',               true,   true,   this._handleChangeBookmark);
+        this.on('entries/changeFollow',                 true,   true,   this._handleChangeFollow);
+        this.on('entries/changeVote',                   true,   true,   this._handleChangeVote);
+        this.on('entries/loadMoreEntries',              true,   true,   this._handleLoadMoreEntries);
+        this.on('entries/postEntry',                    true,   true,   this._handlePostEntry);
+        this.on('entries/subscribeEntries',             true,   true,   this._handleSubscribeEntries);
+        this.on('entries/subscribeEntryList',           true,   true,   this._handleSubscribeEntryList);
+        this.on('entries/unsubscribeEntries',           true,   true,   this._handleUnsubscribeEntries);
+        this.on('entries/unsubscribeEntryList',         true,   true,   this._handleUnsubscribeEntryList);
         
         // events
-        this._socket.on('events/subscribeFullEventDict',    (...args) => this._handleSubscribeFullEventDict(...args));
-        this._socket.on('events/unsubscribeFullEventDict',  (...args) => this._handleUnsubscribeFullEventDict(...args));
-        this._socket.on('events/joinEvent',                 (...args) => this._handleJoinEvent(...args));
-        this._socket.on('events/leaveEvent',                (...args) => this._handleLeaveEvent(...args));
-        this._socket.on('events/switchActiveEvent',         (...args) => this._handleSwitchActiveEvent(...args));
+        this.on('events/subscribeFullEventDict',        true,   false,  this._handleSubscribeFullEventDict);
+        this.on('events/unsubscribeFullEventDict',      true,   false,  this._handleUnsubscribeFullEventDict);
+        this.on('events/joinEvent',                     true,   false,  this._handleJoinEvent);
+        this.on('events/leaveEvent',                    true,   false,  this._handleLeaveEvent);
+        this.on('events/switchActiveEvent',             true,   false,  this._handleSwitchActiveEvent);
 
         // images
-        this._socket.on('images/loadImages', (...args) => this._handleLoadImages(...args));
+        this.on('images/loadImages',                    true,   true,   this._handleLoadImages);
 
         // user
-        this._socket.on('user/continueSession', (...args) => this._handleContinueSession(...args));
-        this._socket.on('user/login',           (...args) => this._handleLogin(...args));
+        this.on('user/continueSession',                 true,   true,   this._handleContinueSession);
+        this.on('user/login',                           false,  false,  this._handleLogin);
     }
 
 
@@ -751,6 +749,51 @@ class Client {
 
     //#region public
     // --------- Public ---------    
+
+    //#region general
+    /**
+     * Handler for client-event.
+     * @callback Client~eventHandler
+     * @param {object} data event-data
+     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
+     */
+
+
+    /**
+     * Registers an event-handler. Calls event handler with current context (this).
+     * @param {string} event event-identifier
+     * @param {boolean} requiresAuthentication true if event-handler requries authentication
+     * @param {boolean} requiresActiveEvent true if event-handler requires an event to be active
+     * @param {Client~eventHandler} handler event-handler
+     */
+    on(event, requiresAuthentication, requiresActiveEvent, handler) {
+        this._socket.on(event, async (data, cb) => {
+            const debugInfo = { clientEvent: event, id: this.id, ip: this.ip, userId: this.userId };
+            try {
+                // check for authentication
+                if (requiresAuthentication && !this.userId) {
+                    let err = utils.createError(`event: "${event}" requires authentication`, statusCodes.UNAUTHORIZED);
+                    cb(err);
+                    throw err;
+                }
+                // check for activeEvent set
+                if (requiresActiveEvent && !this.activeEventId) {
+                    let err = utils.createError(`event: "${event}" requires an event to be active`, statusCodes.UNAUTHORIZED);
+                    cb(err);
+                    throw err;
+                }
+                console.debug(debugInfo);
+                // handle event with current context, Promise.resolve is needed to support async and sync handlers
+                // in case of error: handler is responsible for calling socket-cb with custom error data
+                await Promise.resolve(handler.call(this, data, cb));
+            } catch (err) {
+                console.error(debugInfo, err);
+            }
+        });
+    }
+
+
+    //#endregion general
 
     //#region comments
     /**
