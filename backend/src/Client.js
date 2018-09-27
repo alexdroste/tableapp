@@ -161,7 +161,7 @@ class Client {
     _handleDisconnect() {
         const disconnectTimestamp = Date.now();
         const sessionDurationMin = ((disconnectTimestamp - this.connectTimestamp) / 1000 / 60).toFixed(1);
-        console.log('client disconnected', { id: this.id, ip: this.ip, userId: this.userId, sessionDurationMin});
+        console.log('client disconnected', { clientId: this.id, ip: this.ip, userId: this.userId, sessionDurationMin});
         this._socket = null;
         this._broker.unregisterClient(this);
     }
@@ -178,6 +178,7 @@ class Client {
     async _setupAfterAuthentication(loginData) {
         this.activeEventId = loginData.activeEventId;
         this.userId = loginData.id;
+        console.log('user authorized', { clientId: this.id, ip: this.ip, userId: this.userId });
         this.emitUpdateEventDict(await this._controller.events.getEventDict(this.userId));
         if (this.activeEventId)
             await this._switchActiveEvent(this.activeEventId);
@@ -645,6 +646,7 @@ class Client {
      * @todo reorganize position of this function
      */
     async _switchActiveEvent(newEventId) {
+        console.debug('switch active event', { clientId: this.id, userId: this.userId, activeEventId: this.activeEventId, newEventId });
         this.entriesSubscription.listSubscription = null;            
         this.activeEventId = newEventId;
         this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
@@ -715,7 +717,11 @@ class Client {
             cb(null, loginData);
         } catch (err) {
             cb(utils.createError('continue session failed', statusCodes.UNAUTHORIZED));            
-            throw err;
+            if (err.code === statusCodes.BAD_REQUEST) {
+                console.log('continue session failed', { clientId: this.id, ip: this.ip, sessionToken: data.sessionToken });
+            } else {
+                throw err;
+            }
         }
     }
 
@@ -741,9 +747,9 @@ class Client {
             if (err.name === 'InvalidCredentialsError' 
                     || err.code === statusCodes.NOT_FOUND 
                     || err.code === statusCodes.BAD_REQUEST) {
-                console.log(`user login failed`, { id: this.id, ip: this.ip, email: data.email });
+                console.log('login failed', { clientId: this.id, ip: this.ip, email: data.email });
             } else {
-                throw err; // rethrow unknown/internal error
+                throw err;
             }
         }
     }
@@ -774,19 +780,19 @@ class Client {
      */
     on(event, requiresAuthentication, requiresActiveEvent, handler) {
         this._socket.on(event, async (data, cb) => {
-            const debugInfo = { clientEvent: event, id: this.id, ip: this.ip, userId: this.userId };
+            const debugInfo = { clientEvent: event, clientId: this.id };
             try {
                 // check for authentication
                 if (requiresAuthentication && !this.userId) {
                     let err = utils.createError(`event: "${event}" requires authentication`, statusCodes.UNAUTHORIZED);
-                    cb(err);
-                    throw err;
+                    console.warn(debugInfo, err);
+                    return cb(err);
                 }
                 // check for activeEvent set
                 if (requiresActiveEvent && !this.activeEventId) {
                     let err = utils.createError(`event: "${event}" requires an event to be active`, statusCodes.UNAUTHORIZED);
-                    cb(err);
-                    throw err;
+                    console.warn(debugInfo, err);
+                    return cb(err);
                 }
                 console.debug(debugInfo);
                 // handle event with current context, Promise.resolve is needed to support async and sync handlers
