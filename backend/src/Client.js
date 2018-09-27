@@ -149,9 +149,12 @@ class Client {
     }
 
 
+
+
+    //#region private
     // --------- Private ---------
 
-    // general
+    //#region general
     /**
      * Eventhandler for socket disconnect event.
      * @private
@@ -193,7 +196,9 @@ class Client {
      */
 
 
-    // comments
+    //#endregion general
+
+    //#region comments
     /**
      * Eventhandler for vote change on comment. 
      * @async
@@ -291,7 +296,9 @@ class Client {
     }
 
 
-    // desktopApp
+    //#endregion comments
+
+    //#region desktopApp
     /**
      * Eventhandler for image/screenshot broadcast.
      * @async
@@ -312,7 +319,9 @@ class Client {
     }
 
         
-    // entries
+    //#endregion desktopApp
+
+    //#region entries
     /**
      * Eventhandler for bookmark changed (for entry).
      * @async
@@ -525,7 +534,9 @@ class Client {
     }
 
 
-    // events
+    //#endregion entries
+
+    //#region events
     /**
      * Eventhandler for subscribe to full EventDict request.
      * @async
@@ -662,7 +673,9 @@ class Client {
     }
 
 
-    // images
+    //#endregion events
+
+    //#region images
     /**
      * Eventhandler for load images request.
      * @async
@@ -685,7 +698,9 @@ class Client {
     }
 
 
-    // user
+    //#endregion images
+
+    //#region user
     /**
      * Eventhandler for continue session request.
      * @async
@@ -730,11 +745,14 @@ class Client {
     }
 
 
+    //#endregion user
 
+    //#endregion private
 
+    //#region public
     // --------- Public ---------    
 
-    // comments
+    //#region comments
     /**
      * Sends specified CommentDict to client.
      * @function
@@ -760,7 +778,9 @@ class Client {
     }
 
 
-    // entries
+    //#endregion comments
+
+    //#region entries
     /**
      * Sends specified EntryDict (and optional corresponding idList from list subscription) to client.
      * @function
@@ -799,7 +819,9 @@ class Client {
     }
 
 
-    // eventInfo
+    //#endregion entries
+
+    //#region eventInfo
     /**
      * Sends a specified RoleList to client.
      * @function
@@ -820,7 +842,9 @@ class Client {
     }
 
 
-    // events
+    //#endregion eventInfo
+
+    //#region events
     /**
      * Sends a specified EventDict to client.
      * @function
@@ -847,7 +871,9 @@ class Client {
     }
 
 
-    // eventScreenshots
+    //#endregion events
+
+    //#region eventScreenshots
     /**
      * Sends specified imageIds (as available event-screenshots for the active event)
      * to the client.
@@ -858,6 +884,11 @@ class Client {
         //TODO convert object-ids from array to strings, this should not happen implicitly
         this._socket.emit('eventScreenshots/updateScreenshotIds', imageIds);
     }
+
+
+    //#endregion eventScreenshots
+
+    //#endregion public
 }
 
 
