@@ -136,34 +136,29 @@ class EventsController {
      * @param {string} userId id of user
      * @param {PermissionLevelEnum} permissionLevel permission level to set
      * @returns {Promise} indicates success
-     * @throws {Error} with message: 'eventId not found' with statusCode NOT_FOUND if supplied eventId does not exist
+     * @throws {Error} with message: 'eventId not found' with code NOT_FOUND if supplied eventId does not exist
      */
     async changeUserPermissionLevelForEvent(eventId, userId, permissionLevel) {
-        try {
-            if (!userId || !eventId || permissionLevel === undefined || permissionLevel === null)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!userId || !eventId || permissionLevel === undefined || permissionLevel === null)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const update = {};
-            if (permissionLevel === PermissionLevelEnum.NOT_A_USER) {
-                update.$unset = {};
-                update.$unset['users.' + userId] = 1;
-            }
-            else {
-                update.$set = {};
-                update.$set['users.' + userId + '.permissionLevel'] = permissionLevel;
-            }
-            const res = await this._db.collection('events')
-                .updateOne({ _id: eventId }, update);
-            if (res.result.ok !== 1)
-                throw utils.createError('error changing permission for user', statusCodes.INTERNAL_SERVER_ERROR);
-            if (res.result.n < 1)
-                throw utils.createError('eventId not found', statusCodes.NOT_FOUND);
-            if (res.result.nModified > 0)
-                this._onEventUsersUpdated(eventId, [userId]);
-        } catch (err) {
-            console.error(err);
-            throw err;
+        const update = {};
+        if (permissionLevel === PermissionLevelEnum.NOT_A_USER) {
+            update.$unset = {};
+            update.$unset['users.' + userId] = 1;
         }
+        else {
+            update.$set = {};
+            update.$set['users.' + userId + '.permissionLevel'] = permissionLevel;
+        }
+        const res = await this._db.collection('events')
+            .updateOne({ _id: eventId }, update);
+        if (res.result.ok !== 1)
+            throw utils.createError('error changing permission for user', statusCodes.INTERNAL_SERVER_ERROR);
+        if (res.result.n < 1)
+            throw utils.createError('eventId not found', statusCodes.NOT_FOUND);
+        if (res.result.nModified > 0)
+            this._onEventUsersUpdated(eventId, [userId]);
     }
 
 
@@ -178,44 +173,39 @@ class EventsController {
      * @returns {Promise<EventsController~EventDict>} resolves to dictionary of events (for user)
      */
     async getEventDict(userId, full = false, eventIds = []) {
-        try {
-            if (!userId)
-                throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
+        if (!userId)
+            throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
 
-            const query = {};
-            if (eventIds && eventIds.length > 0) {
-                query._id = {
-                    $in: eventIds
-                };
-            } else if (!full) {
-                query['users.' + userId + '.permissionLevel'] = {
-                    $gte: PermissionLevelEnum.USER
-                };
-            }
-
-
-            const projection = {'_id': 1, 'isArchived': 1, 'name': 1};
-            projection['users.' + userId + '.permissionLevel'] = 1;
-
-            const eventsArr = await this._db.collection('events')
-                .find(query)
-                .project(projection)
-                .toArray();
-
-            const dict = {};
-            eventsArr.forEach(event => {
-                dict[event._id] = {
-                    isArchived: event.isArchived,
-                    name: event.name,
-                    permissionLevel: event.users.hasOwnProperty(userId) ?
-                        event.users[userId].permissionLevel : PermissionLevelEnum.NOT_A_USER
-                };
-            });
-            return dict;
-        } catch (err) {
-            console.error(err);
-            throw err;
+        const query = {};
+        if (eventIds && eventIds.length > 0) {
+            query._id = {
+                $in: eventIds
+            };
+        } else if (!full) {
+            query['users.' + userId + '.permissionLevel'] = {
+                $gte: PermissionLevelEnum.USER
+            };
         }
+
+
+        const projection = {'_id': 1, 'isArchived': 1, 'name': 1};
+        projection['users.' + userId + '.permissionLevel'] = 1;
+
+        const eventsArr = await this._db.collection('events')
+            .find(query)
+            .project(projection)
+            .toArray();
+
+        const dict = {};
+        eventsArr.forEach(event => {
+            dict[event._id] = {
+                isArchived: event.isArchived,
+                name: event.name,
+                permissionLevel: event.users.hasOwnProperty(userId) ?
+                    event.users[userId].permissionLevel : PermissionLevelEnum.NOT_A_USER
+            };
+        });
+        return dict;
     }
 
 
@@ -225,26 +215,21 @@ class EventsController {
      * @function
      * @param {ObjectID} eventId id of event
      * @returns {Promise<EventsController~RoleList>} resolves to list of roles ordered by priority
-     * @throws {Error} with message: 'eventId not found' with statusCode NOT_FOUND if supplied eventId does not exist
+     * @throws {Error} with message: 'eventId not found' with code NOT_FOUND if supplied eventId does not exist
      */
     async getRoleList(eventId) {
-        try {
-            if (!eventId)
-                throw utils.createError('eventId param must be set', statusCodes.BAD_REQUEST);
+        if (!eventId)
+            throw utils.createError('eventId param must be set', statusCodes.BAD_REQUEST);
 
-            const eventsArr = await this._db.collection('events')
-                .find({ _id: eventId })
-                .project({ roles: 1 })
-                .toArray();
+        const eventsArr = await this._db.collection('events')
+            .find({ _id: eventId })
+            .project({ roles: 1 })
+            .toArray();
 
-            if (eventsArr < 1)
-                throw utils.createError('eventId not found', statusCodes.NOT_FOUND);
+        if (eventsArr < 1)
+            throw utils.createError('eventId not found', statusCodes.NOT_FOUND);
 
-            return eventsArr[0].roles;
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        return eventsArr[0].roles;
     }
 
 
@@ -257,7 +242,7 @@ class EventsController {
      * @param {boolean} [withPermissionLevelAndEmail=false] if true, keeps permissionLevel property and adds email address of user
      * @param {string[]} [userIds=[]] Array of userIds to limit dict to. Unset means all users.
      * @returns {Promise<EventsController~UserDict>} resolves to dictionary of event-users
-     * @throws {Error} with message: 'eventId not found' with statusCode NOT_FOUND if supplied eventId does not exist
+     * @throws {Error} with message: 'eventId not found' with code NOT_FOUND if supplied eventId does not exist
      */
     async getUserDict(eventId, withName = true, withPermissionLevelAndEmail = false, userIds = []) {
         const ldap = new LDAPConnection(config.ldap.dn, config.ldap.password);
@@ -301,7 +286,6 @@ class EventsController {
             });
             return users;
         } catch (err) {
-            console.error(err);
             throw err;
         } finally {
             ldap.close();

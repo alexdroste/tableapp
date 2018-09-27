@@ -58,7 +58,6 @@ class UserController {
                 sessionToken
             };
         } catch (err) {
-            console.error(err);
             throw err;
         } finally {
             ldap.close();
@@ -78,16 +77,11 @@ class UserController {
      * @throws {Error} if supplied sessionToken is not valid/expired
      */
     async continueSession(sessionToken) {
-        try {
-            if (!sessionToken)
-                throw utils.createError('sessionToken param must be set', statusCodes.BAD_REQUEST);
+        if (!sessionToken)
+            throw utils.createError('sessionToken param must be set', statusCodes.BAD_REQUEST);
 
-            const payload = utils.verifySessionToken(sessionToken); // throws
-            return await this._createLoginData(payload.dn, sessionToken);
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        const payload = utils.verifySessionToken(sessionToken); // throws
+        return await this._createLoginData(payload.dn, sessionToken);
     }
 
 
@@ -99,23 +93,18 @@ class UserController {
      * @returns {Promise<(ObjectID|null)>} resolves to last ative event-id (or null)
      */
     async getLastActiveEventId(userId) {
-        try {
-            if (!userId)
-                throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
+        if (!userId)
+            throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
 
-            const arr = await this._db.collection('users')
-                .find({ _id: userId })
-                .project({ lastActiveEventId: 1 })
-                .toArray();
-            
-            if (arr.length < 1)
-                return null;
-            
-            return arr[0].lastActiveEventId;
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        const arr = await this._db.collection('users')
+            .find({ _id: userId })
+            .project({ lastActiveEventId: 1 })
+            .toArray();
+        
+        if (arr.length < 1)
+            return null;
+        
+        return arr[0].lastActiveEventId;
     }
 
 
@@ -128,7 +117,7 @@ class UserController {
      * @param {string} email email of user
      * @param {string} password password of user
      * @returns {Promise<UserController~LoginData>} resolves to login data object (id, name, sessionToken)
-     * @throws {Error} with message: 'email not found' and statusCode NOT_FOUND if supplied email could not be found
+     * @throws {Error} with message: 'email not found' and code NOT_FOUND if supplied email could not be found
      * @throws {Error} if user/password combination could not be used to bind to ldap
      */
     async login(email, password) {
@@ -150,7 +139,6 @@ class UserController {
 
             return await this._createLoginData(dn, utils.createSessionToken(dn));
         } catch (err) { 
-            console.error(err);
             throw err;
         } finally {
             ldap.close(); 
@@ -169,20 +157,15 @@ class UserController {
      * @returns {Promise} indicates success
      */
     async saveLastActiveEventId(userId, eventId) {
-        try {
-            if (!userId)
-                throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
-            
-            const res = await this._db.collection('users')
-                .updateOne({ _id: userId }, { $set: { lastActiveEventId: eventId } }, {
-                    upsert: true,
-                });
-            if (res.result.ok !== 1)
-                throw utils.createError('error setting lastActiveEventId for user', statusCodes.INTERNAL_SERVER_ERROR);                
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        if (!userId)
+            throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
+        
+        const res = await this._db.collection('users')
+            .updateOne({ _id: userId }, { $set: { lastActiveEventId: eventId } }, {
+                upsert: true,
+            });
+        if (res.result.ok !== 1)
+            throw utils.createError('error setting lastActiveEventId for user', statusCodes.INTERNAL_SERVER_ERROR);                
     }
 }
 

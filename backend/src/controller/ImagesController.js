@@ -55,34 +55,29 @@ class ImagesController {
      * @returns {Promise<ImagesController~GetImagesResult>} resolves to an object containing an imageDict and thumbnailDict property, if onlyThumbnails is set imageDict will be an empty object
      */
     async getImages(imageIds, onlyThumbnails = false) {
-        try {
-            if (!imageIds)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!imageIds)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const project = { _id: 1, thumbnail: 1 };
+        const project = { _id: 1, thumbnail: 1 };
+        if (!onlyThumbnails)
+            project.data = 1;
+
+        const imagesArr = await this._db.collection('images')
+            .find({ _id: { $in: imageIds } })
+            .project(project)
+            .toArray();
+
+        const imageDict = {};
+        const thumbnailDict = {};
+        imagesArr.forEach((img) => {
+            thumbnailDict[img._id] = img.thumbnail;
             if (!onlyThumbnails)
-                project.data = 1;
-
-            const imagesArr = await this._db.collection('images')
-                .find({ _id: { $in: imageIds } })
-                .project(project)
-                .toArray();
-
-            const imageDict = {};
-            const thumbnailDict = {};
-            imagesArr.forEach((img) => {
-                thumbnailDict[img._id] = img.thumbnail;
-                if (!onlyThumbnails)
-                    imageDict[img._id] = img.data;
-            });
-            return {
-                imageDict,
-                thumbnailDict,
-            };
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+                imageDict[img._id] = img.data;
+        });
+        return {
+            imageDict,
+            thumbnailDict,
+        };
     }
 }
 

@@ -112,33 +112,28 @@ class EntriesController {
      * @param {string} userId id of user
      * @param {boolean} bookmark true sets bookmark, false unsets
      * @returns {Promise} indicates success
-     * @throws {Error} with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+     * @throws {Error} with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
      */
     async changeUserBookmark(eventId, entryId, userId, bookmark) {
-        try {
-            if (!eventId || !entryId || !userId || typeof bookmark !== 'boolean')
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!eventId || !entryId || !userId || typeof bookmark !== 'boolean')
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const update = {};
-            if (bookmark) {
-                update.$addToSet = { bookmarks: userId };
-            } else {
-                update.$pull = { bookmarks: userId };
-            }
-
-            const res = await this._db.collection('entries')
-                .updateOne({ _id: entryId, eventId }, update);
-                
-            if (res.result.ok !== 1)
-                throw utils.createError('error changing user bookmark state for entry', statusCodes.INTERNAL_SERVER_ERROR);
-            if (res.result.n < 1)
-                throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
-            if (res.result.nModified > 0)
-                this._onEntryUpdated(eventId, entryId);
-        } catch (err) {
-            console.error(err);
-            throw err;
+        const update = {};
+        if (bookmark) {
+            update.$addToSet = { bookmarks: userId };
+        } else {
+            update.$pull = { bookmarks: userId };
         }
+
+        const res = await this._db.collection('entries')
+            .updateOne({ _id: entryId, eventId }, update);
+            
+        if (res.result.ok !== 1)
+            throw utils.createError('error changing user bookmark state for entry', statusCodes.INTERNAL_SERVER_ERROR);
+        if (res.result.n < 1)
+            throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
+        if (res.result.nModified > 0)
+            this._onEntryUpdated(eventId, entryId);
     }
 
 
@@ -151,33 +146,28 @@ class EntriesController {
      * @param {string} userId id of user
      * @param {boolean} follow true sets follow, false unsets
      * @returns {Promise} indicates success
-     * @throws {Error} with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+     * @throws {Error} with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
      */
     async changeUserFollow(eventId, entryId, userId, follow) {
-        try {
-            if (!eventId || !entryId || !userId || typeof follow !== 'boolean')
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!eventId || !entryId || !userId || typeof follow !== 'boolean')
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const update = {};
-            if (follow) {
-                update.$addToSet = { following: userId };
-            } else {
-                update.$pull = { following: userId };
-            }
-
-            const res = await this._db.collection('entries')
-                .updateOne({ _id: entryId, eventId }, update);
-                
-            if (res.result.ok !== 1)
-                throw utils.createError('error changing user follow state for entry', statusCodes.INTERNAL_SERVER_ERROR);
-            if (res.result.n < 1)
-                throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
-            if (res.result.nModified > 0)
-                this._onEntryUpdated(eventId, entryId);
-        } catch (err) {
-            console.error(err);
-            throw err;
+        const update = {};
+        if (follow) {
+            update.$addToSet = { following: userId };
+        } else {
+            update.$pull = { following: userId };
         }
+
+        const res = await this._db.collection('entries')
+            .updateOne({ _id: entryId, eventId }, update);
+            
+        if (res.result.ok !== 1)
+            throw utils.createError('error changing user follow state for entry', statusCodes.INTERNAL_SERVER_ERROR);
+        if (res.result.n < 1)
+            throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
+        if (res.result.nModified > 0)
+            this._onEntryUpdated(eventId, entryId);
     }
 
 
@@ -190,37 +180,32 @@ class EntriesController {
      * @param {string} userId id of user
      * @param {number} vote number representing vote (>0: upvote, 0: no vote, <0: downvote)
      * @returns {Promise} indicates success
-     * @throws {Error} with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+     * @throws {Error} with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
      */
     async changeUserVote(eventId, entryId, userId, vote) { // IMPORTANT: set eventId by users activeEventId, to ensure sufficient rights
-        try {
-            if (!eventId || !entryId || !userId || vote == null)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!eventId || !entryId || !userId || vote == null)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const update = {};
-            if (vote > 0) {
-                update.$addToSet = { upvotes: userId };
-                update.$pull = { downvotes: userId };
-            } else if (vote < 0) {
-                update.$addToSet = { downvotes: userId };
-                update.$pull = { upvotes: userId };
-            } else {
-                update.$pull = { upvotes: userId, downvotes: userId };
-            }
-
-            const res = await this._db.collection('entries')
-                .updateOne({ _id: entryId, eventId }, update);
-                
-            if (res.result.ok !== 1)
-                throw utils.createError('error changing uservote for entry', statusCodes.INTERNAL_SERVER_ERROR);
-            if (res.result.n < 1)
-                throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
-            if (res.result.nModified > 0)
-                this._onEntryUpdated(eventId, entryId);
-        } catch (err) {
-            console.error(err);
-            throw err;
+        const update = {};
+        if (vote > 0) {
+            update.$addToSet = { upvotes: userId };
+            update.$pull = { downvotes: userId };
+        } else if (vote < 0) {
+            update.$addToSet = { downvotes: userId };
+            update.$pull = { upvotes: userId };
+        } else {
+            update.$pull = { upvotes: userId, downvotes: userId };
         }
+
+        const res = await this._db.collection('entries')
+            .updateOne({ _id: entryId, eventId }, update);
+            
+        if (res.result.ok !== 1)
+            throw utils.createError('error changing uservote for entry', statusCodes.INTERNAL_SERVER_ERROR);
+        if (res.result.n < 1)
+            throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
+        if (res.result.nModified > 0)
+            this._onEntryUpdated(eventId, entryId);
     }
 
 
@@ -231,29 +216,24 @@ class EntriesController {
      * @param {ObjectID} eventId id of event
      * @param {ObjectID} entryId id of entry
      * @returns {Promise<EntriesController~EntryInfo>} resolve to object containing entries _id, score & timestamp
-     * @throws {Error} with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+     * @throws {Error} with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
      */
     async getEntryInfo(eventId, entryId) {
-        try {
-            if (!eventId || !entryId)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!eventId || !entryId)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const entriesArr = await this._db.collection('entries').aggregate([
-                { $match: { eventId, _id: entryId } },
-                { $project: {
-                    score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
-                    timestamp: 1,
-                } },
-            ]).toArray();
-            
-            if (entriesArr.length < 1)
-                throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
-            
-            return entriesArr[0];
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        const entriesArr = await this._db.collection('entries').aggregate([
+            { $match: { eventId, _id: entryId } },
+            { $project: {
+                score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
+                timestamp: 1,
+            } },
+        ]).toArray();
+        
+        if (entriesArr.length < 1)
+            throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
+        
+        return entriesArr[0];
     }
 
 
@@ -269,38 +249,33 @@ class EntriesController {
      * @returns {Promise<Array<EntriesController~EntryInfo>>} resolves to object array containing entries: _id, timestamp & score (optional)
      */
     async getEntriesInfoRange(eventId, sort, filter, includeScore, limit) {
-        try {
-            if (!eventId || !sort || !filter || !limit)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!eventId || !sort || !filter || !limit)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const match = { eventId };
-            if (filter.bookmarkForUser)
-                match.bookmarks = { $eq: filter.bookmarkForUser }; // single array element equals value
-            if (filter.excludedEntryIds)
-                match._id = { $nin: filter.excludedEntryIds };
-            if (filter.maxTimestamp)
-                match.timestamp = { $lte: filter.maxTimestamp };
-            if (filter.minTimestamp)
-                match.timestamp = { $gte: filter.minTimestamp, ...match.timestamp };
-            if (filter.maxScore)
-                match.score = { $lte: filter.maxScore };
+        const match = { eventId };
+        if (filter.bookmarkForUser)
+            match.bookmarks = { $eq: filter.bookmarkForUser }; // single array element equals value
+        if (filter.excludedEntryIds)
+            match._id = { $nin: filter.excludedEntryIds };
+        if (filter.maxTimestamp)
+            match.timestamp = { $lte: filter.maxTimestamp };
+        if (filter.minTimestamp)
+            match.timestamp = { $gte: filter.minTimestamp, ...match.timestamp };
+        if (filter.maxScore)
+            match.score = { $lte: filter.maxScore };
 
-            const project = { timestamp: 1 };
-            if (includeScore)
-                project.score = { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] };            
+        const project = { timestamp: 1 };
+        if (includeScore)
+            project.score = { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] };            
 
-            const entriesArr = await this._db.collection('entries').aggregate([
-                { $match: match },
-                { $project: project },
-                { $sort: sort },
-                { $limit: limit },
-            ]).toArray();
-            
-            return entriesArr;
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        const entriesArr = await this._db.collection('entries').aggregate([
+            { $match: match },
+            { $project: project },
+            { $sort: sort },
+            { $limit: limit },
+        ]).toArray();
+        
+        return entriesArr;
     }
 
 
@@ -314,59 +289,54 @@ class EntriesController {
      * @returns {Promise<EntriesController~EntryDict>} resolves to dictionary of entries (for specified user)
      */
     async getEntries(eventId, userId, entryIds) {
-        try {
-            if (!eventId || !userId || !entryIds)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
-            
-            const entriesArr = await this._db.collection('entries').aggregate([
-                { $match: { eventId, _id: { $in: entryIds } } },
-                { $project: {
-                    authorId: 1, 
-                    bookmark: { $in: [ userId, "$bookmarks" ] },
-                    content: 1,
-                    follow: { $in: [ userId, "$following" ] },
-                    imageIds: 1,
-                    liveAnswered: 1,
-                    score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
-                    timestamp: 1,
-                    vote: { $cond: [ { $in: [ userId, "$upvotes" ] }, 1, { 
-                        $cond: [ { $in: [ userId, "$downvotes"]}, -1, 0 ] 
-                    } ] },
-                } }
-            ]).toArray();
+        if (!eventId || !userId || !entryIds)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        
+        const entriesArr = await this._db.collection('entries').aggregate([
+            { $match: { eventId, _id: { $in: entryIds } } },
+            { $project: {
+                authorId: 1, 
+                bookmark: { $in: [ userId, "$bookmarks" ] },
+                content: 1,
+                follow: { $in: [ userId, "$following" ] },
+                imageIds: 1,
+                liveAnswered: 1,
+                score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
+                timestamp: 1,
+                vote: { $cond: [ { $in: [ userId, "$upvotes" ] }, 1, { 
+                    $cond: [ { $in: [ userId, "$downvotes"]}, -1, 0 ] 
+                } ] },
+            } }
+        ]).toArray();
 
-            const commentsArr = await this._db.collection('comments').aggregate([
-                { $match: { eventId, entryId: { $in: entryIds } } },
-                { $group : {
-                    _id: "$entryId",
-                    authorIds: { $push: "$authorId" },
-                    count: { $sum: 1 }
-                } }
-            ]).toArray();
+        const commentsArr = await this._db.collection('comments').aggregate([
+            { $match: { eventId, entryId: { $in: entryIds } } },
+            { $group : {
+                _id: "$entryId",
+                authorIds: { $push: "$authorId" },
+                count: { $sum: 1 }
+            } }
+        ]).toArray();
 
-            const comments = {};
-            commentsArr.forEach((comment) => {
-                comments[comment._id] = comment;
-                delete comment._id;
-            });
+        const comments = {};
+        commentsArr.forEach((comment) => {
+            comments[comment._id] = comment;
+            delete comment._id;
+        });
 
-            const entryDict = {};
-            entriesArr.forEach((entry) => {
-                if (comments[entry._id]) {
-                    entry.commentAttendingUserIds = 
-                        utils.filterArrayForNulledEntries(comments[entry._id].authorIds) || [];
-                    entry.commentCount = comments[entry._id].count;
-                } else {
-                    entry.commentCount = 0;
-                }
-                entryDict[entry._id] = entry;
-                delete entry._id;
-            });
-            return entryDict;
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        const entryDict = {};
+        entriesArr.forEach((entry) => {
+            if (comments[entry._id]) {
+                entry.commentAttendingUserIds = 
+                    utils.filterArrayForNulledEntries(comments[entry._id].authorIds) || [];
+                entry.commentCount = comments[entry._id].count;
+            } else {
+                entry.commentCount = 0;
+            }
+            entryDict[entry._id] = entry;
+            delete entry._id;
+        });
+        return entryDict;
     }
 
 
@@ -378,29 +348,24 @@ class EntriesController {
      * @param {ObjectID} entryId id of entry
      * @param {string} userId id of user
      * @returns {Promise<boolean>} true if user bookmark is set
-     * @throws {Error} with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+     * @throws {Error} with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
      */
     async hasUserBookmarkSetForEntry(eventId, entryId, userId) {
-        try {
-            if (!eventId || !entryId || !userId)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!eventId || !entryId || !userId)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const entriesArr = await this._db.collection('entries').aggregate([
-                { $match: { eventId, _id: entryId } },
-                { $project: {
-                    _id: 0,
-                    bookmark: { $in: [ userId, "$bookmarks" ] },
-                } },
-            ]).toArray();
-            
-            if (entriesArr.length < 1)
-                throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
-            
-            return entriesArr[0].bookmark;
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        const entriesArr = await this._db.collection('entries').aggregate([
+            { $match: { eventId, _id: entryId } },
+            { $project: {
+                _id: 0,
+                bookmark: { $in: [ userId, "$bookmarks" ] },
+            } },
+        ]).toArray();
+        
+        if (entriesArr.length < 1)
+            throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
+        
+        return entriesArr[0].bookmark;
     }
 
 
@@ -416,46 +381,41 @@ class EntriesController {
      * @returns {Promise} indicates success
      */
     async postEntry(eventId, userId, isAnonymous, content, imageDataArr) {
-        try {
-            if (!eventId || !userId || isAnonymous == null || !content || !imageDataArr)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
-            
-            let imageIds = [];
-            if (imageDataArr.length) {
-                const images = [];
-                for (let i = 0; i < imageDataArr.length; ++i)
-                    images.push({
-                        data: imageDataArr[i],
-                        thumbnail: await utils.createThumbnailFromBase64Image(imageDataArr[i])
-                    });
-                const insertRes = await this._db.collection('images').insertMany(images);
-                if (insertRes.result.ok !== 1)
-                    throw utils.createError('could not save images for new entry');
-                imageIds = Object.values(insertRes.insertedIds);
-            }
-
-            const res = await this._db.collection('entries').insertOne({
-                authorId: isAnonymous ? null : userId,
-                bookmarks: [],
-                content,
-                downvotes: [],
-                eventId,
-                following: [],
-                imageIds,
-                liveAnswered: false,
-                postedById: userId,
-                timestamp: Date.now(),
-                upvotes: [],
-            });
-
-            if (res.insertedCount < 1)
-                throw utils.createError('entry could not be posted');
-            
-            this._onEntryUpdated(eventId, res.insertedId);
-        } catch (err) {
-            console.error(err);
-            throw err;
+        if (!eventId || !userId || isAnonymous == null || !content || !imageDataArr)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        
+        let imageIds = [];
+        if (imageDataArr.length) {
+            const images = [];
+            for (let i = 0; i < imageDataArr.length; ++i)
+                images.push({
+                    data: imageDataArr[i],
+                    thumbnail: await utils.createThumbnailFromBase64Image(imageDataArr[i])
+                });
+            const insertRes = await this._db.collection('images').insertMany(images);
+            if (insertRes.result.ok !== 1)
+                throw utils.createError('could not save images for new entry');
+            imageIds = Object.values(insertRes.insertedIds);
         }
+
+        const res = await this._db.collection('entries').insertOne({
+            authorId: isAnonymous ? null : userId,
+            bookmarks: [],
+            content,
+            downvotes: [],
+            eventId,
+            following: [],
+            imageIds,
+            liveAnswered: false,
+            postedById: userId,
+            timestamp: Date.now(),
+            upvotes: [],
+        });
+
+        if (res.insertedCount < 1)
+            throw utils.createError('entry could not be posted');
+        
+        this._onEntryUpdated(eventId, res.insertedId);
     }
 }
 

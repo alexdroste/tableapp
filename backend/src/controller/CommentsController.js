@@ -104,37 +104,32 @@ class CommentsController {
      * @param {string} userId id of user
      * @param {number} vote number representing vote (>0: upvote, 0: no vote, <0: downvote)
      * @returns {Promise} indicates success
-     * @throws {Error} with message: 'commentId not found' with statusCode NOT_FOUND if supplied commentId (for entryId/eventId) does not exist
+     * @throws {Error} with message: 'commentId not found' with code NOT_FOUND if supplied commentId (for entryId/eventId) does not exist
      */
     async changeUserVote(eventId, entryId, commentId, userId, vote) { // IMPORTANT: set eventId by users activeEventId, to ensure sufficient rights
-        try {
-            if (!eventId || !entryId || !commentId || !userId || vote == null)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!eventId || !entryId || !commentId || !userId || vote == null)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const update = {};
-            if (vote > 0) {
-                update.$addToSet = { upvotes: userId };
-                update.$pull = { downvotes: userId };
-            } else if (vote < 0) {
-                update.$addToSet = { downvotes: userId };
-                update.$pull = { upvotes: userId };
-            } else {
-                update.$pull = { upvotes: userId, downvotes: userId };
-            }
-
-            const res = await this._db.collection('comments')
-                .updateOne({ _id: commentId, entryId, eventId }, update);
-                
-            if (res.result.ok !== 1)
-                throw utils.createError('error changing uservote for comment', statusCodes.INTERNAL_SERVER_ERROR);
-            if (res.result.n < 1)
-                throw utils.createError('commentId not found', statusCodes.NOT_FOUND);
-            if (res.result.nModified > 0)
-                this._onCommentUpdated(eventId, entryId, commentId, false);
-        } catch (err) {
-            console.error(err);
-            throw err;
+        const update = {};
+        if (vote > 0) {
+            update.$addToSet = { upvotes: userId };
+            update.$pull = { downvotes: userId };
+        } else if (vote < 0) {
+            update.$addToSet = { downvotes: userId };
+            update.$pull = { upvotes: userId };
+        } else {
+            update.$pull = { upvotes: userId, downvotes: userId };
         }
+
+        const res = await this._db.collection('comments')
+            .updateOne({ _id: commentId, entryId, eventId }, update);
+            
+        if (res.result.ok !== 1)
+            throw utils.createError('error changing uservote for comment', statusCodes.INTERNAL_SERVER_ERROR);
+        if (res.result.n < 1)
+            throw utils.createError('commentId not found', statusCodes.NOT_FOUND);
+        if (res.result.nModified > 0)
+            this._onCommentUpdated(eventId, entryId, commentId, false);
     }
 
 
@@ -149,38 +144,33 @@ class CommentsController {
      * @returns {Promise<CommentsController~CommentDict>} resolves to dictionary of comments (for specified user)
      */
     async getComments(eventId, entryId, userId, commentIds = []) {
-        try {
-            if (!eventId || !entryId || !userId || !commentIds)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!eventId || !entryId || !userId || !commentIds)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            const match = { eventId, entryId };
-            if (commentIds.length > 0)
-                match._id = { $in: commentIds };
-            const commentArr = await this._db.collection('comments').aggregate([
-                { $match: match },
-                { $project: {
-                    authorId: 1, 
-                    content: 1,
-                    imageIds: 1,
-                    parentId: 1,
-                    score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
-                    timestamp: 1,
-                    vote: { $cond: [ { $in: [ userId, "$upvotes" ] }, 1, { 
-                        $cond: [ { $in: [ userId, "$downvotes"]}, -1, 0 ] 
-                    } ] },
-                } }
-            ]).toArray();
+        const match = { eventId, entryId };
+        if (commentIds.length > 0)
+            match._id = { $in: commentIds };
+        const commentArr = await this._db.collection('comments').aggregate([
+            { $match: match },
+            { $project: {
+                authorId: 1, 
+                content: 1,
+                imageIds: 1,
+                parentId: 1,
+                score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
+                timestamp: 1,
+                vote: { $cond: [ { $in: [ userId, "$upvotes" ] }, 1, { 
+                    $cond: [ { $in: [ userId, "$downvotes"]}, -1, 0 ] 
+                } ] },
+            } }
+        ]).toArray();
 
-            const commentDict = {};
-            commentArr.forEach((comment) => {
-                commentDict[comment._id] = comment;
-                delete comment._id;
-            });
-            return commentDict;
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
+        const commentDict = {};
+        commentArr.forEach((comment) => {
+            commentDict[comment._id] = comment;
+            delete comment._id;
+        });
+        return commentDict;
     }
 
 
@@ -198,45 +188,40 @@ class CommentsController {
      * @returns {Promise} indicates success
      */
     async postComment(eventId, entryId, parentId, userId, isAnonymous, content, imageDataArr) {
-        try {
-            if (!eventId || !entryId || !userId || isAnonymous == null || !content || !imageDataArr)
-                throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        if (!eventId || !entryId || !userId || isAnonymous == null || !content || !imageDataArr)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
-            let imageIds = [];
-            if (imageDataArr.length) {
-                const images = [];
-                for (let i = 0; i < imageDataArr.length; ++i)
-                    images.push({
-                        data: imageDataArr[i],
-                        thumbnail: await utils.createThumbnailFromBase64Image(imageDataArr[i])
-                    });
-                const insertRes = await this._db.collection('images').insertMany(images);
-                if (insertRes.result.ok !== 1)
-                    throw utils.createError('could not save images for new comments');
-                imageIds = Object.values(insertRes.insertedIds);
-            }
-
-            const res = await this._db.collection('comments').insertOne({
-                authorId: isAnonymous ? null : userId,
-                content,
-                downvotes: [],
-                entryId,
-                eventId,
-                imageIds,
-                parentId: parentId ? parentId : null,
-                postedById: userId,
-                timestamp: Date.now(),
-                upvotes: [],
-            });
-
-            if (res.insertedCount < 1)
-                throw utils.createError('comment could not be posted');
-            
-            this._onCommentUpdated(eventId, entryId, res.insertedId, true);
-        } catch (err) {
-            console.error(err);
-            throw err;
+        let imageIds = [];
+        if (imageDataArr.length) {
+            const images = [];
+            for (let i = 0; i < imageDataArr.length; ++i)
+                images.push({
+                    data: imageDataArr[i],
+                    thumbnail: await utils.createThumbnailFromBase64Image(imageDataArr[i])
+                });
+            const insertRes = await this._db.collection('images').insertMany(images);
+            if (insertRes.result.ok !== 1)
+                throw utils.createError('could not save images for new comments');
+            imageIds = Object.values(insertRes.insertedIds);
         }
+
+        const res = await this._db.collection('comments').insertOne({
+            authorId: isAnonymous ? null : userId,
+            content,
+            downvotes: [],
+            entryId,
+            eventId,
+            imageIds,
+            parentId: parentId ? parentId : null,
+            postedById: userId,
+            timestamp: Date.now(),
+            upvotes: [],
+        });
+
+        if (res.insertedCount < 1)
+            throw utils.createError('comment could not be posted');
+        
+        this._onCommentUpdated(eventId, entryId, res.insertedId, true);
     }
 }
 

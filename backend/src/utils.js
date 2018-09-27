@@ -1,3 +1,5 @@
+"use strict";
+
 const config = require('./config');
 const statusCodes = require('http-status-codes');
 const jwt = require('jsonwebtoken');
@@ -5,16 +7,16 @@ const Jimp = require('jimp');
 
 
 /**
- * Creates a new Error object with a custom statusCode attribute
+ * Creates a new Error object with a custom code attribute
  * @function
  * @param {string} msg error-message
- * @param {(number|string)} [statusCode=500] statusCode property, defaults to internal server error (500)
- * @returns {Error} error object with additional property .statusCode
+ * @param {(number|string)} [code=500] code (status-code) property, defaults to internal server error (500)
+ * @returns {Error} error object
  */
-function createError(msg, statusCode = statusCodes.INTERNAL_SERVER_ERROR) {
+function createError(msg, code = statusCodes.INTERNAL_SERVER_ERROR) {
     const err = new Error(msg);
     Error.captureStackTrace(err, createError);
-    err.statusCode = statusCode;
+    err.code = code;
     return err;
 };
 module.exports.createError = createError;
