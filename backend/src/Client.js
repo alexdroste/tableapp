@@ -735,7 +735,13 @@ class Client {
             cb(null, loginData);
         } catch (err) {
             cb(utils.createError('login failed', statusCodes.UNAUTHORIZED));
+            if (err.name === 'InvalidCredentialsError' 
+                    || err.code === statusCodes.NOT_FOUND 
+                    || err.code === statusCodes.BAD_REQUEST) {
+                console.log(`user login failed`, { id: this.id, ip: this.ip, email: data.email });
+            } else {
                 throw err; // rethrow unknown/internal error
+            }
         }
     }
 
