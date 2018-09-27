@@ -62,7 +62,9 @@ class ClientBroker {
      * @param {SocketIoConnection} socket socket connection to client
      */
     _handleConnection(socket) {
-        this._clients.push(new Client(socket, this._controller, this));
+        let client = new Client(socket, this._controller, this);
+        console.log('client connected', { id: client.id, ip: client.ip, userAgent: client.userAgent });
+        this._clients.push(client);
     }
 
 
