@@ -159,6 +159,9 @@ class Client {
      * @function
      */
     _handleDisconnect() {
+        const disconnectTimestamp = Date.now();
+        const sessionDurationMin = ((disconnectTimestamp - this.connectTimestamp) / 1000 / 60).toFixed(1);
+        console.log('client disconnected', { id: this.id, ip: this.ip, userId: this.userId, sessionDurationMin});
         this._socket = null;
         this._broker.unregisterClient(this);
     }
