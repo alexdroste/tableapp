@@ -2,12 +2,20 @@
 let custom = {};
 try { custom = require('./config.custom.js') } 
 catch (e) { console.error('Custom configuration is missing!'); }
+const {ldap, db, sessionToken, eventScreenshots, ...rest} = custom;
 
 
 /**
  * Configuration values.
  */
 const config = {
+    /**
+     * Logging-Level.
+     * Valid values: 'debug', 'info', 'warn', 'error'.
+     * Defaults to 'debug'.
+     * @type {string}
+     */
+    loglevel: 'debug',
     /**
      * LDAP config values.
      */
@@ -55,7 +63,7 @@ const config = {
          * @type {(string|undefined)}
          */
         titleAttribute: undefined,
-        ...custom.ldap // overwrite with custom config values
+        ...ldap // overwrite with custom config values
     },
     /**
      * Database (MongoDB) config values.
@@ -73,7 +81,7 @@ const config = {
          * @type {string}
          */
         url: 'mongodb://localhost:27017',
-        ...custom.db // overwrite with custom config values
+        ...db // overwrite with custom config values
     },
     /**
      * Config values for session tokens.
@@ -93,7 +101,7 @@ const config = {
          * @type {string}
          */
         validFor: '180d',
-        ...custom.sessionToken // overwrite with custom config values
+        ...sessionToken // overwrite with custom config values
     },
     /**
      * Config values for (event-)screenshots.
@@ -111,8 +119,9 @@ const config = {
          * @type {number}
          */
         saveLastCount: 3,
-        ...custom.eventScreenshots // overwrite with custom config values
+        ...eventScreenshots // overwrite with custom config values
     },
+    ...rest
 };
 
 module.exports = config;

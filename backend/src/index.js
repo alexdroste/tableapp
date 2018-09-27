@@ -1,5 +1,6 @@
 "use strict";
 
+require('./console');
 const config = require('./config');
 const httpServer = require('http').createServer();
 const io = require('socket.io')(httpServer);
@@ -11,10 +12,10 @@ const utils = require('./utils');
 
 
 if (utils.isAppInDevelopmentMode())
-    console.log('launching in development/debug mode');
+    console.warn('launching in development/debug mode');
 
 MongoClient.connect(config.db.url).then(client => {
-    console.log('mongodb connected');
+    console.info('mongodb connected');
     const db = client.db(config.db.name);
     const controller = configureController(db);
     const broker = new ClientBroker(io, controller);
@@ -25,6 +26,6 @@ MongoClient.connect(config.db.url).then(client => {
 
 
 httpServer.listen(4898, () => {
-    console.log('http server listening on port 4898');
+    console.info('http server listening on port 4898');
 });
 
