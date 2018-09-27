@@ -142,7 +142,7 @@ class Client {
         this.on('images/loadImages',                    true,   true,   this._handleLoadImages);
 
         // user
-        this.on('user/continueSession',                 true,   true,   this._handleContinueSession);
+        this.on('user/continueSession',                 false,  false,  this._handleContinueSession);
         this.on('user/login',                           false,  false,  this._handleLogin);
     }
 
