@@ -12,29 +12,37 @@
 - [ ] entry moderation options (edit, delete)
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
-- [ ] implement or remove archive option for events
-- [ ] option to add tag to entry -> "discussed in lecture"
 - [ ] screencapture module for windows / desktop-app for windows
+- [ ] fix: screenshots of active window not working sometimes => allow screenshots per screen (& maybe screenshot preview for presenter)
+- [ ] ssl
 
 
-### other
+### normal priority
 
+- [ ] notifications (in-app/email)
+- [ ] option to add tag to entry -> "discussed in lecture"
 - [ ] improve (really bad atm) container/presentational component split (https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
-  - [ ] add documentation for components/containers
+- [ ] add documentation for components/containers
+- [ ] max character limit for comments/entries
+- [ ] collapse entry content in feed if its too long => add button to "expand" / "collapse" long content
+- [ ] make more than the last 3 screenshots available for use / preview other screenshots in zoomed view
+- [ ] implement or remove archive option for events
+- [ ] rate-limits (e.g. you can only post x new entries in x secs)
+- [ ] ability to ban or temp-ban users
 - [ ] optimize entry virtualisation
 - [ ] virtualize comment section
 - [ ] optimize design, especially for desktop
-- [ ] notifications (in-app/email)
-- [ ] make more than the last 3 screenshots available for use / preview other screenshots in zoomed view
-- [ ] allow screenshots per screen (& maybe screenshot preview for presenter)
-- [ ] screencapture module for linux / desktop-app for linux
 - [ ] use Flow typechecking (https://flow.org)
+- [ ] maybe? replace listsubscription with update notifications for events
+- [ ] backend: better error handling
 
 
-### features / enhancements
+### low priority
 
+- [ ] screencapture module for linux / desktop-app for linux
 - [ ] polls / quizzes
 - [ ] integrate with tuc course catalog
+- [ ] comment-section: add person-tracking for anonymous comments (@1, @2, ...)
 
 
 ## documentation
