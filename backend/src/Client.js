@@ -1,10 +1,14 @@
 "use strict";
+
 const ObjectID = require('mongodb').ObjectID;
 const EntryListTypeEnum = require('./EntryListTypeEnum');
 const EntryListSubscription = require('./EntryListSubscription');
 const PermissionLevelEnum = require('./PermissionLevelEnum');
 const utils = require('./utils');
 var statusCodes = require('http-status-codes');
+
+
+let curClientId = 0;
 
 
 /**
@@ -25,11 +29,21 @@ class Client {
          */
         this.activeEventId = null;
         /**
+         * Internal (process-unique) id for a client.
+         * @type {number}
+         */
+        this.id = curClientId++;
+        /**
          * Id of entry client subscribed comments of.
          * Null indicates that no comments(-updates/-data) are subscribed.
          * @type {(ObjectID|null)}
          */
         this.commentsSubscribedForEntryId = null;
+        /**
+         * Timestamp of connect-event.
+         * @type {number}
+         */
+        this.connectTimestamp = Date.now();
         /**
          * Infos about clients subscribed entries.
          */
@@ -46,6 +60,16 @@ class Client {
              */
             subscribedIds: [],
         };
+        /**
+         * User-Agent of connected client.
+         * @type {string}
+         */
+        this.userAgent = socket.request.headers['user-agent'];
+        /**
+         * IP-Address of connected client.
+         * @type {string}
+         */
+        this.ip = socket.request.connection.remoteAddress;
         /**
          * Permissionlevel of user for active event. 
          * Defaults to NOT_A_USER.
