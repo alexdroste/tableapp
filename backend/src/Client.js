@@ -173,16 +173,11 @@ class Client {
      * @returns {Promise} 
      */
     async _setupAfterAuthentication(loginData) {
-        try {
-            this.activeEventId = loginData.activeEventId;
-            this.userId = loginData.id;
-            this.emitUpdateEventDict(await this._controller.events.getEventDict(this.userId));
-            if (this.activeEventId)
-                await this._switchActiveEvent(this.activeEventId);
-        } catch (err) {
-            console.error(err);
-            console.error('could not perform _setupAfterAuthentication');
-        }
+        this.activeEventId = loginData.activeEventId;
+        this.userId = loginData.id;
+        this.emitUpdateEventDict(await this._controller.events.getEventDict(this.userId));
+        if (this.activeEventId)
+            await this._switchActiveEvent(this.activeEventId);
     }
 
 
@@ -215,8 +210,8 @@ class Client {
                 new ObjectID(data.entryId), new ObjectID(data.commentId), this.userId, data.vote);
             cb(null);
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('change user vote for comment failed', err.statusCode));
+            cb(utils.createError('change user vote for comment failed', err.code));
+            throw err;
         }
     }
 
@@ -244,8 +239,8 @@ class Client {
                 data.isAnonymous, data.content, data.imageDataArr);
             cb(null);
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('could not post comment', err.statusCode));
+            cb(utils.createError('could not post comment', err.code));
+            throw err;
         }
     }
 
@@ -268,8 +263,8 @@ class Client {
             this.commentsSubscribedForEntryId = entryId;
             cb(null, { commentDict })
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('could not subscribe comments for entry', err.statusCode));
+            cb(utils.createError('could not subscribe comments for entry', err.code));
+            throw err;
         }
     }
 
@@ -288,8 +283,8 @@ class Client {
             this.commentsSubscribedForEntryId = null;
             cb(null)
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('could not unsubscribe comments for entry', err.statusCode));
+            cb(utils.createError('could not unsubscribe comments for entry', err.code));
+            throw err;
         }
     }
 
@@ -311,8 +306,8 @@ class Client {
             await this._controller.eventScreenshots.addImageForEvent(this.activeEventId, data);
             cb(null);
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('could not broadcast image', err.statusCode));
+            cb(utils.createError('could not broadcast image', err.code));
+            throw err;
         }
     }
 
@@ -337,8 +332,8 @@ class Client {
                 this.activeEventId, new ObjectID(data.entryId), this.userId, data.bookmark);
             cb(null);
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('change user bookmark for entry failed', err.statusCode));
+            cb(utils.createError('change user bookmark for entry failed', err.code));
+            throw err;
         }
     }
 
@@ -360,8 +355,8 @@ class Client {
                 this.activeEventId, new ObjectID(data.entryId), this.userId, data.follow);
             cb(null);
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('change user follow for entry failed', err.statusCode));
+            cb(utils.createError('change user follow for entry failed', err.code));
+            throw err;
         }
     }
 
@@ -383,8 +378,8 @@ class Client {
                 this.activeEventId, new ObjectID(data.entryId), this.userId, data.vote);
             cb(null);
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('change user vote for entry failed', err.statusCode));
+            cb(utils.createError('change user vote for entry failed', err.code));
+            throw err;
         }
     }
 
@@ -412,8 +407,8 @@ class Client {
                 hasMoreEntriesToLoad: res.hasMoreEntriesToLoad,
             });
         } catch (err) {
-            console.error(err);
             cb(utils.createError('load more entries failed'));
+            throw err;
         }
     }
 
@@ -437,8 +432,8 @@ class Client {
                 this.activeEventId, this.userId, data.isAnonymous, data.content, data.imageDataArr);
             cb(null);
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('post entry failed', err.statusCode));
+            cb(utils.createError('post entry failed', err.code));
+            throw err;
         }
     }
 
@@ -464,8 +459,8 @@ class Client {
                 .getEntries(this.activeEventId, this.userId, entryIds);
             cb(null, { entryDict });
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('subscribe entries failed', err.statusCode));
+            cb(utils.createError('subscribe entries failed', err.code));
+            throw err;
         }
     }
 
@@ -489,8 +484,8 @@ class Client {
                 this.userId, data.onlyBookmarked);
             cb(null);
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('subscribe entrylist failed', err.statusCode));
+            cb(utils.createError('subscribe entrylist failed', err.code));
+            throw err;
         }
     }
 
@@ -513,8 +508,8 @@ class Client {
             });
             cb(null);
         } catch (err) {
-            console.error(err);
-            cb(utils.createError('subscribe entries failed', err.statusCode));
+            cb(utils.createError('subscribe entries failed', err.code));
+            throw err;
         }
     }
 
@@ -552,6 +547,7 @@ class Client {
             cb(null);    
         } catch (err) {
             cb(utils.createError('subscribe full eventDict failed', statusCodes.INTERNAL_SERVER_ERROR));   
+            throw err;
         }
     }
 
@@ -585,7 +581,8 @@ class Client {
                 new ObjectID(data.eventId), this.userId, PermissionLevelEnum.USER);
             cb(null);
         } catch (err) {
-            cb(utils.createError('could not join event', err.statusCode));
+            cb(utils.createError('could not join event', err.code));
+            throw err;
         }
     }
 
@@ -608,7 +605,8 @@ class Client {
                 await this._switchActiveEvent(null);
             cb(null);
         } catch (err) {
-            cb(utils.createError('could not leave event', err.statusCode));
+            cb(utils.createError('could not leave event', err.code));
+            throw err;
         }
     }
 
@@ -629,6 +627,7 @@ class Client {
             cb(null);    
         } catch (err) {
             cb(utils.createError('switch active event failed', statusCodes.INTERNAL_SERVER_ERROR));
+            throw err;
         }    
     }
 
@@ -643,31 +642,26 @@ class Client {
      * @todo reorganize position of this function
      */
     async _switchActiveEvent(newEventId) {
-        try {
-            this.entriesSubscription.listSubscription = null;            
-            this.activeEventId = newEventId;
-            this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
-            await this._controller.user.saveLastActiveEventId(this.userId, this.activeEventId);
-            if (!this.activeEventId)
-                return;
-            
-            // TODO cancel if newEventId does not exist
-            const event = (await this._controller.events.getEventDict(
-                this.userId, true, [newEventId]))[newEventId];
-            this.permissionLevel = event.permissionLevel;
-            
-            const withPermissionLevelAndEmail = this.permissionLevel >= PermissionLevelEnum.ADMINISTRATOR;
-            this.emitUpdateUserDict(await this._controller.events.getUserDict(
-                this.activeEventId, true, withPermissionLevelAndEmail));
+        this.entriesSubscription.listSubscription = null;            
+        this.activeEventId = newEventId;
+        this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
+        await this._controller.user.saveLastActiveEventId(this.userId, this.activeEventId);
+        if (!this.activeEventId)
+            return;
+        
+        // TODO cancel if newEventId does not exist
+        const event = (await this._controller.events.getEventDict(
+            this.userId, true, [newEventId]))[newEventId];
+        this.permissionLevel = event.permissionLevel;
+        
+        const withPermissionLevelAndEmail = this.permissionLevel >= PermissionLevelEnum.ADMINISTRATOR;
+        this.emitUpdateUserDict(await this._controller.events.getUserDict(
+            this.activeEventId, true, withPermissionLevelAndEmail));
 
-            this.emitUpdateRoleList(await this._controller.events.getRoleList(this.activeEventId));
+        this.emitUpdateRoleList(await this._controller.events.getRoleList(this.activeEventId));
 
-            this.emitUpdateEventScreenshotIds(
-                await this._controller.eventScreenshots.getScreenshotIdsForEvent(this.activeEventId));
-        } catch (err) {
-            console.error(err);            
-            throw utils.createError('encountered error during internal event switch action');
-        }
+        this.emitUpdateEventScreenshotIds(
+            await this._controller.eventScreenshots.getScreenshotIdsForEvent(this.activeEventId));
     }
 
 
@@ -691,7 +685,8 @@ class Client {
             const ret = await this._controller.images.getImages(imageIds, data.onlyThumbnails);
             cb(null, ret);
         } catch (err) {
-            cb(utils.createError('load images failed', err.statusCode));            
+            cb(utils.createError('load images failed', err.code));            
+            throw err;
         }
     }
 
@@ -717,6 +712,7 @@ class Client {
             cb(null, loginData);
         } catch (err) {
             cb(utils.createError('continue session failed', statusCodes.UNAUTHORIZED));            
+            throw err;
         }
     }
 
@@ -739,6 +735,7 @@ class Client {
             cb(null, loginData);
         } catch (err) {
             cb(utils.createError('login failed', statusCodes.UNAUTHORIZED));
+                throw err; // rethrow unknown/internal error
         }
     }
 
