@@ -61,6 +61,7 @@ const roleList = (state = initialState.roleList, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.roleList;
         default:
             return state;
@@ -83,6 +84,7 @@ const userDict = (state = initialState.userDict, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.userDict;
         default:
             return state;

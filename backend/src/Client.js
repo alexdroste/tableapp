@@ -24,69 +24,25 @@ class Client {
     constructor(socket, controller, broker) {
         // public properties
         /**
-         * Id of active event.
-         * @type {(ObjectID|null)}
+         * Timestamp of connect-event.
+         * @type {number}
          */
-        this.activeEventId = null;
+        this.connectTimestamp = Date.now();
         /**
          * Internal (process-unique) id for a client.
          * @type {number}
          */
         this.id = curClientId++;
         /**
-         * Id of entry client subscribed comments of.
-         * Null indicates that no comments(-updates/-data) are subscribed.
-         * @type {(ObjectID|null)}
-         */
-        this.commentsSubscribedForEntryId = null;
-        /**
-         * Timestamp of connect-event.
-         * @type {number}
-         */
-        this.connectTimestamp = Date.now();
-        /**
-         * Infos about clients subscribed entries.
-         */
-        this.entriesSubscription = {
-            /**
-             * List subscription instance.
-             * Null indicates that no list subscription is active.
-             * @type {(EntryListSubscription|null)}
-             */
-            listSubscription: null,
-            /**
-             * List of subscribed entryIds.
-             * @type {Array<ObjectID>}
-             */
-            subscribedIds: [],
-        };
-        /**
-         * User-Agent of connected client.
-         * @type {string}
-         */
-        this.userAgent = socket.request.headers['user-agent'];
-        /**
          * IP-Address of connected client.
          * @type {string}
          */
         this.ip = socket.request.connection.remoteAddress;
         /**
-         * Permissionlevel of user for active event. 
-         * Defaults to NOT_A_USER.
-         * @type {PermissionLevelEnum}
+         * User-Agent of connected client.
+         * @type {string}
          */
-        this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
-        /**
-         * Id of authenticated user.
-         * @type {(string|null)}
-         */
-        this.userId = null;
-        /**
-         * Indicates if client subcribed to full EventDict.
-         * Defaults to false.
-         * @type {boolean}
-         */
-        this.subscribedFullEventDict = false;
+        this.userAgent = socket.request.headers['user-agent'];
 
         // private properties
         /**
@@ -107,6 +63,9 @@ class Client {
          * @type {ClientBroker}
          */
         this._broker = broker;
+
+        // init/reset client-state
+        this._init();
 
         // setup listeners
         this.on('disconnect',                           false,  false,  this._handleDisconnect);
@@ -144,8 +103,8 @@ class Client {
         // user
         this.on('user/continueSession',                 false,  false,  this._handleContinueSession);
         this.on('user/login',                           false,  false,  this._handleLogin);
+        this.on('user/logout',                          true,   false,  this._handleLogout);
     }
-
 
 
 
@@ -153,6 +112,60 @@ class Client {
     // --------- Private ---------
 
     //#region general
+    /**
+     * Initializes / resets client-state properties.
+     * @private
+     * @function
+     */
+    _init() {
+        // public properties
+        /**
+         * Id of active event.
+         * @type {(ObjectID|null)}
+         */
+        this.activeEventId = null;
+        /**
+         * Id of entry client subscribed comments of.
+         * Null indicates that no comments(-updates/-data) are subscribed.
+         * @type {(ObjectID|null)}
+         */
+        this.commentsSubscribedForEntryId = null;
+        /**
+         * Infos about clients subscribed entries.
+         */
+        this.entriesSubscription = {
+            /**
+             * List subscription instance.
+             * Null indicates that no list subscription is active.
+             * @type {(EntryListSubscription|null)}
+             */
+            listSubscription: null,
+            /**
+             * List of subscribed entryIds.
+             * @type {Array<ObjectID>}
+             */
+            subscribedIds: [],
+        };
+        /**
+         * Permissionlevel of user for active event. 
+         * Defaults to NOT_A_USER.
+         * @type {PermissionLevelEnum}
+         */
+        this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
+        /**
+         * Indicates if client subcribed to full EventDict.
+         * Defaults to false.
+         * @type {boolean}
+         */
+        this.subscribedFullEventDict = false;
+        /**
+         * Id of authenticated user.
+         * @type {(string|null)}
+         */
+        this.userId = null;
+    }
+
+
     /**
      * Eventhandler for socket disconnect event.
      * @private
@@ -646,10 +659,11 @@ class Client {
      * @todo reorganize position of this function
      */
     async _switchActiveEvent(newEventId) {
-        console.debug('switch active event', { clientId: this.id, userId: this.userId, activeEventId: this.activeEventId, newEventId });
-        this.entriesSubscription.listSubscription = null;            
+        const userId = this.userId;
+        console.debug('switch active event', { clientId: this.id, userId, activeEventId: this.activeEventId, newEventId });
+        this._init(); // reset client-state
+        this.userId = userId; // preserve userId from client-state reset (_init)
         this.activeEventId = newEventId;
-        this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
         await this._controller.user.saveLastActiveEventId(this.userId, this.activeEventId);
         if (!this.activeEventId)
             return;
@@ -752,6 +766,20 @@ class Client {
                 throw err;
             }
         }
+    }
+
+
+    /**
+     * Eventhandler for logout request.
+     * @private
+     * @function
+     * @param {object} data empty object
+     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
+     */
+    _handleLogout(data, cb) {
+        console.log('user logout', { clientId: this.id, ip: this.ip, userId: this.userId });
+        this._init(); // reset client-state 
+        cb(null);
     }
 
 

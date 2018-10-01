@@ -41,3 +41,22 @@ export function login(email, password) {
         }
     });
 }
+
+
+/**
+ * Creates action for logging out.
+ * @function
+ * @returns {object} action
+ */
+export function logout() {
+    return ({
+        type: 'apiCall',
+        apiCall: {
+            key: 'logout',
+            types: [userActionTypes.LOGOUT_REQUEST, 
+                userActionTypes.LOGOUT_SUCCESS, 
+                userActionTypes.LOGOUT_FAILURE],
+            call: (api) => userApiMethods.logout(api)
+        }
+    });
+}

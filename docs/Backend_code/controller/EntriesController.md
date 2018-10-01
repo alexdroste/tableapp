@@ -83,7 +83,7 @@ Change users bookmark state for a specific entry.
 **Returns**: <code>Promise</code> - indicates success  
 **Throws**:
 
-- <code>Error</code> with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+- <code>Error</code> with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
 
 
 | Param | Type | Description |
@@ -102,7 +102,7 @@ Change users follow state for a specific entry.
 **Returns**: <code>Promise</code> - indicates success  
 **Throws**:
 
-- <code>Error</code> with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+- <code>Error</code> with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
 
 
 | Param | Type | Description |
@@ -121,7 +121,7 @@ Change a users voting for a specific entry.
 **Returns**: <code>Promise</code> - indicates success  
 **Throws**:
 
-- <code>Error</code> with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+- <code>Error</code> with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
 
 
 | Param | Type | Description |
@@ -140,7 +140,7 @@ Retrieves entry info containing _id, score & timestamp
 **Returns**: [<code>Promise.&lt;EntryInfo&gt;</code>](#entriescontroller4646entryinfo) - resolve to object containing entries _id, score & timestamp  
 **Throws**:
 
-- <code>Error</code> with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+- <code>Error</code> with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
 
 
 | Param | Type | Description |
@@ -187,7 +187,7 @@ Returns whether a user has set a bookmark on a specific entry.
 **Returns**: <code>Promise.&lt;boolean&gt;</code> - true if user bookmark is set  
 **Throws**:
 
-- <code>Error</code> with message: 'entryId not found' with statusCode NOT_FOUND if supplied entryId (for eventId) does not exist
+- <code>Error</code> with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
 
 
 | Param | Type | Description |

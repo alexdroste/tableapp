@@ -25,6 +25,18 @@ API-call: login.
 | email | <code>string</code> | email of user |
 | password | <code>string</code> | password of user |
 
+<a id="logout"></a>
+
+## logout(api) ⇒ <code>Promise</code>
+API-call: logout.
+
+**Kind**: global function  
+**Returns**: <code>Promise</code> - indicates success  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| api | <code>ApiConnection</code> | ApiConnection instance |
+
 <a id="logindata"></a>
 
 ## LoginData : <code>object</code>

@@ -87,7 +87,7 @@ HINT: if app is not in production mode, using 'debug' as password always grants 
 **Returns**: [<code>Promise.&lt;LoginData&gt;</code>](#usercontroller4646logindata) - resolves to login data object (id, name, sessionToken)  
 **Throws**:
 
-- <code>Error</code> with message: 'email not found' and statusCode NOT_FOUND if supplied email could not be found
+- <code>Error</code> with message: 'email not found' and code NOT_FOUND if supplied email could not be found
 - <code>Error</code> if user/password combination could not be used to bind to ldap
 
 

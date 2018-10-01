@@ -87,6 +87,7 @@ const entryDict = (state = initialState.entryDict, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.entryDict;
         default:
             return state;
@@ -108,6 +109,7 @@ const idList = (state = initialState.idList, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.idList;
         default:
             return state;
@@ -124,6 +126,7 @@ const listOnlyBookmarked = (state = initialState.listOnlyBookmarked, action) => 
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.listOnlyBookmarked;
         default:
             return state;
@@ -141,6 +144,7 @@ const listSubscribed = (state = initialState.listSubscribed, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.listSubscribed;
         default:
             return state;
@@ -157,6 +161,7 @@ const listType = (state = initialState.listType, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.listType;
         default:
             return state;
@@ -174,6 +179,7 @@ const moreEntriesToLoad = (state = initialState.moreEntriesToLoad, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.moreEntriesToLoad;
         default:
             return state;

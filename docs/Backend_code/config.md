@@ -6,6 +6,7 @@ Configuration values.
 **Kind**: global constant  
 
 * [config](#config)
+    * [.loglevel](#config46loglevel) : <code>string</code>
     * [.ldap](#config46ldap)
         * [.url](#config46ldap46url) : <code>string</code>
         * [.dn](#config46ldap46dn) : <code>string</code>
@@ -24,6 +25,14 @@ Configuration values.
         * [.keepForMinutesAfterLastUpdate](#config46eventscreenshots46keepforminutesafterlastupdate) : <code>number</code>
         * [.saveLastCount](#config46eventscreenshots46savelastcount) : <code>number</code>
 
+<a id="config46loglevel"></a>
+
+### config.loglevel : <code>string</code>
+Logging-Level.
+Valid values: 'debug', 'info', 'warn', 'error'.
+Defaults to 'debug'.
+
+**Kind**: static property of [<code>config</code>](#config)  
 <a id="config46ldap"></a>
 
 ### config.ldap

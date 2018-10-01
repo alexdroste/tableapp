@@ -23,3 +23,10 @@ Creates action for logging in.
 | email | <code>string</code> | email of user |
 | password | <code>string</code> | password of user |
 
+<a id="logout"></a>
+
+## logout() ⇒ <code>object</code>
+Creates action for logging out.
+
+**Kind**: global function  
+**Returns**: <code>object</code> - action  

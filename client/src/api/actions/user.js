@@ -32,3 +32,15 @@ export function continueSession(api, sessionToken) {
 export function login(api, email, password) {
     return api.request('user/login', { email, password });
 }
+
+
+/**
+ * API-call: logout.
+ * @async
+ * @function
+ * @param {ApiConnection} api ApiConnection instance 
+ * @returns {Promise} indicates success
+ */
+export function logout(api) {
+    return api.request('user/logout');
+}

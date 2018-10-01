@@ -11,3 +11,10 @@ export const LOGIN_REQUEST = 'user/LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'user/LOGIN_SUCCESS';
 /** user actiontype: login */
 export const LOGIN_FAILURE = 'user/LOGIN_FAILURE';
+
+/** user actiontype: logout */
+export const LOGOUT_REQUEST = 'user/LOGOUT_REQUEST';
+/** user actiontype: logout */
+export const LOGOUT_SUCCESS = 'user/LOGOUT_SUCCESS';
+/** user actiontype: logout */
+export const LOGOUT_FAILURE = 'user/LOGOUT_FAILURE';

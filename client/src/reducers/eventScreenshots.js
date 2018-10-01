@@ -23,6 +23,7 @@ const ids = (state = initialState.ids, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.ids;
         default:
             return state;

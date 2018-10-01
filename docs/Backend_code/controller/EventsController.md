@@ -82,7 +82,7 @@ Changes a users permission level for a specific event.
 **Returns**: <code>Promise</code> - indicates success  
 **Throws**:
 
-- <code>Error</code> with message: 'eventId not found' with statusCode NOT_FOUND if supplied eventId does not exist
+- <code>Error</code> with message: 'eventId not found' with code NOT_FOUND if supplied eventId does not exist
 
 
 | Param | Type | Description |
@@ -114,7 +114,7 @@ Retrieves rolesList for an event.
 **Returns**: [<code>Promise.&lt;RoleList&gt;</code>](#eventscontroller4646rolelist) - resolves to list of roles ordered by priority  
 **Throws**:
 
-- <code>Error</code> with message: 'eventId not found' with statusCode NOT_FOUND if supplied eventId does not exist
+- <code>Error</code> with message: 'eventId not found' with code NOT_FOUND if supplied eventId does not exist
 
 
 | Param | Type | Description |
@@ -130,7 +130,7 @@ Retrieves userDict for an event.
 **Returns**: [<code>Promise.&lt;UserDict&gt;</code>](#eventscontroller4646userdict) - resolves to dictionary of event-users  
 **Throws**:
 
-- <code>Error</code> with message: 'eventId not found' with statusCode NOT_FOUND if supplied eventId does not exist
+- <code>Error</code> with message: 'eventId not found' with code NOT_FOUND if supplied eventId does not exist
 
 
 | Param | Type | Default | Description |

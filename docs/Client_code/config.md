@@ -67,6 +67,6 @@ Defaults to 1200.
 ### config.saveStateDebounceTime : <code>number</code>
 Time intervall in ms that state-save operations 
 (save state to localStorage) can be performed at max rate.  
-Defaults to 3000.
+Defaults to 500.
 
 **Kind**: static property of [<code>config</code>](#config)  

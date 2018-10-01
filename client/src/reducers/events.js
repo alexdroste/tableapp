@@ -79,6 +79,7 @@ const activeEvent = (state = initialState.activeEvent, action) => {
         // reset
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.activeEvent;
         default:
             return state;
@@ -95,6 +96,7 @@ const initialDictUpdatePending = (state = initialState.initialDictUpdatePending,
         // reset
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.initialDictUpdatePending;
         default:
             return state;
@@ -111,6 +113,8 @@ const eventDict = (state = initialState.eventDict, action) => {
                 ...state,
                 ...action.eventDict,
             };
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.eventDict;
         default:
             return state;
     }
@@ -123,6 +127,8 @@ const subscribedFullDict = (state = initialState.subscribedFullDict, action) => 
             return true;
         case eventsActionTypes.UNSUBSCRIBE_FULL_EVENT_DICT_REQUEST:
             return false;
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.subscribedFullDict;
         default:
             return state;
     }

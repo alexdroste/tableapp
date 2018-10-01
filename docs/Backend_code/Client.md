@@ -8,17 +8,22 @@ Class representing a single client connection.
 * [Client](#client)
     * [new Client(socket, controller, broker)](#new95client95new)
     * _instance_
+        * [.connectTimestamp](#client43connecttimestamp) : <code>number</code>
+        * [.id](#client43id) : <code>number</code>
+        * [.ip](#client43ip) : <code>string</code>
+        * [.userAgent](#client43useragent) : <code>string</code>
+        * [._socket](#client4395socket) : <code>SocketIoConnection</code> ℗
+        * [._controller](#client4395controller) : <code>Controller</code> ℗
+        * [._broker](#client4395broker) : <code>ClientBroker</code> ℗
         * [.activeEventId](#client43activeeventid) : <code>ObjectID</code> &#124; <code>null</code>
         * [.commentsSubscribedForEntryId](#client43commentssubscribedforentryid) : <code>ObjectID</code> &#124; <code>null</code>
         * [.entriesSubscription](#client43entriessubscription)
             * [.listSubscription](#client43entriessubscription46listsubscription) : <code>EntryListSubscription</code> &#124; <code>null</code>
             * [.subscribedIds](#client43entriessubscription46subscribedids) : <code>Array.&lt;ObjectID&gt;</code>
         * [.permissionLevel](#client43permissionlevel) : <code>PermissionLevelEnum</code>
-        * [.userId](#client43userid) : <code>string</code> &#124; <code>null</code>
         * [.subscribedFullEventDict](#client43subscribedfulleventdict) : <code>boolean</code>
-        * [._socket](#client4395socket) : <code>SocketIoConnection</code> ℗
-        * [._controller](#client4395controller) : <code>Controller</code> ℗
-        * [._broker](#client4395broker) : <code>ClientBroker</code> ℗
+        * [.userId](#client43userid) : <code>string</code> &#124; <code>null</code>
+        * [._init()](#client4395init) ℗
         * [._handleDisconnect()](#client4395handledisconnect) ℗
         * [._setupAfterAuthentication(loginData)](#client4395setupafterauthentication) ⇒ <code>Promise</code> ℗
         * [._handleChangeVoteForComment(data, cb)](#client4395handlechangevoteforcomment) ⇒ <code>Promise</code> ℗
@@ -44,6 +49,8 @@ Class representing a single client connection.
         * [._handleLoadImages(data, cb)](#client4395handleloadimages) ⇒ <code>Promise</code> ℗
         * [._handleContinueSession(data, cb)](#client4395handlecontinuesession) ⇒ <code>Promise</code> ℗
         * [._handleLogin(data, cb)](#client4395handlelogin) ⇒ <code>Promise</code> ℗
+        * [._handleLogout(data, cb)](#client4395handlelogout) ℗
+        * [.on(event, requiresAuthentication, requiresActiveEvent, handler)](#client43on)
         * [.emitUpdateCommentDict(commentDict)](#client43emitupdatecommentdict)
         * [.updateComment(entryId, commentId)](#client43updatecomment) ⇒ <code>Promise</code>
         * [.emitUpdateEntries(entryDict, [idList])](#client43emitupdateentries)
@@ -55,6 +62,7 @@ Class representing a single client connection.
         * [.emitUpdateEventScreenshotIds(imageIds)](#client43emitupdateeventscreenshotids)
     * _inner_
         * [~messageAcknowledgementCallback](#client4646messageacknowledgementcallback) : <code>function</code>
+        * [~eventHandler](#client4646eventhandler) : <code>function</code>
 
 <a id="new95client95new"></a>
 
@@ -68,6 +76,51 @@ Creates a Client instance.
 | controller | <code>Controller</code> | controller object containing initialized controllers |
 | broker | <code>ClientBroker</code> | reference to parent ClientBroker instance |
 
+<a id="client43connecttimestamp"></a>
+
+### client.connectTimestamp : <code>number</code>
+Timestamp of connect-event.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
+<a id="client43id"></a>
+
+### client.id : <code>number</code>
+Internal (process-unique) id for a client.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
+<a id="client43ip"></a>
+
+### client.ip : <code>string</code>
+IP-Address of connected client.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
+<a id="client43useragent"></a>
+
+### client.userAgent : <code>string</code>
+User-Agent of connected client.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
+<a id="client4395socket"></a>
+
+### client._socket : <code>SocketIoConnection</code> ℗
+Open socket connection to client.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
+**Access**: private  
+<a id="client4395controller"></a>
+
+### client._controller : <code>Controller</code> ℗
+Controller object containing initialized controllers.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
+**Access**: private  
+<a id="client4395broker"></a>
+
+### client._broker : <code>ClientBroker</code> ℗
+Reference to parent ClientBroker instance that manages this instance.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
+**Access**: private  
 <a id="client43activeeventid"></a>
 
 ### client.activeEventId : <code>ObjectID</code> &#124; <code>null</code>
@@ -112,12 +165,6 @@ Permissionlevel of user for active event.
 Defaults to NOT_A_USER.
 
 **Kind**: instance property of [<code>Client</code>](#client)  
-<a id="client43userid"></a>
-
-### client.userId : <code>string</code> &#124; <code>null</code>
-Id of authenticated user.
-
-**Kind**: instance property of [<code>Client</code>](#client)  
 <a id="client43subscribedfulleventdict"></a>
 
 ### client.subscribedFullEventDict : <code>boolean</code>
@@ -125,26 +172,18 @@ Indicates if client subcribed to full EventDict.
 Defaults to false.
 
 **Kind**: instance property of [<code>Client</code>](#client)  
-<a id="client4395socket"></a>
+<a id="client43userid"></a>
 
-### client._socket : <code>SocketIoConnection</code> ℗
-Open socket connection to client.
-
-**Kind**: instance property of [<code>Client</code>](#client)  
-**Access**: private  
-<a id="client4395controller"></a>
-
-### client._controller : <code>Controller</code> ℗
-Controller object containing initialized controllers.
+### client.userId : <code>string</code> &#124; <code>null</code>
+Id of authenticated user.
 
 **Kind**: instance property of [<code>Client</code>](#client)  
-**Access**: private  
-<a id="client4395broker"></a>
+<a id="client4395init"></a>
 
-### client._broker : <code>ClientBroker</code> ℗
-Reference to parent ClientBroker instance that manages this instance.
+### client._init() ℗
+Initializes / resets client-state properties.
 
-**Kind**: instance property of [<code>Client</code>](#client)  
+**Kind**: instance method of [<code>Client</code>](#client)  
 **Access**: private  
 <a id="client4395handledisconnect"></a>
 
@@ -498,6 +537,33 @@ Eventhandler for login request.
 | data.password | <code>string</code> | password of user |
 | cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
+<a id="client4395handlelogout"></a>
+
+### client._handleLogout(data, cb) ℗
+Eventhandler for logout request.
+
+**Kind**: instance method of [<code>Client</code>](#client)  
+**Access**: private  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>object</code> | empty object |
+| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
+
+<a id="client43on"></a>
+
+### client.on(event, requiresAuthentication, requiresActiveEvent, handler)
+Registers an event-handler. Calls event handler with current context (this).
+
+**Kind**: instance method of [<code>Client</code>](#client)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>string</code> | event-identifier |
+| requiresAuthentication | <code>boolean</code> | true if event-handler requries authentication |
+| requiresActiveEvent | <code>boolean</code> | true if event-handler requires an event to be active |
+| handler | [<code>eventHandler</code>](#client4646eventhandler) | event-handler |
+
 <a id="client43emitupdatecommentdict"></a>
 
 ### client.emitUpdateCommentDict(commentDict)
@@ -617,4 +683,16 @@ Socket message callback function.
 | --- | --- | --- |
 | error | <code>\*</code> | error object, message / null or undefined for "no error" |
 | result | <code>\*</code> | data to send back to client |
+
+<a id="client4646eventhandler"></a>
+
+### Client~eventHandler : <code>function</code>
+Handler for client-event.
+
+**Kind**: inner typedef of [<code>Client</code>](#client)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>object</code> | event-data |
+| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 

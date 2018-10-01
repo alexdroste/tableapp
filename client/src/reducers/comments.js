@@ -72,6 +72,7 @@ export const commentDict = (state = initialState.commentDict, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.commentDict;
         default:
             return state;
@@ -90,6 +91,7 @@ export const initialLoadPending = (state = initialState.initialLoadPending, acti
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.initialLoadPending;
         default:
             return state;
@@ -107,6 +109,7 @@ export const subscribedEntryId = (state = initialState.subscribedEntryId, action
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.subscribedEntryId;
         default:
             return state;

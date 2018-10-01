@@ -61,6 +61,7 @@ const imageDict = (state = initialState.imageDict, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.imageDict;
         default:
             return state;
@@ -91,6 +92,7 @@ const thumbnailDict = (state = initialState.thumbnailDict, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_REQUEST:
         case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
             return initialState.thumbnailDict;
         default:
             return state;

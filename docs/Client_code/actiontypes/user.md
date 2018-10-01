@@ -34,3 +34,21 @@ user actiontype: login
 user actiontype: login
 
 **Kind**: global constant  
+<a id="logout95request"></a>
+
+## LOGOUT_REQUEST
+user actiontype: logout
+
+**Kind**: global constant  
+<a id="logout95success"></a>
+
+## LOGOUT_SUCCESS
+user actiontype: logout
+
+**Kind**: global constant  
+<a id="logout95failure"></a>
+
+## LOGOUT_FAILURE
+user actiontype: logout
+
+**Kind**: global constant  

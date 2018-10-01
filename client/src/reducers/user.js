@@ -71,6 +71,8 @@ export const user = (state = initialState, action) => {
                 id: action.result.id,
                 name: action.result.name,
             }
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState;
         default:
             return state;
     }

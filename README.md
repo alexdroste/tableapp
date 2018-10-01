@@ -18,6 +18,7 @@
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
 - [ ] opt-in/opt-out
+- [x] sign-out
 
 
 ### normal priority

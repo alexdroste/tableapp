@@ -79,7 +79,7 @@ Change a users voting for a specific comment.
 **Returns**: <code>Promise</code> - indicates success  
 **Throws**:
 
-- <code>Error</code> with message: 'commentId not found' with statusCode NOT_FOUND if supplied commentId (for entryId/eventId) does not exist
+- <code>Error</code> with message: 'commentId not found' with code NOT_FOUND if supplied commentId (for entryId/eventId) does not exist
 
 
 | Param | Type | Description |

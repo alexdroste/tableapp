@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import * as userActions from '../actions/user';
 import { ActiveEventQrCodeModal } from './ActiveEventQrCodeModal';
 import { ActionSheet } from '../components/ActionSheet';
 
@@ -10,6 +12,7 @@ class MainNavActionSheet extends React.Component {
     static get propTypes() {
         return {
             onClose: PropTypes.func.isRequired,
+            userActions: PropTypes.object.isRequired,
         };
     };
 
@@ -44,6 +47,7 @@ class MainNavActionSheet extends React.Component {
             {
                 name: 'Ausloggen',
                 icon: 'sign out',
+                onClick: this._handleSignOutClick,
             },
         ];
     }
@@ -66,6 +70,12 @@ class MainNavActionSheet extends React.Component {
         this.setState({
             isActiveEventQrCodeModalOpen: true,
         });
+    };
+
+
+    _handleSignOutClick = (e) => {
+        this.props.userActions.logout();
+        this.props.history.push('/');
     };
 
 
@@ -105,7 +115,7 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // TODO
+        userActions: bindActionCreators(userActions, dispatch),
     };
 }
 
