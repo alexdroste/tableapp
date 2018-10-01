@@ -503,9 +503,9 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   integrity sha1-PXz0Rk22RG6mRL9LOVB/mFEAjo4=
 
 console-stamp@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/console-stamp/-/console-stamp-0.2.6.tgz#9aa21b945b788d639ce3d1f9b1cd1c5a7ecc96c0"
-  integrity sha512-7l2MJ93tXpCWh9n5rRJHu7tNMxa9SPx8pba8kBJDROOfMFVBHPpqv141lkhcnLEYMC5npvrywH7gZ5DzYE+cSg==
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/console-stamp/-/console-stamp-0.2.7.tgz#f3f1a0bd874a6cec3506940ee1088d1da0821395"
+  integrity sha512-4QGcEgXSDnErHxX8NLtywyjSRaS9IUV7gPAqYKtIvDM0DYuZErcVQgcKrtJGIK9W821HwqYqaA3FXU1OlgMiIQ==
   dependencies:
     chalk "^1.1.1"
     dateformat "^1.0.11"
@@ -1850,9 +1850,9 @@ mv@~2:
     rimraf "~2.4.0"
 
 nan@^2.10.0, nan@^2.9.2:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.0.tgz#574e360e4d954ab16966ec102c0c049fd961a099"
-  integrity sha512-F4miItu2rGnV2ySkXOQoA8FKz/SR2Q2sWP0sbTxNxz/tuokeC8WxOhPMcwi0qIyGtVn/rrSeLbvVkznqCdwYnw==
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
+  integrity sha512-iji6k87OSXa0CcrLl9z+ZiYSuR2o+c0bGuNmXdrhTQTakxytAFsC56SArGYoiHlJlFoHSnvmhpceZJaXkVuOtA==
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -2628,9 +2628,9 @@ sparse-bitfield@^3.0.3:
     memory-pager "^1.0.2"
 
 spdx-correct@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/spdx-correct/-/spdx-correct-3.0.0.tgz#05a5b4d7153a195bc92c3c425b69f3b2a9524c82"
-  integrity sha512-N19o9z5cEyc8yQQPukRCZ9EUmb4HUpnrmaL/fxS2pBo2jbfcFRVuFZ/oFC+vZz0MNNk0h80iMn5/S6qGZOL5+g==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/spdx-correct/-/spdx-correct-3.0.1.tgz#434434ff9d1726b4d9f4219d1004813d80639e30"
+  integrity sha512-hxSPZbRZvSDuOvADntOElzJpenIR7wXJkuoUcUtS0erbgt2fgeaoPIYretfKpslMhfFDY4k0MZ2F5CUzhBsSvQ==
   dependencies:
     spdx-expression-parse "^3.0.0"
     spdx-license-ids "^3.0.0"
