@@ -9,8 +9,8 @@ import { Button, Icon, Menu, Modal, Rail, Responsive, Sticky } from 'semantic-ui
 import { getActiveEventId, getActiveEventName, getActiveEventUserPermissionLevel } from '../reducers/events'; 
 import { isDesktopApp, isWindowAlwaysOnTop, isBroadcastActive } from '../reducers/desktopApp';
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
-import { NavMainModal } from './NavMainModal';
 import { ActiveEventQrCodeModal } from './ActiveEventQrCodeModal';
+import { MainNavActionSheet } from './MainNavActionSheet';
 
 
 const FixedTop = styled.div`
@@ -268,6 +268,7 @@ class NavBar extends React.Component {
                                     {activeEventName}
                                     {'\u00A0' /* &nbsp; */}
                                     <Icon name="chevron down"/>
+                                    {/* <Icon name="ellipsis horizontal"/> */}
                                 </MenuItemTitle>
                             }
                             {!hasGoBack && isDesktopApp && canBroadcast && 
@@ -322,7 +323,7 @@ class NavBar extends React.Component {
                     </CustomRail>
                 }
                 {navMainModalOpen &&
-                    <NavMainModal
+                    <MainNavActionSheet
                         onClose={this._handleNavMainModalClose}
                     />
                 }
