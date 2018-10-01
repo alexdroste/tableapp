@@ -50,7 +50,7 @@ const QRCodeWrapperInner = styled.div`
  * @param {string} props.activeEventId id of event (injected by redux)
  * @param {string} props.activeEventName name/title of event (injected by redux)
  * @param {ActiveEventQrCodeModal~onCloseCallback} props.onClose callback if user clicked on close
- * @param {object} props.trigger trigger component
+ * @param {object} [props.trigger] trigger component
  */
 class ActiveEventQrCodeModal extends React.Component {
     static get propTypes() {
@@ -58,7 +58,7 @@ class ActiveEventQrCodeModal extends React.Component {
             activeEventId: PropTypes.string.isRequired,
             activeEventName: PropTypes.string.isRequired,
             onClose: PropTypes.func.isRequired,
-            trigger: PropTypes.object.isRequired,
+            trigger: PropTypes.object,
         };
     };
 
@@ -66,28 +66,19 @@ class ActiveEventQrCodeModal extends React.Component {
         return {
         };
     };
-
-
-    /**
-     * Handles close click.
-     * @function
-     * @private
-     * @param {Event} e
-     */
-    _handleCloseClick = (e) => {
-        this.props.onClose(e);
-    };
     
 
     render() {
-        const {activeEventId, activeEventName, trigger} = this.props;
+        const {activeEventId, activeEventName, onClose, trigger} = this.props;
         const joinUrl = config.baseUrl + 'join/' + activeEventId;
 
         return (
             <Modal 
                 trigger={trigger}
+                open={!trigger}
                 closeIcon
                 closeOnDocumentClick={true}
+                onClose={onClose}
             >
                 <Modal.Header>
                     {activeEventName}
