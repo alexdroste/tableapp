@@ -6,8 +6,8 @@ import { bindActionCreators } from 'redux';
 import * as commentsActions from '../actions/comments';
 import * as entriesActions from '../actions/entries';
 import { isInitialLoadPending, getCommentsView } from '../reducers/comments';
-import {Link} from 'react-router-dom';
-import {EntryCard} from './EntryCard';
+import { Link } from 'react-router-dom';
+import { EntryCardContainer } from './EntryCardContainer';
 import { Comment, Header, Message, Dropdown, Button, Responsive } from 'semantic-ui-react';
 import { CommentCard } from './CommentCard';
 import { FloatingActionButton } from '../components/FloatingActionButton';
@@ -158,7 +158,7 @@ class CommentsView extends React.Component {
                         to={`/entries/${entryId}/0/new`}
                     />
                 </Responsive>
-                <EntryCard 
+                <EntryCardContainer 
                     entryId={entryId}
                     noLink
                 />

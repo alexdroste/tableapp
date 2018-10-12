@@ -1,16 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as entriesActions from '../actions/entries';
-import { getEntry } from '../reducers/entries';
-import { Link } from 'react-router-dom';
 import { Card, Label, Icon, Loader, Dimmer, Image, Button, Responsive } from 'semantic-ui-react';
 import { UpDownVote } from '../components/UpDownVote';
-import { SortedUserRolesByPriority } from './SortedUserRolesByPriority';
+import { SortedUserRolesByPriority } from '../containers/SortedUserRolesByPriority';
 import { Content } from '../components/Content';
-import { Thumbnails } from './Thumbnails';
+import { Thumbnails } from '../containers/Thumbnails';
 
 
 const CustomCard = styled(Card)`
@@ -58,6 +53,7 @@ const ControlIconButton = styled(Button).attrs({
     size: "small"
 })`
     &&&&&&&& {
+        white-space: nowrap;
         padding-left: 3px;
         padding-right: 3px;
         box-shadow: none !important;
@@ -69,41 +65,33 @@ const ControlIconButton = styled(Button).attrs({
 `;
 
 
-class EntryCard extends React.Component {
+export class EntryCard extends React.PureComponent {
     /**
-     * @property {object} entriesActions object containing entries-actions
-     * @property {String} [entry] entry object (injected by redux via id)
-     * @property {String} [entryId] id of entry, if unset a Loader will be rendered
-     * @property {String} [noLink=false] set true to disable redirect to comments-page on click
+     * @property {object} [entry] entry object (injected by redux via id)
+     * @todo
      */
     static get propTypes() {
         return {
-            entriesActions: PropTypes.object.isRequired,
-            entry: PropTypes.object,
-            entryId: PropTypes.string,
-            noLink: PropTypes.bool
+            entry: PropTypes.shape({
+                authorId: PropTypes.string,
+                commentAttendingUserIds: PropTypes.arrayOf(PropTypes.string),
+                commentCount: PropTypes.number.isRequired,
+                content: PropTypes.string,
+                imageIds: PropTypes.arrayOf(PropTypes.string),
+                liveAnswered: PropTypes.bool,
+                score: PropTypes.number.isRequired,
+                timestamp: PropTypes.number,
+                vote: PropTypes.number,
+            }),
+            onCommentClick: PropTypes.func.isRequired,
+            onContentClick: PropTypes.func.isRequired,
+            onMoreClick: PropTypes.func.isRequired,
+            onVoteChange: PropTypes.func.isRequired,
         };
     };
 
     static get defaultProps() {
-        return {
-            noLink: false,
-        };
-    };
-
-
-    _handleBookmarkToggle = () => {
-        this.props.entriesActions.changeBookmark(this.props.entryId, !this.props.entry.bookmark);
-    };
-
-
-    _handleFollowToggle = () => {
-        this.props.entriesActions.changeFollow(this.props.entryId, !this.props.entry.follow);
-    };
-
-
-    _handleVoteChanged = (vote) => {
-        this.props.entriesActions.changeVote(this.props.entryId, vote);
+        return {};
     };
 
 
@@ -121,17 +109,17 @@ class EntryCard extends React.Component {
                 </Dimmer.Dimmable>
             );
 
-        const {entryId, noLink} = this.props;
-        const {authorId, bookmark, commentAttendingUserIds, commentCount, content, 
-            follow, imageIds, liveAnswered, score, timestamp, vote } = this.props.entry;
+        const { onContentClick, onCommentClick, onMoreClick, onVoteChange } = this.props;
+
+        const { authorId, commentAttendingUserIds, commentCount, content, 
+            imageIds, liveAnswered, score, timestamp, vote } = this.props.entry;
 
         return (
             <CustomCard 
                 fluid
             >
                 <Card.Content
-                    as={noLink ? undefined : Link}
-                    to={noLink ? undefined : "/entries/" + entryId}
+                    onClick={onContentClick}
                 >
                     <Card.Description>
                         <Content
@@ -166,26 +154,23 @@ class EntryCard extends React.Component {
                 </Card.Content>
                 <CardContentSubControls>
                     <ControlItem>
-                        <ControlIconButton 
-                            icon="bookmark" 
-                            content={bookmark ? "Markiert" : "Markieren"} 
-                            color={bookmark ? "blue" : undefined}
-                            onClick={this._handleBookmarkToggle}                            
-                        />
-                    </ControlItem>
-                    <ControlItem >
-                        <ControlIconButton 
-                            icon="bell"
-                            content={follow ? "Folgend" : "Folgen"}
-                            color={follow ? "blue" : undefined}
-                            onClick={this._handleFollowToggle}                                                  
-                        />
-                    </ControlItem>
-                    <ControlItem >
                         <UpDownVote
-                            onVoteChange={this._handleVoteChanged}
+                            onVoteChange={onVoteChange}
                             score={score}
                             vote={vote}
+                        />
+                    </ControlItem>
+                    <ControlItem>
+                        <ControlIconButton 
+                            icon='ellipsis horizontal' 
+                            onClick={onMoreClick}                            
+                        />
+                    </ControlItem>
+                    <ControlItem>
+                        <ControlIconButton 
+                            icon='comment'
+                            content='Kommentieren'
+                            onClick={onCommentClick}                                                  
                         />
                     </ControlItem>
                 </CardContentSubControls>
@@ -193,21 +178,3 @@ class EntryCard extends React.Component {
         );
     }
 }
-
-
-const mapStateToProps = (state, props) => {
-    return {
-        entry: getEntry(state.entries, props.entryId),
-    }
-};
-
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        entriesActions: bindActionCreators(entriesActions, dispatch),        
-    };
-}
-
-
-const ConnectedEntryCard = connect(mapStateToProps, mapDispatchToProps)(EntryCard);
-export { ConnectedEntryCard as EntryCard };

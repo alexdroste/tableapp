@@ -9,7 +9,7 @@ import * as entriesActions from '../actions/entries';
 import { getIdList, getListType, hasMoreEntriesToLoad, isListSubscribed, EntryListTypeEnum, hasListOnlyBookmarked } from '../reducers/entries';
 import { Header, Dropdown, Message, Button, Responsive } from 'semantic-ui-react';
 import { AutoSizer, List, WindowScroller } from 'react-virtualized';
-import { EntryCard } from './EntryCard';
+import { EntryCardContainer } from './EntryCardContainer';
 import { FloatingActionButton } from '../components/FloatingActionButton';
 import { UserPostForm } from './UserPostForm';
 import { NavBar } from './NavBar';
@@ -186,7 +186,7 @@ class EntriesView extends React.Component {
                 key={key}
                 style={style}                
             >
-                <EntryCard
+                <EntryCardContainer
                     entryId={entryId}
                 />
             </DynamicRow>
