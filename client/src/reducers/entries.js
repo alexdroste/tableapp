@@ -16,6 +16,7 @@ import * as utils from '../utils';
  * @property {boolean} follow indicates if user is following entry-updates
  * @property {Array<string>} imageIds list of (image-)ids of attached images
  * @property {boolean} liveAnswered indicates if entry was discussed in live situation
+ * @property {boolean} own indicates if user owns entry
  * @property {number} score score of the entry
  * @property {number} timestamp unix-timestamp in ms indicating submission date
  * @property {number} vote indicates user vote: 0 user did not vote, +1 user upvoted, -1 user downvoted entry

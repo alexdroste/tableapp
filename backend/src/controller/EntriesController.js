@@ -18,7 +18,8 @@ class EntriesController {
      * @property {string} content text-content of entry
      * @property {boolean} follow indicates if user is following entry-updates
      * @property {Array<string>} imageIds list of (image-)ids of attached images
-     * @property {boolean} liveAnswered indicates if entry was discussed in live situation
+     * @property {boolean} liveAnswered indicates if entry was discussed in live situation 
+     * @property {boolean} own indicates if user owns entry
      * @property {number} score score of the entry
      * @property {number} timestamp unix-timestamp in ms indicating submission date
      * @property {number} vote indicates user vote: 0 user did not vote, +1 user upvoted, -1 user downvoted entry
@@ -301,6 +302,7 @@ class EntriesController {
                 follow: { $in: [ userId, "$following" ] },
                 imageIds: 1,
                 liveAnswered: 1,
+                own: { $eq:  [ userId, "$postedById" ] },
                 score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
                 timestamp: 1,
                 vote: { $cond: [ { $in: [ userId, "$upvotes" ] }, 1, { 
