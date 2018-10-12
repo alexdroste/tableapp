@@ -89,7 +89,8 @@ class LDAPConnection {
                 resolve();
             });
             this._client.once('error', (e) => {
-                console.error('ldap connect error:', e);
+                // console.error('ldap connect error:', e);
+                e.message = "LDAP connect error: " + e.message;
                 reject(e);
             });
         });
