@@ -10,7 +10,7 @@ import * as userActionTypes from '../actiontypes/user';
  * @property {(string|null)} authorId user-id of author, null if comment was posted anonymously
  * @property {string} content text-content of comment
  * @property {Array<string>} imageIds list of (image-)ids of attached images
- * @property {boolean} own indicates if user owns comment
+ * @property {boolean} isOwn indicates if user owns comment
  * @property {(string|null)} parentId (comment-)id of parent comment (id of comment this comment is subordinate), null if comment is a top-level comment 
  * @property {number} score score of the comment
  * @property {number} timestamp unix-timestamp in ms indicating submission date

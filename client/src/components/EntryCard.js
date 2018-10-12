@@ -78,7 +78,7 @@ export class EntryCard extends React.PureComponent {
                 commentCount: PropTypes.number.isRequired,
                 content: PropTypes.string,
                 imageIds: PropTypes.arrayOf(PropTypes.string),
-                liveAnswered: PropTypes.bool,
+                isLiveAnswered: PropTypes.bool,
                 score: PropTypes.number.isRequired,
                 timestamp: PropTypes.number,
                 vote: PropTypes.number,
@@ -112,7 +112,7 @@ export class EntryCard extends React.PureComponent {
         const { onContentClick, onCommentClick, onMoreClick, onVoteChange } = this.props;
 
         const { authorId, commentAttendingUserIds, commentCount, content, 
-            imageIds, liveAnswered, score, timestamp, vote } = this.props.entry;
+            imageIds, isLiveAnswered, score, timestamp, vote } = this.props.entry;
 
         return (
             <CustomCard 
@@ -141,7 +141,7 @@ export class EntryCard extends React.PureComponent {
                                     />
                                 }
                             </FlexStretch>
-                            {liveAnswered &&
+                            {isLiveAnswered &&
                                 <Label 
                                     color="blue"
                                     basic

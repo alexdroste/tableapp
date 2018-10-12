@@ -6,9 +6,9 @@ import { ActionSheet } from './ActionSheet';
 export class EntryCardActionSheet extends React.PureComponent {
     static get propTypes() {
         return {
-            bookmark: PropTypes.bool.isRequired,
             canManageEntry: PropTypes.bool.isRequired,
-            follow: PropTypes.bool.isRequired,
+            isBookmarked: PropTypes.bool.isRequired,
+            isFollowing: PropTypes.bool.isRequired,
             isOpen: PropTypes.bool.isRequired,
             onBookmarkToggle: PropTypes.func.isRequired,
             onClose: PropTypes.func.isRequired,
@@ -24,19 +24,19 @@ export class EntryCardActionSheet extends React.PureComponent {
 
 
     render() {
-        const { bookmark, canManageEntry, follow, isOpen, onBookmarkToggle, 
+        const { canManageEntry, isBookmarked, isFollowing, isOpen, onBookmarkToggle, 
             onClose, onDeleteClick, onEditClick, onFollowToggle } = this.props;
 
         const actions = [
             {
-                color: bookmark ? 'blue' : null,
-                name: bookmark ? 'De-Markieren (Lesezeichen entfernen)' : 'Markieren (Lesezeichen)',
+                color: isBookmarked ? 'blue' : null,
+                name: isBookmarked ? 'De-Markieren (Lesezeichen entfernen)' : 'Markieren (Lesezeichen)',
                 icon: 'bookmark',
                 onClick: onBookmarkToggle,
             },
             { 
-                color: follow ? 'blue' : null,
-                name: follow ? 'Benachrichtigungen deaktivieren' : 'Benachrichtigungen aktivieren',
+                color: isFollowing ? 'blue' : null,
+                name: isFollowing ? 'Benachrichtigungen deaktivieren' : 'Benachrichtigungen aktivieren',
                 icon: 'bell',
                 onClick: onFollowToggle,
             },

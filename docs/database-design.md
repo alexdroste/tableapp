@@ -35,20 +35,20 @@ A single document has the following properties:
 
 A single document has the following properties:
 
-| Property     | Type                   | Description                                                  |
-| ------------ | ---------------------- | ------------------------------------------------------------ |
-| _id          | `ObjectID`             | id of entry                                                  |
-| authorId     | `string` &#124; `null` | id of user, null if entry was posted anonymously             |
-| bookmarks    | `Array<ObjectID>`      | array of userIds that bookmarked the entry                   |
-| content      | `string`               | text content                                                 |
-| downvotes    | `Array<ObjectID>`      | array of userIds that downvoted                              |
-| eventId      | `ObjectID`             | id of related event                                          |
-| following    | `Array<ObjectID>`      | array of userIds that follow the entry                       |
-| imageIds     | `Array<ObjectID>`      | array of imageIds (of attached images)                       |
-| liveAnswered | `boolean`              | indicates if entry was discussed in live situation (not used atm) |
-| postedById   | `string`               | id of user                                                   |
-| timestamp    | `number`               | timestamp of creation                                        |
-| upvotes      | `Array<ObjectID>`      | array of userIds that upvoted                                |
+| Property       | Type                   | Description                                                  |
+| -------------- | ---------------------- | ------------------------------------------------------------ |
+| _id            | `ObjectID`             | id of entry                                                  |
+| authorId       | `string` &#124; `null` | id of user, null if entry was posted anonymously             |
+| bookmarks      | `Array<ObjectID>`      | array of userIds that bookmarked the entry                   |
+| content        | `string`               | text content                                                 |
+| downvotes      | `Array<ObjectID>`      | array of userIds that downvoted                              |
+| eventId        | `ObjectID`             | id of related event                                          |
+| following      | `Array<ObjectID>`      | array of userIds that follow the entry                       |
+| imageIds       | `Array<ObjectID>`      | array of imageIds (of attached images)                       |
+| isLiveAnswered | `boolean`              | indicates if entry was discussed in live situation (not used atm) |
+| postedById     | `string`               | id of user                                                   |
+| timestamp      | `number`               | timestamp of creation                                        |
+| upvotes        | `Array<ObjectID>`      | array of userIds that upvoted                                |
 
 ## events
 

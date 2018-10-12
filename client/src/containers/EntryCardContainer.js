@@ -59,7 +59,7 @@ class EntryCardContainer extends React.Component {
 
 
     _handleBookmarkToggle = () => {
-        this.props.entriesActions.changeBookmark(this.props.entryId, !this.props.entry.bookmark);
+        this.props.entriesActions.changeBookmark(this.props.entryId, !this.props.entry.isBookmarked);
         this.setState({
             isActionSheetOpen: false,
         });
@@ -94,7 +94,7 @@ class EntryCardContainer extends React.Component {
 
 
     _handleFollowToggle = () => {
-        this.props.entriesActions.changeFollow(this.props.entryId, !this.props.entry.follow);
+        this.props.entriesActions.changeFollow(this.props.entryId, !this.props.entry.isFollowing);
         this.setState({
             isActionSheetOpen: false,
         });
@@ -119,7 +119,7 @@ class EntryCardContainer extends React.Component {
 
         let canManageEntry = activeEventUserPermissionLevel >=PermissionLevelEnum.MODERATOR;
         if (entry) { 
-            canManageEntry = canManageEntry || entry.own;
+            canManageEntry = canManageEntry || entry.isOwn;
         }
         
         return (
@@ -132,9 +132,9 @@ class EntryCardContainer extends React.Component {
                     onVoteChange={this._handleVoteChange}
                 />
                 <EntryCardActionSheet
-                    bookmark={entry && entry.bookmark}
                     canManageEntry={canManageEntry}
-                    follow={entry && entry.follow}
+                    isBookmarked={entry && entry.isBookmarked}
+                    isFollowing={entry && entry.isFollowing}
                     isOpen={isActionSheetOpen}
                     onBookmarkToggle={this._handleBookmarkToggle}
                     onClose={this._handleActionSheetClose}

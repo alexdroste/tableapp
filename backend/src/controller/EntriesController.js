@@ -12,14 +12,14 @@ class EntriesController {
      * Containing non-general entry infos for a single user.
      * @typedef {object} EntriesController~Entry
      * @property {(string|null)} authorId user-id of author, null if entry was posted anonymously
-     * @property {boolean} bookmark indicates if user bookmarked entry
      * @property {Array<string>} commentAttendingUserIds list of user-ids that attend discussion (comment-section)
      * @property {number} commentCount count of comments
      * @property {string} content text-content of entry
-     * @property {boolean} follow indicates if user is following entry-updates
      * @property {Array<string>} imageIds list of (image-)ids of attached images
-     * @property {boolean} liveAnswered indicates if entry was discussed in live situation 
-     * @property {boolean} own indicates if user owns entry
+     * @property {boolean} isBookmarked indicates if user bookmarked entry
+     * @property {boolean} isFollowing indicates if user is following entry-updates
+     * @property {boolean} isLiveAnswered indicates if entry was discussed in live situation 
+     * @property {boolean} isOwn indicates if user owns entry
      * @property {number} score score of the entry
      * @property {number} timestamp unix-timestamp in ms indicating submission date
      * @property {number} vote indicates user vote: 0 user did not vote, +1 user upvoted, -1 user downvoted entry
@@ -297,12 +297,12 @@ class EntriesController {
             { $match: { eventId, _id: { $in: entryIds } } },
             { $project: {
                 authorId: 1, 
-                bookmark: { $in: [ userId, "$bookmarks" ] },
                 content: 1,
-                follow: { $in: [ userId, "$following" ] },
                 imageIds: 1,
-                liveAnswered: 1,
-                own: { $eq:  [ userId, "$postedById" ] },
+                isBookmarked: { $in: [ userId, "$bookmarks" ] },
+                isFollowing: { $in: [ userId, "$following" ] },
+                isLiveAnswered: 1,
+                isOwn: { $eq:  [ userId, "$postedById" ] },
                 score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
                 timestamp: 1,
                 vote: { $cond: [ { $in: [ userId, "$upvotes" ] }, 1, { 
@@ -360,14 +360,14 @@ class EntriesController {
             { $match: { eventId, _id: entryId } },
             { $project: {
                 _id: 0,
-                bookmark: { $in: [ userId, "$bookmarks" ] },
+                isBookmarked: { $in: [ userId, "$bookmarks" ] },
             } },
         ]).toArray();
         
         if (entriesArr.length < 1)
             throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
         
-        return entriesArr[0].bookmark;
+        return entriesArr[0].isBookmarked;
     }
 
 
@@ -408,7 +408,7 @@ class EntriesController {
             eventId,
             following: [],
             imageIds,
-            liveAnswered: false,
+            isLiveAnswered: false,
             postedById: userId,
             timestamp: Date.now(),
             upvotes: [],

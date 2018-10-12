@@ -9,14 +9,14 @@ import * as utils from '../utils';
  * An entry object.
  * @typedef {object} Entry
  * @property {(string|null)} authorId user-id of author, null if entry was posted anonymously
- * @property {boolean} bookmark indicates if user bookmarked entry
  * @property {Array<string>} commentAttendingUserIds list of user-ids that attend discussion (comment-section)
  * @property {number} commentCount count of comments
  * @property {string} content text-content of entry
- * @property {boolean} follow indicates if user is following entry-updates
  * @property {Array<string>} imageIds list of (image-)ids of attached images
- * @property {boolean} liveAnswered indicates if entry was discussed in live situation
- * @property {boolean} own indicates if user owns entry
+ * @property {boolean} isBookmarked indicates if user bookmarked entry
+ * @property {boolean} isFollowing indicates if user is following entry-updates
+ * @property {boolean} isLiveAnswered indicates if entry was discussed in live situation
+ * @property {boolean} isOwn indicates if user owns entry
  * @property {number} score score of the entry
  * @property {number} timestamp unix-timestamp in ms indicating submission date
  * @property {number} vote indicates user vote: 0 user did not vote, +1 user upvoted, -1 user downvoted entry
