@@ -1,17 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal, List, Transition } from 'semantic-ui-react';
+import styled from 'styled-components';
+import { Button, Modal, List, TransitionablePortal } from 'semantic-ui-react';
 
 
-export class ActionSheet extends React.Component {
+const ListIconPaddingFix = styled(List.Icon)`
+    &&&&& {
+        padding-right: 0;
+    }
+`;
+
+
+export class ActionSheet extends React.PureComponent {
     static get propTypes() {
         return {
             actions: PropTypes.arrayOf(PropTypes.shape({
+                color: PropTypes.string,
                 name: PropTypes.string.isRequired,
-                icon: PropTypes.string,
-                onClick: PropTypes.func,
+                icon: PropTypes.string.isRequired,
+                onClick: PropTypes.func.isRequired,
             })),
             isCentered: PropTypes.bool,
+            isOpen: PropTypes.bool.isRequired,
             onClose: PropTypes.func.isRequired,
         };
     };
@@ -24,15 +34,15 @@ export class ActionSheet extends React.Component {
 
 
     render() {
-        const { actions, isCentered, onClose } = this.props;
+        const { actions, isCentered, isOpen, onClose } = this.props;
 
         return (
-            <Transition
-                animation='fade up'
-                transitionOnMount={true}
+            <TransitionablePortal
+                transition={{ animation: 'fade up', duration: 300 }}
+                open={isOpen}
             >
                 <Modal
-                    open
+                    open={true}
                     size="mini"
                     onClose={onClose}
                     centered={isCentered}
@@ -45,11 +55,18 @@ export class ActionSheet extends React.Component {
                         >
                             {actions.map(action =>
                                 <List.Item
-                                    header={action.name}
-                                    icon={action.icon}
                                     onClick={action.onClick}
-                                    disabled={!action.onClick}
-                                />
+                                >
+                                    <ListIconPaddingFix
+                                        color={action.color}
+                                        name={action.icon}
+                                        verticalAlign='middle'
+                                    />
+                                    <List.Content
+                                        color={action.color}
+                                        header={action.name}
+                                    />
+                                </List.Item>
                             )}
                         </List>
                         <Button
@@ -59,7 +76,7 @@ export class ActionSheet extends React.Component {
                         />
                     </Modal.Content>
                 </Modal>
-            </Transition>
+            </TransitionablePortal>
         );
     }
 }
