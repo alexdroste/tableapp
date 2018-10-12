@@ -11,6 +11,7 @@ import { ActionSheet } from '../components/ActionSheet';
 class MainNavActionSheet extends React.Component {
     static get propTypes() {
         return {
+            history: PropTypes.object.isRequired,
             onClose: PropTypes.func.isRequired,
             userActions: PropTypes.object.isRequired,
         };
