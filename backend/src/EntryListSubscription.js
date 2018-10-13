@@ -10,6 +10,7 @@ class EntryListSubscription {
      * Represents a search filter.
      * @typedef {object} EntryListSubscription~SearchFilter
      * @property {(string|undefined)} bookmarkForUser id of user, only include entries if bookmarked by this user 
+     * @property {boolean} excludeDeletedEntries indicates whether deleted entries should be ignored
      * @property {Array<ObjectID>} excludedEntryIds entries to exclude 
      * @property {number} maxScore maximum score to include 
      * @property {number} maxTimestamp maximum (entry-)timestamp to include
@@ -115,6 +116,9 @@ class EntryListSubscription {
                 this._sort = { score: -1 };
                 break;
         }
+        // exlcude deleted entries by default 
+        // TODO include them in special cases (e.g. mod wants to load deleted entries)
+        this._filter.excludeDeletedEntries = true;
         if (this._onlyBookmarked)
             this._filter.bookmarkForUser = this._userId;
     }
@@ -240,9 +244,15 @@ class EntryListSubscription {
      * @returns {Promise<boolean>} true indicates update merged, false update ignored/not relevant for this subscription
      */
     async updateEntry(entryInfo) {
-        // TODO handle entry deleted
-
         const foundEntry = this._list.find((cur) => cur._id.equals(entryInfo._id));
+
+        if (entryInfo.isDeleted && this._filter.excludeDeletedEntries) {
+            if (!foundEntry)
+                return false;
+            // entry deletion triggered update (was in list before)
+            this._list = this._list.filter((cur) => !cur._id.equals(entryInfo._id)); 
+            return true;
+        }
 
         if (this._onlyBookmarked) {
             const bookmarked  = await this._entriesController.hasUserBookmarkSetForEntry(

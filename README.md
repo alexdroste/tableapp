@@ -9,7 +9,8 @@
 
 ### high priority / before use
 
-- [ ] entry moderation options (edit, delete)
+- [x] moderation options: delete entry
+- [ ] moderation options: delete comment
 - [ ] screencapture module for windows / desktop-app for windows
 - [ ] fix: screenshots of active window not working sometimes => allow screenshots per screen (& maybe screenshot preview for presenter)
 - [ ] ssl
@@ -18,14 +19,18 @@
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
 - [ ] opt-in/opt-out
+- [ ] save all screenshots, link them in db
 - [x] sign-out
 
 
 ### normal priority
 
+- [ ] moderation options: edit entry
+- [ ] moderation options: edit comment
 - [ ] feed sorting / filter options
 - [ ] notifications (in-app/email)
 - [ ] option to add tag to entry -> "discussed in lecture"
+- [ ] better routing/links (entry, comment) => ability for permalinks
 - [ ] improve (really bad atm) container/presentational component split (https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
 - [ ] add documentation for components/containers
 - [ ] max character limit for comments/entries

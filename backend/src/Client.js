@@ -83,6 +83,7 @@ class Client {
         this.on('entries/changeBookmark',               true,   true,   this._handleChangeBookmark);
         this.on('entries/changeFollow',                 true,   true,   this._handleChangeFollow);
         this.on('entries/changeVote',                   true,   true,   this._handleChangeVote);
+        this.on('entries/deleteEntry',                  true,   true,   this._handleDeleteEntry);
         this.on('entries/loadMoreEntries',              true,   true,   this._handleLoadMoreEntries);
         this.on('entries/postEntry',                    true,   true,   this._handlePostEntry);
         this.on('entries/subscribeEntries',             true,   true,   this._handleSubscribeEntries);
@@ -396,6 +397,29 @@ class Client {
             cb(null);
         } catch (err) {
             cb(utils.createError('change user vote for entry failed', err.code));
+            throw err;
+        }
+    }
+
+    
+    /**
+     * Eventhandler for entry deletion. 
+     * @async
+     * @private
+     * @function
+     * @param {object} data 
+     * @param {string} data.entryId entryId (as string)
+     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
+     * @returns {Promise} 
+     */
+    async _handleDeleteEntry(data, cb) {
+        try {
+            // TODO ensure sufficient permissions
+            await this._controller.entries.deleteEntry(
+                this.activeEventId, new ObjectID(data.entryId));
+            cb(null);
+        } catch (err) {
+            cb(utils.createError('could not delete entry', err.code));
             throw err;
         }
     }

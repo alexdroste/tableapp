@@ -19,6 +19,13 @@ export const CHANGE_VOTE_SUCCESS = 'events/CHANGE_VOTE_SUCCESS';
 /** entries actiontype: change users vote for entry */
 export const CHANGE_VOTE_FAILURE = 'events/CHANGE_VOTE_FAILURE';
 
+/** entries actiontype: delete entry */
+export const DELETE_ENTRY_REQUEST = 'events/DELETE_ENTRY_REQUEST';
+/** entries actiontype: delete entry */
+export const DELETE_ENTRY_SUCCESS = 'events/DELETE_ENTRY_SUCCESS';
+/** entries actiontype: delete entry */
+export const DELETE_ENTRY_FAILURE = 'events/DELETE_ENTRY_FAILURE';
+
 /** entries actiontype: load more entries into feed */
 export const LOAD_MORE_ENTRIES_REQUEST = 'events/LOAD_MORE_ENTRIES_REQUEST';
 /** entries actiontype: load more entries into feed */

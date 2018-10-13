@@ -40,6 +40,7 @@ export class Content extends React.Component {
                 PropTypes.string,
                 PropTypes.object
             ]),
+            isDeleted: PropTypes.bool,
             timestamp: PropTypes.number,
         };
     };
@@ -50,6 +51,14 @@ export class Content extends React.Component {
 
 
     render() {
+        if (this.props.isDeleted) {
+            return (
+                <Main>
+                    <i>Beitrag wurde gelöscht.</i>
+                </Main>
+            );
+        }
+
         const { authorId, content, timestamp } = this.props;
 
         return (

@@ -41,6 +41,19 @@ export function changeVote(api, entryId, vote) {
 
 
 /**
+ * API-call: delete entry.
+ * @async
+ * @function
+ * @param {ApiConnection} api ApiConnection instance 
+ * @param {string} entryId entryId 
+ * @returns {Promise} indicates success
+ */
+export function deleteEntry(api, entryId) {
+    return api.request('entries/deleteEntry', { entryId });
+}
+
+
+/**
  * @typedef {object} LoadMoreEntriesResult
  * @property {EntryDict} entryDict dictionary of entries
  * @property {Array<string>} idList list of entry-ids ordered/filtered according to subscribed list type

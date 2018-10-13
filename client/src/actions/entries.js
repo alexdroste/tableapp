@@ -64,6 +64,25 @@ export function changeVote(entryId, vote) {
 
 
 /**
+ * Creates action for deleting an entry.
+ * @function
+ * @param {string} entryId entryId 
+ * @returns {object} action
+ */
+export function deleteEntry(entryId) {
+    return ({
+        type: 'apiCall',
+        apiCall: {
+            types: [entriesActionTypes.DELETE_ENTRY_REQUEST,
+                entriesActionTypes.DELETE_ENTRY_SUCCESS,
+                entriesActionTypes.DELETE_ENTRY_FAILURE],
+            call: (api) => entriesApiMethods.deleteEntry(api, entryId)
+        }
+    });
+}
+
+
+/**
  * Creates action for loading more entries (into feed).
  * @function
  * @returns {object} action

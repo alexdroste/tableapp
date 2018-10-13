@@ -45,6 +45,7 @@ A single document has the following properties:
 | eventId        | `ObjectID`             | id of related event                                          |
 | following      | `Array<ObjectID>`      | array of userIds that follow the entry                       |
 | imageIds       | `Array<ObjectID>`      | array of imageIds (of attached images)                       |
+| isDeleted      | `boolean`              | indicates if entry is deleted                                |
 | isLiveAnswered | `boolean`              | indicates if entry was discussed in live situation (not used atm) |
 | postedById     | `string`               | id of user                                                   |
 | timestamp      | `number`               | timestamp of creation                                        |

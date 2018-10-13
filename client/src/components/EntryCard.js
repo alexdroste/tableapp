@@ -78,6 +78,7 @@ export class EntryCard extends React.PureComponent {
                 commentCount: PropTypes.number.isRequired,
                 content: PropTypes.string,
                 imageIds: PropTypes.arrayOf(PropTypes.string),
+                isDeleted: PropTypes.bool,
                 isLiveAnswered: PropTypes.bool,
                 score: PropTypes.number.isRequired,
                 timestamp: PropTypes.number,
@@ -112,7 +113,7 @@ export class EntryCard extends React.PureComponent {
         const { onContentClick, onCommentClick, onMoreClick, onVoteChange } = this.props;
 
         const { authorId, commentAttendingUserIds, commentCount, content, 
-            imageIds, isLiveAnswered, score, timestamp, vote } = this.props.entry;
+            imageIds, isDeleted, isLiveAnswered, score, timestamp, vote } = this.props.entry;
 
         return (
             <CustomCard 
@@ -125,6 +126,7 @@ export class EntryCard extends React.PureComponent {
                         <Content
                             authorId={authorId}
                             content={content}
+                            isDeleted={isDeleted}
                             timestamp={timestamp}
                         />
                         <Thumbnails imageIds={imageIds}/>
@@ -135,11 +137,9 @@ export class EntryCard extends React.PureComponent {
                                 <span>{commentCount}</span>
                             </span>
                             <FlexStretch>
-                                {commentAttendingUserIds &&
-                                    <SortedUserRolesByPriority
-                                        userIds={commentAttendingUserIds}
-                                    />
-                                }
+                                <SortedUserRolesByPriority
+                                    userIds={commentAttendingUserIds}
+                                />
                             </FlexStretch>
                             {isLiveAnswered &&
                                 <Label 
@@ -155,6 +155,7 @@ export class EntryCard extends React.PureComponent {
                 <CardContentSubControls>
                     <ControlItem>
                         <UpDownVote
+                            disabled={isDeleted}
                             onVoteChange={onVoteChange}
                             score={score}
                             vote={vote}
@@ -170,6 +171,7 @@ export class EntryCard extends React.PureComponent {
                         <ControlIconButton 
                             icon='comment'
                             content='Kommentieren'
+                            disabled={isDeleted}
                             onClick={onCommentClick}                                                  
                         />
                     </ControlItem>

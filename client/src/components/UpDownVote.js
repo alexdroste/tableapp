@@ -63,6 +63,7 @@ export class UpDownVote extends React.Component {
     static get propTypes() {
         return {
             className: PropTypes.string,
+            disabled: PropTypes.bool,
             onVoteChange: PropTypes.func.isRequired,
             score: PropTypes.number.isRequired,
             vote: PropTypes.number,
@@ -77,23 +78,26 @@ export class UpDownVote extends React.Component {
 
 
     _handleVoteUpClick = (e) => {
+        if (this.props.disabled) return;
         this.props.onVoteChange(this.props.vote > 0 ? 0 : 1);
     };
 
 
     _handleVoteDownClick = (e) => {
+        if (this.props.disabled) return;
         this.props.onVoteChange(this.props.vote < 0 ? 0 : -1);
     };
 
 
     render() {
-        const { score, vote } = this.props;
+        const { disabled, score, vote } = this.props;
 
         return (
             <Button.Group className={this.props.className} size="small">
                 <ButtonVote 
                     icon="arrow up" 
                     color={vote > 0 ? "blue" : null}
+                    disabled={disabled}
                     onClick={this._handleVoteUpClick}
                 />
                 <Count
@@ -103,6 +107,7 @@ export class UpDownVote extends React.Component {
                 <ButtonVote 
                     icon="arrow down" 
                     color={vote < 0 ? "red" : null}
+                    disabled={disabled}
                     onClick={this._handleVoteDownClick}
                 />
             </Button.Group>                      

@@ -78,7 +78,7 @@ class EntryCardContainer extends React.Component {
 
 
     _handleDeleteClick = (e) => {
-
+        this.props.entriesActions.deleteEntry(this.props.entryId);
         this.setState({
             isActionSheetOpen: false,
         });
@@ -117,7 +117,7 @@ class EntryCardContainer extends React.Component {
         const { activeEventUserPermissionLevel, entry } = this.props;
         const { isActionSheetOpen } = this.state;
 
-        let canManageEntry = activeEventUserPermissionLevel >=PermissionLevelEnum.MODERATOR;
+        let canManageEntry = activeEventUserPermissionLevel >= PermissionLevelEnum.MODERATOR;
         if (entry) { 
             canManageEntry = canManageEntry || entry.isOwn;
         }
@@ -134,6 +134,7 @@ class EntryCardContainer extends React.Component {
                 <EntryCardActionSheet
                     canManageEntry={canManageEntry}
                     isBookmarked={entry && entry.isBookmarked}
+                    isDeleted={entry && entry.isDeleted}
                     isFollowing={entry && entry.isFollowing}
                     isOpen={isActionSheetOpen}
                     onBookmarkToggle={this._handleBookmarkToggle}

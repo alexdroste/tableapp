@@ -11,7 +11,7 @@ import * as utils from '../utils';
  * @property {(string|null)} authorId user-id of author, null if entry was posted anonymously
  * @property {Array<string>} commentAttendingUserIds list of user-ids that attend discussion (comment-section)
  * @property {number} commentCount count of comments
- * @property {string} content text-content of entry
+ * @property {(string|null)} content text-content of entry
  * @property {Array<string>} imageIds list of (image-)ids of attached images
  * @property {boolean} isBookmarked indicates if user bookmarked entry
  * @property {boolean} isFollowing indicates if user is following entry-updates

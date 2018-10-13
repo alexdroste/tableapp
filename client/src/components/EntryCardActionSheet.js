@@ -8,6 +8,7 @@ export class EntryCardActionSheet extends React.PureComponent {
         return {
             canManageEntry: PropTypes.bool.isRequired,
             isBookmarked: PropTypes.bool.isRequired,
+            isDeleted: PropTypes.bool.isRequired,
             isFollowing: PropTypes.bool.isRequired,
             isOpen: PropTypes.bool.isRequired,
             onBookmarkToggle: PropTypes.func.isRequired,
@@ -24,8 +25,8 @@ export class EntryCardActionSheet extends React.PureComponent {
 
 
     render() {
-        const { canManageEntry, isBookmarked, isFollowing, isOpen, onBookmarkToggle, 
-            onClose, onDeleteClick, onEditClick, onFollowToggle } = this.props;
+        const { canManageEntry, isBookmarked, isDeleted, isFollowing, isOpen, 
+            onBookmarkToggle, onClose, onDeleteClick, onEditClick, onFollowToggle } = this.props;
 
         const actions = [
             {
@@ -41,12 +42,14 @@ export class EntryCardActionSheet extends React.PureComponent {
                 onClick: onFollowToggle,
             },
         ];
-        if (canManageEntry) {
-            actions.push({
-                    name: 'Bearbeiten',
-                    icon: 'text cursor',
-                    onClick: onEditClick,
-                },
+        if (canManageEntry && !isDeleted) {
+            actions.push(
+                // TODO
+                // {
+                //     name: 'Bearbeiten',
+                //     icon: 'text cursor',
+                //     onClick: onEditClick,
+                // },
                 {
                     name: 'Löschen',
                     icon: 'trash',

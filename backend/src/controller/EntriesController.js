@@ -14,7 +14,7 @@ class EntriesController {
      * @property {(string|null)} authorId user-id of author, null if entry was posted anonymously
      * @property {Array<string>} commentAttendingUserIds list of user-ids that attend discussion (comment-section)
      * @property {number} commentCount count of comments
-     * @property {string} content text-content of entry
+     * @property {(string|null)} content text-content of entry
      * @property {Array<string>} imageIds list of (image-)ids of attached images
      * @property {boolean} isBookmarked indicates if user bookmarked entry
      * @property {boolean} isFollowing indicates if user is following entry-updates
@@ -40,6 +40,7 @@ class EntriesController {
      * An entryInfo object.
      * @typedef {object} EntriesController~EntryInfo
      * @property {ObjectID} _id id of entry
+     * @property {boolean} [isDeleted] indicates if entry is deleted
      * @property {number} [score] score of entry
      * @property {number} timestamp timestamp in ms of entry submission
      */
@@ -211,12 +212,40 @@ class EntriesController {
 
 
     /**
-     * Retrieves entry info containing _id, score & timestamp
+     * Mark an entry as deleted.
      * @async
      * @function
      * @param {ObjectID} eventId id of event
      * @param {ObjectID} entryId id of entry
-     * @returns {Promise<EntriesController~EntryInfo>} resolve to object containing entries _id, score & timestamp
+     * @returns {Promise} indicates success
+     * @throws {Error} with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
+     */
+    async deleteEntry(eventId, entryId) { 
+        if (!eventId || !entryId)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+
+        const res = await this._db.collection('entries')
+            .updateOne({ _id: entryId, eventId }, 
+                { $set: { 
+                    isDeleted: true 
+                }});
+            
+        if (res.result.ok !== 1)
+            throw utils.createError('error changing isDeleted for entry', statusCodes.INTERNAL_SERVER_ERROR);
+        if (res.result.n < 1)
+            throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
+        if (res.result.nModified > 0)
+            this._onEntryUpdated(eventId, entryId);
+    }
+
+
+    /**
+     * Retrieves entry info containing _id, isDeleted, score & timestamp
+     * @async
+     * @function
+     * @param {ObjectID} eventId id of event
+     * @param {ObjectID} entryId id of entry
+     * @returns {Promise<EntriesController~EntryInfo>} resolve to object containing entries _id, isDeleted, score & timestamp
      * @throws {Error} with message: 'entryId not found' with code NOT_FOUND if supplied entryId (for eventId) does not exist
      */
     async getEntryInfo(eventId, entryId) {
@@ -226,6 +255,7 @@ class EntriesController {
         const entriesArr = await this._db.collection('entries').aggregate([
             { $match: { eventId, _id: entryId } },
             { $project: {
+                isDeleted: 1,
                 score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
                 timestamp: 1,
             } },
@@ -244,7 +274,7 @@ class EntriesController {
      * @function
      * @param {ObjectID} eventId id of event
      * @param {object} sort sorting-options for key supports "timestamp" & "score", e.g. { score: -1, timestamp: -1 }
-     * @param {object} filter filter-options support: "bookmarkForUser", "minTimestamp", "maxTimestamp", "maxScore" & "excludedEntryIds"
+     * @param {EntryListSubscription~SearchFilter} filter search-filter (see SearchFilter docs for possible properties)
      * @param {boolean} includeScore if true, resulting entries in array will contain score prop
      * @param {number} limit limits returned array range
      * @returns {Promise<Array<EntriesController~EntryInfo>>} resolves to object array containing entries: _id, timestamp & score (optional)
@@ -256,6 +286,8 @@ class EntriesController {
         const match = { eventId };
         if (filter.bookmarkForUser)
             match.bookmarks = { $eq: filter.bookmarkForUser }; // single array element equals value
+        if (filter.excludeDeletedEntries)
+            match.isDeleted = false;
         if (filter.excludedEntryIds)
             match._id = { $nin: filter.excludedEntryIds };
         if (filter.maxTimestamp)
@@ -282,6 +314,9 @@ class EntriesController {
 
     /**
      * Query entries.
+     * 
+     * If an entry is deleted (isDeleted == true), its content & authorId props
+     * will be returned as 'null'.
      * @async
      * @function
      * @param {ObjectID} eventId id of event
@@ -299,6 +334,7 @@ class EntriesController {
                 authorId: 1, 
                 content: 1,
                 imageIds: 1,
+                isDeleted: 1,
                 isBookmarked: { $in: [ userId, "$bookmarks" ] },
                 isFollowing: { $in: [ userId, "$following" ] },
                 isLiveAnswered: 1,
@@ -311,6 +347,7 @@ class EntriesController {
             } }
         ]).toArray();
 
+        // query authorIds of comments + comment-count for each entry
         const commentsArr = await this._db.collection('comments').aggregate([
             { $match: { eventId, entryId: { $in: entryIds } } },
             { $group : {
@@ -320,6 +357,7 @@ class EntriesController {
             } }
         ]).toArray();
 
+        // dict of comment-infos (authorIds & count) with entryId as key
         const comments = {};
         commentsArr.forEach((comment) => {
             comments[comment._id] = comment;
@@ -328,11 +366,18 @@ class EntriesController {
 
         const entryDict = {};
         entriesArr.forEach((entry) => {
+            // hide content & authorId if entry is deleted
+            if (entry.isDeleted) {
+                entry.authorId = null;
+                entry.content = null;
+            }
+            // properly set commentAttendingUserIds & commentCount
             if (comments[entry._id]) {
                 entry.commentAttendingUserIds = 
                     utils.filterArrayForNulledEntries(comments[entry._id].authorIds) || [];
                 entry.commentCount = comments[entry._id].count;
             } else {
+                entry.commentAttendingUserIds = [];
                 entry.commentCount = 0;
             }
             entryDict[entry._id] = entry;
@@ -408,6 +453,7 @@ class EntriesController {
             eventId,
             following: [],
             imageIds,
+            isDeleted: false,
             isLiveAnswered: false,
             postedById: userId,
             timestamp: Date.now(),
