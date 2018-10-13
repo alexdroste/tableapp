@@ -9,11 +9,13 @@ import * as utils from '../utils';
 class SortedUserRolesByPriority extends React.Component {
     /**
      * @property {string[]} rolePriority array of role ids ordered by priority (injected by redux)
+     * @property {string[]} userIds ids of users whose roles will be rendered 
      * @property {string[]} userRoleIds ids roles to render
      */
     static get propTypes() {
         return {
             rolePriority: PropTypes.array.isRequired,
+            userIds: PropTypes.array.isRequired,
             userRoleIds: PropTypes.array.isRequired,
         };
     };
