@@ -49,28 +49,34 @@ export class ActionSheet extends React.PureComponent {
                 >
                     {/* <Modal.Header>Aktion wählen</Modal.Header> */}
                     <Modal.Content>
-                        <List 
-                            selection
-                            size='large'
-                        >
-                            {actions.map(action =>
-                                <List.Item
-                                    onClick={action.onClick}
-                                >
-                                    <ListIconPaddingFix
-                                        color={action.color}
-                                        name={action.icon}
-                                        verticalAlign='middle'
-                                    />
-                                    <List.Content
-                                        color={action.color}
-                                        header={action.name}
-                                    />
-                                </List.Item>
-                            )}
-                        </List>
+                        {actions.length > 0 ? (
+                            <List 
+                                selection
+                                size='large'
+                            >
+                                {actions.map(action =>
+                                    <List.Item
+                                        onClick={action.onClick}
+                                    >
+                                        <ListIconPaddingFix
+                                            color={action.color}
+                                            name={action.icon}
+                                            verticalAlign='middle'
+                                        />
+                                        <List.Content
+                                            color={action.color}
+                                            header={action.name}
+                                        />
+                                    </List.Item>
+                                )}
+                            </List>
+                        ) : (
+                            <p>
+                                Keine Aktionen verfügbar.
+                            </p>
+                        )}
                         <Button
-                            content="Abbrechen"
+                            content="Schließen"
                             fluid
                             onClick={onClose}
                         />
