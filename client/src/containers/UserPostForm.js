@@ -9,7 +9,7 @@ import * as imagesActions from '../actions/images';
 import { getUserId } from '../reducers/user';
 import { getComment } from '../reducers/comments';
 import { getEntry } from '../reducers/entries';
-import { Icon, Header, Button, Form, Divider, Card, Checkbox, TextArea, Dimmer } from 'semantic-ui-react';
+import { Icon, Header, Button, Form, Divider, Card, Checkbox, TextArea, Dimmer, Message } from 'semantic-ui-react';
 import { Content } from '../components/Content';
 import { NameLabel } from './NameLabel';
 import { FormFieldAction } from '../components/FormFieldAction';
@@ -49,6 +49,7 @@ const AddThumbnail = styled.div`
  * @param {string} [props.replyCommentId] comment id to reply to ('0' => root entry)
  * @param {string} [props.replyContent] content of comment to reply to (injected by redux if replyCommentId + replyEntryId are set)
  * @param {string} [props.replyEntryId] entry id to reply to
+ * @param {bool} [props.replyIsDeleted] indicates if entry or comment to reply to is deleted
  * @param {number} [props.replyTimeStamp] timestamp of comment to reply to (injected by redux if replyCommentId + replyEntryId are set)
  * @param {string[]} [props.screenshotIds] ids of event-screenshots (injected by redux if isComment == false)
  * @param {string} props.userId id of user creating entry/comment
@@ -65,6 +66,7 @@ class UserPostForm extends React.Component {
             replyCommentId: PropTypes.string,
             replyContent: PropTypes.string,
             replyEntryId: PropTypes.string,
+            replyIsDeleted: PropTypes.bool,
             replyTimeStamp: PropTypes.number,
             screenshotIds: PropTypes.array,
             userId: PropTypes.string.isRequired,
@@ -340,6 +342,16 @@ class UserPostForm extends React.Component {
 
 
     render() {
+        if (this.props.replyIsDeleted) {
+            return (
+                <Message
+                    error
+                    header="Beitrag wurde gelöscht!"
+                    content="Es nicht möglich auf gelöschte Inhalte zu antworten."
+                />
+            );
+        }
+
         const {isComment, replyAuthorId, replyContent, replyTimeStamp, userId} = this.props;
         const {imageIds, inputImageModalOpen, postAnonymously, selectedImageIds, 
             sendDisabled, submitted} = this.state;
@@ -451,10 +463,14 @@ const mapStateToProps = (state, props) => {
             : getComment(state.comments, props.replyCommentId);
 
     const isComment = props.replyCommentId && props.replyEntryId;
+    // TODO fix routing (wrap this component by outer component that subscribes to entry/comment)
+    if (isComment && !replyData)
+        alert("Fehler: Beitrag nicht gefunden (subscription missing)!");
     return {
-        isComment,
+        isComment: !!isComment,
         replyAuthorId: replyData ? replyData.authorId : null,
         replyContent: replyData ? replyData.content : null,
+        replyIsDeleted: replyData ? replyData.isDeleted : null,
         replyTimeStamp: replyData ? replyData.timestamp : null,
         screenshotIds: isComment ? null : getScreenshotIds(state.eventScreenshots),
         userId: getUserId(state.user),
