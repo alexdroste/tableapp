@@ -9,7 +9,7 @@ import { isInitialLoadPending, getCommentsView } from '../reducers/comments';
 import { Link } from 'react-router-dom';
 import { EntryCardContainer } from './EntryCardContainer';
 import { Comment, Header, Message, Dropdown, Button, Responsive } from 'semantic-ui-react';
-import { CommentCard } from './CommentCard';
+import { CommentCardContainer } from './CommentCardContainer';
 import { FloatingActionButton } from '../components/FloatingActionButton';
 import { NavBar } from './NavBar';
 import { SegmentLoader } from '../components/SegmentLoader';
@@ -101,15 +101,14 @@ class CommentsView extends React.Component {
         const comments = childrenIds.map(id => {
             const innerComments = this._renderComments(id);
             return ( 
-                <CommentCard 
+                <CommentCardContainer 
                     key={id}
                     commentId={id}
                     entryId={entryId}
-                    parentId={parentId}
-                    toplevel={parentId === '0'}
+                    isToplevel={parentId === '0'}
                 >
                     {innerComments}
-                </CommentCard>
+                </CommentCardContainer>
             );
         });
         

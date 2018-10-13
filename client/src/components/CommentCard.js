@@ -1,15 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as commentsActions from '../actions/comments';
-import { Link } from 'react-router-dom';
-import { getComment } from '../reducers/comments';
 import { Comment, Button, Dimmer, Loader, Image } from 'semantic-ui-react';
 import { UpDownVote } from '../components/UpDownVote';
 import { Content } from '../components/Content';
-import { Thumbnails } from './Thumbnails';
+import { Thumbnails } from '../containers/Thumbnails';
 
 
 const CustomComment = styled(Comment)`
@@ -73,45 +68,38 @@ const VerticalDivider = styled.span`
  * __Exported component is connected to redux-store. Some props are injected by HOC.__
  * @param {object} props
  * @param {*} [props.children] furhter content to render inside comment
- * @param {object} [props.comment] comment object (injected by redux via commentId)
- * @param {object} props.commentsActions object containing bound commentsActions (injected by redux)
- * @param {String} props.commentId id of comment to render
- * @param {String} props.entryId id of entry comment refers to
- * @param {String} props.parentId id of parent comment ('0' for root)
- * @param {boolean} [props.toplevel=false] true indicates that card is on toplevel
+ * @param {object} [props.comment] comment object
+ * @param {boolean} [props.isToplevel=false] true indicates that card is on toplevel
+ * @todo
  */
-class CommentCard extends React.Component {
+export class CommentCard extends React.Component {
     static get propTypes() {
         return {
             children: PropTypes.any,
-            comment: PropTypes.object,
-            commentsActions: PropTypes.object.isRequired,
-            commentId: PropTypes.string.isRequired,
-            entryId: PropTypes.string.isRequired,
-            parentId: PropTypes.string.isRequired,
-            toplevel: PropTypes.bool,
+            comment: PropTypes.shape({
+                authorId: PropTypes.string,
+                content: PropTypes.string,
+                imageIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+                isDeleted: PropTypes.bool,
+                score: PropTypes.number.isRequired,
+                timestamp: PropTypes.number,
+                vote: PropTypes.number,
+            }),
+            isToplevel: PropTypes.bool,
+            onMoreClick: PropTypes.func.isRequired,
+            onReplyClick: PropTypes.func.isRequired,
+            onVoteChange: PropTypes.func.isRequired,
         };
     };
 
     static get defaultProps() {
         return {
-            toplevel: false,
+            isToplevel: false,
         };
     };
 
 
-    /**
-     * Handles vote change by dispatching action.
-     * @function
-     * @private
-     */
-    _handleVoteChanged = (vote) => {
-        this.props.commentsActions.changeVote(this.props.entryId, this.props.commentId, vote);
-    };
-
-
     render() {
-        const { toplevel } = this.props;
         // render loader with wireframe if comment is empty
         if (!this.props.comment)
             return (
@@ -125,55 +113,45 @@ class CommentCard extends React.Component {
                 </Dimmer.Dimmable>
             );
 
-        const { authorId, content, imageIds, score, timestamp, vote } = this.props.comment;
-        const { children, entryId, commentId } = this.props;
+        const { authorId, content, imageIds, isDeleted, score, timestamp, vote } = this.props.comment;
+
+        const { children, isToplevel, onMoreClick, onReplyClick, onVoteChange } = this.props;
 
         return (
             <CustomComment 
-                data-toplevel={toplevel}
+                data-toplevel={isToplevel}
             >
                 <Comment.Content>
                     <Content
                         authorId={authorId}
                         content={content}
+                        isDeleted={isDeleted}
                         timestamp={timestamp}
                     />
                     <Thumbnails imageIds={imageIds}/>
-                    <SubActions>
-                        <ActionButton 
-                            as={Link}
-                            icon="reply" 
-                            content="Antworten" 
-                            to={`/entries/${entryId}/${commentId}/new`}                            
-                        />
-                        <VerticalDivider/>
-                        <UpDownVote
-                            onVoteChange={this._handleVoteChanged}
-                            score={score}
-                            vote={vote}
-                        />
-                    </SubActions>
+                    {!isDeleted &&
+                        <SubActions>
+                            <ActionButton
+                                icon="ellipsis horizontal"
+                                onClick={onMoreClick}
+                            />
+                            <VerticalDivider/>
+                            <ActionButton 
+                                icon="reply" 
+                                content={isToplevel ? "Antworten" : null} 
+                                onClick={onReplyClick}
+                            />
+                            <VerticalDivider/>
+                            <UpDownVote
+                                onVoteChange={onVoteChange}
+                                score={score}
+                                vote={vote}
+                            />
+                        </SubActions>
+                    }
                 </Comment.Content>
                 {children}
             </CustomComment>
         );
     }
 }
-
-
-const mapStateToProps = (state, props) => {
-    return {
-        comment: getComment(state.comments, props.commentId),
-    }
-};
-
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        commentsActions: bindActionCreators(commentsActions, dispatch), 
-    };
-}
-
-
-const ConnectedCommentCard = connect(mapStateToProps, mapDispatchToProps)(CommentCard);
-export { ConnectedCommentCard as CommentCard };
