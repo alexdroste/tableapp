@@ -17,6 +17,7 @@ class EntriesController {
      * @property {(string|null)} content text-content of entry
      * @property {Array<string>} imageIds list of (image-)ids of attached images
      * @property {boolean} isBookmarked indicates if user bookmarked entry
+     * @property {boolean} isDeleted indicates if entry is deleted
      * @property {boolean} isFollowing indicates if user is following entry-updates
      * @property {boolean} isLiveAnswered indicates if entry was discussed in live situation 
      * @property {boolean} isOwn indicates if user owns entry
@@ -348,8 +349,13 @@ class EntriesController {
         ]).toArray();
 
         // query authorIds of comments + comment-count for each entry
+        // and DO NOT INCLUDE deleted entries
         const commentsArr = await this._db.collection('comments').aggregate([
-            { $match: { eventId, entryId: { $in: entryIds } } },
+            { $match: { 
+                eventId, 
+                entryId: { $in: entryIds },
+                isDeleted: false
+            } },
             { $group : {
                 _id: "$entryId",
                 authorIds: { $push: "$authorId" },

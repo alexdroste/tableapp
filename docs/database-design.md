@@ -26,6 +26,7 @@ A single document has the following properties:
 | entryId    | `ObjectID`               | id of related entry                                    |
 | eventId    | `ObjectID`               | id of related event                                    |
 | imageIds   | `Array<ObjectID>`        | array of imageIds (of attached images)                 |
+| isDeleted  | `boolean`                | indicates if comment is deleted                        |
 | parentId   | `ObjectID` &#124; `null` | id of parent comment, null if it comment has no parent |
 | postedById | `string`                 | id of user                                             |
 | timestamp  | `number`                 | timestamp of creation                                  |

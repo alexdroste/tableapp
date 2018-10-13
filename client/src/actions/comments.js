@@ -4,7 +4,7 @@ import { getImage } from '../reducers/images';
 
 
 /**
- * Creates action for changing a users vote on an entry.
+ * Creates action for changing a users vote on a comment.
  * @function
  * @param {string} entryId entryId 
  * @param {string} commentId commentId
@@ -19,6 +19,26 @@ export function changeVote(entryId, commentId, vote) {
                 commentsActionTypes.CHANGE_VOTE_SUCCESS,
                 commentsActionTypes.CHANGE_VOTE_FAILURE],
             call: (api) => commentsApiMethods.changeVote(api, entryId, commentId, vote)
+        }
+    });
+}
+
+
+/**
+ * Creates action for deleting a comment.
+ * @function
+ * @param {string} entryId entryId 
+ * @param {string} commentId commentId
+ * @returns {object} action
+ */
+export function deleteComment(entryId, commentId) {
+    return ({
+        type: 'apiCall',
+        apiCall: {
+            types: [commentsActionTypes.DELETE_COMMENT_REQUEST,
+                commentsActionTypes.DELETE_COMMENT_SUCCESS,
+                commentsActionTypes.DELETE_COMMENT_FAILURE], 
+            call: (api) => commentsApiMethods.deleteComment(api, entryId, commentId)
         }
     });
 }

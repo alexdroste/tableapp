@@ -14,6 +14,20 @@ export function changeVote(api, entryId, commentId, vote) {
 
 
 /**
+ * API-call: delete comment.
+ * @async
+ * @function
+ * @param {ApiConnection} api ApiConnection instance 
+ * @param {string} entryId entryId 
+ * @param {string} commentId commentId
+ * @returns {Promise} indicates success
+ */
+export function deleteComment(api, entryId, commentId) {
+    return api.request('comments/deleteComment', { entryId, commentId });
+}
+
+
+/**
  * API-call: post new comment.
  * @async
  * @function

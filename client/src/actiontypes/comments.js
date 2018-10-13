@@ -6,6 +6,13 @@ export const CHANGE_VOTE_SUCCESS = 'events/CHANGE_VOTE_SUCCESS';
 /** comments actiontype: change a users vote */
 export const CHANGE_VOTE_FAILURE = 'events/CHANGE_VOTE_FAILURE';
 
+/** comments actiontype: delete a comment */
+export const DELETE_COMMENT_REQUEST = 'events/DELETE_COMMENT_REQUEST';
+/** comments actiontype: delete a comment */
+export const DELETE_COMMENT_SUCCESS = 'events/DELETE_COMMENT_SUCCESS';
+/** comments actiontype: delete a comment */
+export const DELETE_COMMENT_FAILURE = 'events/DELETE_COMMENT_FAILURE';
+
 /** comments actiontype: post a comment */
 export const POST_COMMENT_REQUEST = 'events/POST_COMMENT_REQUEST';
 /** comments actiontype: post a comment */

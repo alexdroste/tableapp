@@ -13,7 +13,8 @@ class CommentsController {
      * @typedef {object} CommentsController~Comment
      * @property {(string|null)} authorId user-id of author, null if comment was posted anonymously
      * @property {string} content text-content of comment
-     * @property {Array<string>} imageIds list of (image-)ids of attached images
+     * @property {Array<string>} imageIds list of (image-)ids of attached images 
+     * @property {boolean} isDeleted indicates if comment is deleted
      * @property {boolean} isOwn indicates if user owns comment
      * @property {(string|null)} parentId (comment-)id of parent comment (id of comment this comment is subordinate), null if comment is a top-level comment 
      * @property {number} score score of the comment
@@ -135,7 +136,39 @@ class CommentsController {
 
 
     /**
+     * Mark a comment as deleted.
+     * @async
+     * @function
+     * @param {ObjectID} eventId id of event
+     * @param {ObjectID} entryId id of entry
+     * @param {ObjectID} commentId id of comment
+     * @returns {Promise} indicates success
+     * @throws {Error} with message: 'commentId not found' with code NOT_FOUND if supplied commentId (for entryId/eventId) does not exist
+     */
+    async deleteComment(eventId, entryId, commentId) { 
+        if (!eventId || !entryId || !commentId)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+
+        const res = await this._db.collection('comments')
+            .updateOne({ _id: commentId, entryId, eventId }, 
+                { $set: { 
+                    isDeleted: true 
+                }});
+
+        if (res.result.ok !== 1)
+            throw utils.createError('error changing isDeleted for comment', statusCodes.INTERNAL_SERVER_ERROR);
+        if (res.result.n < 1)
+            throw utils.createError('commentId not found', statusCodes.NOT_FOUND);
+        if (res.result.nModified > 0)
+            this._onCommentUpdated(eventId, entryId, commentId, true);
+    }
+
+
+    /**
      * Query comments.
+     * 
+     * If a comment is deleted (isDeleted == true), its content & authorId props
+     * will be returned as 'null'.
      * @async
      * @function
      * @param {ObjectID} eventId id of event
@@ -157,6 +190,7 @@ class CommentsController {
                 authorId: 1, 
                 content: 1,
                 imageIds: 1,
+                isDeleted: 1,
                 isOwn: { $eq:  [ userId, "$postedById" ] },
                 parentId: 1,
                 score: { $subtract: [ { $size: "$upvotes" }, { $size: "$downvotes" } ] },
@@ -169,6 +203,11 @@ class CommentsController {
 
         const commentDict = {};
         commentArr.forEach((comment) => {
+            // hide content & authorId if comment is deleted
+            if (comment.isDeleted) {
+                comment.authorId = null;
+                comment.content = null;
+            }
             commentDict[comment._id] = comment;
             delete comment._id;
         });
@@ -193,6 +232,29 @@ class CommentsController {
         if (!eventId || !entryId || !userId || isAnonymous == null || !content || !imageDataArr)
             throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
 
+        // check if entry exists and is not deleted
+        const entryRes = await this._db.collection('entries').findOne(
+            { _id: entryId, eventId },
+            { projection : { isDeleted: 1 }}
+        );
+        if (!entryRes)
+            throw utils.createError('entryId not found', statusCodes.NOT_FOUND);
+        if (entryRes.isDeleted)
+            throw utils.createError('cannot comment a deleted entry', statusCodes.BAD_REQUEST);
+
+        // check if parent comment exists and is not deleted
+        if (parentId) {
+            const parentRes = await this._db.collection('comments').findOne(
+                { _id: parentId, entryId, eventId },
+                { projection : { isDeleted: 1 }}
+            );
+            if (!parentRes)
+                throw utils.createError('parentId not found', statusCodes.NOT_FOUND);
+            if (parentRes.isDeleted)
+                throw utils.createError('cannot comment a deleted comment', statusCodes.BAD_REQUEST);
+        }
+        
+        // save attached images
         let imageIds = [];
         if (imageDataArr.length) {
             const images = [];
@@ -207,6 +269,7 @@ class CommentsController {
             imageIds = Object.values(insertRes.insertedIds);
         }
 
+        // insert comment
         const res = await this._db.collection('comments').insertOne({
             authorId: isAnonymous ? null : userId,
             content,
@@ -214,6 +277,7 @@ class CommentsController {
             entryId,
             eventId,
             imageIds,
+            isDeleted: false,
             parentId: parentId ? parentId : null,
             postedById: userId,
             timestamp: Date.now(),

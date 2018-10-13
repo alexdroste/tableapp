@@ -72,6 +72,7 @@ class Client {
 
         // comments
         this.on('comments/changeVote',                  true,   true,   this._handleChangeVoteForComment);
+        this.on('comments/deleteComment',               true,   true,   this._handleDeleteComment);
         this.on('comments/postComment',                 true,   true,   this._handlePostComment);
         this.on('comments/subscribeCommentsForEntry',   true,   true,   this._handleSubscribeCommentsForEntry);
         this.on('comments/unsubscribeCommentsForEntry', true,   true,   this._handleUnsubscribeCommentsForEntry);
@@ -229,6 +230,30 @@ class Client {
             cb(null);
         } catch (err) {
             cb(utils.createError('change user vote for comment failed', err.code));
+            throw err;
+        }
+    }
+
+
+    /**
+     * Eventhandler for comment deletion. 
+     * @async
+     * @private
+     * @function
+     * @param {object} data 
+     * @param {string} data.entryId entryId (as string)
+     * @param {string} data.commentId commentId (as string)
+     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
+     * @returns {Promise} 
+     */
+    async _handleDeleteComment(data, cb) {
+        try {
+            // TODO ensure sufficient permissions
+            await this._controller.comments.deleteComment(
+                this.activeEventId, new ObjectID(data.entryId), new ObjectID(data.commentId));
+            cb(null);
+        } catch (err) {
+            cb(utils.createError('could not delete comment', err.code));
             throw err;
         }
     }

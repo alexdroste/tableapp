@@ -14,6 +14,7 @@ import * as utils from '../utils';
  * @property {(string|null)} content text-content of entry
  * @property {Array<string>} imageIds list of (image-)ids of attached images
  * @property {boolean} isBookmarked indicates if user bookmarked entry
+ * @property {boolean} isDeleted indicates if entry is deleted
  * @property {boolean} isFollowing indicates if user is following entry-updates
  * @property {boolean} isLiveAnswered indicates if entry was discussed in live situation
  * @property {boolean} isOwn indicates if user owns entry
