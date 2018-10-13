@@ -2,7 +2,10 @@ import createBrowserHistory from 'history/createBrowserHistory';
 
 
 /**
- * Returns a patched browserHistory that prevents gooing back in history too far (outside app).
+ * Returns a patched browserHistory:
+ * 
+ * * prevents going back in history too far (outside app)
+ * * prevents pushing to the same location
  * @function
  * @returns {object} object containing patched browserHistory as property .browserHistory
  * @see https://github.com/ReactTraining/history/issues/26#issuecomment-357062114
@@ -18,7 +21,12 @@ export function createSafeBrowserHistory() {
 
     obj.browserHistory.push = (path, state) => {
         obj.previous += 1;
-        obj._push(path, state);
+        // if current location is same as push location, call replace instead of push
+        if (obj.browserHistory.location.pathname === path) {
+            obj.browserHistory.replace(path);
+        } else {
+            obj._push(path, state);
+        }
     };
 
     obj.browserHistory.goBack = () => {
