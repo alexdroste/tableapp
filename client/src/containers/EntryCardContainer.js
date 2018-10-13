@@ -16,7 +16,6 @@ class EntryCardContainer extends React.Component {
      * @property {object} entriesActions object containing entries-actions
      * @property {String} [entry] entry object (injected by redux via id)
      * @property {String} [entryId] id of entry, if unset a Loader will be rendered
-     * @property {String} [noLink=false] set true to disable redirect to comments-page on click
      */
     static get propTypes() {
         return {
@@ -25,7 +24,6 @@ class EntryCardContainer extends React.Component {
             entriesActions: PropTypes.object.isRequired,
             entry: PropTypes.object,
             entryId: PropTypes.string,
-            noLink: PropTypes.bool
         };
     };
 
@@ -45,12 +43,6 @@ class EntryCardContainer extends React.Component {
     }
 
 
-    _gotoCommentsSection = () => {
-        if (!this.props.noLink)
-            this.props.history.push('/entries/' + this.props.entryId);
-    };
-
-
     _handleActionSheetClose = (e) => {
         this.setState({
             isActionSheetOpen: false,
@@ -67,13 +59,13 @@ class EntryCardContainer extends React.Component {
 
 
     _handleCommentClick = (e) => {
-        // todo redesign (maybe open write comment view)
-        this._gotoCommentsSection();
+        this.props.history.push('/entries/' + this.props.entryId);
+        this.props.history.push('/entries/' + this.props.entryId + '/0/new');
     };
 
 
     _handleContentClick = (e) => {
-        this._gotoCommentsSection();
+        this.props.history.push('/entries/' + this.props.entryId);
     };
 
 

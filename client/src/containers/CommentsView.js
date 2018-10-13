@@ -160,7 +160,6 @@ class CommentsView extends React.Component {
                 </Responsive>
                 <EntryCardContainer 
                     entryId={entryId}
-                    noLink
                 />
                 <Header>
                     Kommentare
