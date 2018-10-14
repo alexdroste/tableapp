@@ -18,21 +18,6 @@ import { getScreenshotIds } from '../reducers/eventScreenshots';
 import { InputImageModal } from './InputImageModal';
 
 
-const AddThumbnail = styled.div`
-    width: 100%;
-    height: 100%;
-    border: 1px dashed rgba(0,0,0,.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 16px;
-
-    &&&&& > i {
-        margin: 0;
-    }
-`;
-
-
 /**
  * Displays a form for creating new entries and comments.
  * If form is used for creating a comment, entry/comment that is
@@ -421,11 +406,11 @@ class UserPostForm extends React.Component {
                             <Thumbnails
                                 imageIds={imageIds}
                                 onSelectionChanged={this._handleThumbnailSelectionChanged}
-                                placeholderItem={
-                                    <AddThumbnail onClick={this._handleImageAddClick}>
-                                        <Icon color="grey" name="image"/>
-                                    </AddThumbnail>
-                                }
+                                placeholderThumbnailProps={{
+                                    hasDashedBorder: true,
+                                    icon: 'image',
+                                    onClick: this._handleImageAddClick,
+                                } }
                                 selectable
                                 selectedIds={selectedImageIds}
                             />
