@@ -322,11 +322,10 @@ class NavBar extends React.Component {
                         </Sticky>
                     </CustomRail>
                 }
-                {navMainModalOpen &&
-                    <MainNavActionSheet
-                        onClose={this._handleNavMainModalClose}
-                    />
-                }
+                <MainNavActionSheet
+                    isOpen={navMainModalOpen}
+                    onClose={this._handleNavMainModalClose}
+                />
             </div>
         );
     }

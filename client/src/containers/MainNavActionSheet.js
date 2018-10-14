@@ -12,6 +12,7 @@ class MainNavActionSheet extends React.Component {
     static get propTypes() {
         return {
             history: PropTypes.object.isRequired,
+            isOpen: PropTypes.bool.isRequired,
             onClose: PropTypes.func.isRequired,
             userActions: PropTypes.object.isRequired,
         };
@@ -87,13 +88,14 @@ class MainNavActionSheet extends React.Component {
 
 
     render() {
-        const { onClose } = this.props;
+        const { isOpen, onClose } = this.props;
         const { isActiveEventQrCodeModalOpen } = this.state;
 
         return (
             <div>
                 <ActionSheet
                     actions={this.actions}
+                    isOpen={isOpen}
                     onClose={onClose}
                 />
                 {isActiveEventQrCodeModalOpen && 
