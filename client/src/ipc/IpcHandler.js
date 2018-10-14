@@ -11,7 +11,7 @@ export class IpcHandler {
      * @param {dispatchAction} dispatch  function to dispatch an action to the store
      */
     initialize(dispatch) {
-        if (!window.ipc)
+        if (!window.electron)
             return;
         this._dispatch = dispatch;
         setupListeners(this, this._dispatch);
@@ -24,11 +24,11 @@ export class IpcHandler {
      * @param {object} [data={}] data to send
      */
     sendMessage(event, data = {}) {
-        if (!window.ipc) {
-            console.log("ERROR: ipc unset, electron context missing");
+        if (!window.electron || !window.electron.ipc) {
+            console.error("ERROR: ipc unset, electron context missing");
             return
         }
-        window.ipc.send(event, data);
+        window.electron.ipc.send(event, data);
     }
 
 
@@ -45,6 +45,10 @@ export class IpcHandler {
      * @param {IpcHandler~eventListenerCallback} cb callback for ipc-event
      */
     on(event, cb) {
-        window.ipc.on(event, cb);
+        if (!window.electron || !window.electron.ipc) {
+            console.error("ERROR: ipc unset, electron context missing");
+            return
+        }
+        window.electron.ipc.on(event, cb);
     }
 }

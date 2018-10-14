@@ -61,7 +61,7 @@ class App extends React.Component {
      * @function
      */
     UNSAFE_componentWillMount() {
-        if (window.ipc) { // if window.ipc is set => desktop app
+        if (window.electron) { // if window.electron is set => desktop app
             this.props.desktopAppActions.initDesktopApp();
             this.props.history.replace('/');
         }
