@@ -98,7 +98,6 @@ export function setWindowAlwaysOnTop(alwaysOnTop) {
 export function setBroadcastActive(active) {
     return {
         type: desktopAppActionTypes.SET_BROADCAST_ACTIVE,
-        ipcCall: (ipc) => ipcActions.setBroadcastActive(ipc, active),
         active,
     }
 }

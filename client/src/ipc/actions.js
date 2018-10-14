@@ -29,14 +29,3 @@ export function restoreLastWindowSize(ipc) {
 export function setWindowAlwaysOnTop(ipc, alwaysOnTop) {
     ipc.sendMessage('setWindowAlwaysOnTop', alwaysOnTop);
 }
-
-
-/**
- * IPC-call: set if broadcasting is active.
- * @function
- * @param {IpcHandler} ipc IpcHandler instance 
- * @param {boolean} active indicates if broadcasting should be activated 
- */
-export function setBroadcastActive(ipc, active) {
-    ipc.sendMessage('setBroadcastActive', active);
-}

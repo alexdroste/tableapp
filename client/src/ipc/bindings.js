@@ -9,16 +9,16 @@ import * as desktopAppActions from '../actions/desktopApp';
  * @param {dispatchAction} dispatch function to dispatch an action to the store
  */
 export const setupListeners = (ipc, dispatch) => {
-    const _handleBroadcastCancelled = () => {
-        dispatch(desktopAppActions.broadcastCancelled());
-    };
+    // const _handleBroadcastCancelled = () => {
+    //     dispatch(desktopAppActions.broadcastCancelled());
+    // };
 
-    const _handleNewBroadcastImage = (e, data) => {
-        dispatch(desktopAppActions.broadcastNewImage(data));
-    };
+    // const _handleNewBroadcastImage = (e, data) => {
+    //     dispatch(desktopAppActions.broadcastNewImage(data));
+    // };
 
 
-    ipc.on('broadcastCancelled', _handleBroadcastCancelled);
+    // ipc.on('broadcastCancelled', _handleBroadcastCancelled);
 
-    ipc.on('newBroadcastImage', _handleNewBroadcastImage);
+    // ipc.on('newBroadcastImage', _handleNewBroadcastImage);
 };
