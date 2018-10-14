@@ -12,8 +12,13 @@ const InnerImage = styled.img`
 
 const Thumb = styled(Image)`
     cursor: pointer;
-    width: 82px; /* 80px + 2px border */
-    height: 82px;
+    ${props => !props['data-hasinnerimage'] && (props['data-ishuge'] ? `
+        width: 258px; /* 256px + 2px border */
+        height: 258px; 
+    ` : `
+        width: 82px; /* 80px + 2px border */
+        height: 82px; 
+    `)}
     border: 1px ${props => props['data-hasdashedborder'] ? 'dashed' : 'solid'} rgba(0,0,0,.2);
     border-radius: .28571429rem;
     overflow: hidden;
@@ -54,6 +59,7 @@ export class Thumbnail extends React.Component {
             alt: PropTypes.string,
             hasDashedBorder: PropTypes.bool,
             icon: PropTypes.string,
+            isHuge: PropTypes.bool,
             isSelectable: PropTypes.bool,
             isSelected: PropTypes.bool,
             onClick: PropTypes.func.isRequired,
@@ -64,6 +70,7 @@ export class Thumbnail extends React.Component {
     static get defaultProps() {
         return {
             hasDashedBorder: false,
+            isHuge: false,
             isSelectable: false,
             isSelected: false,
         };
@@ -71,19 +78,22 @@ export class Thumbnail extends React.Component {
 
 
     render() {
-        const { alt, hasDashedBorder, icon, isSelectable, isSelected, onClick, src } = this.props;
+        const { alt, hasDashedBorder, icon, isHuge, isSelectable, isSelected, onClick, src } = this.props;
+
+        const width = isHuge ? 256 : 80;
 
         return (
             <Thumb
                 onClick={onClick}
+                data-ishuge={isHuge}
+                data-hasinnerimage={!!src}
                 data-hasdashedborder={hasDashedBorder}
             >
                 {src &&
                     <InnerImage 
                         src={src} 
                         alt={alt}
-                        width={80}
-                        height={80}
+                        width={width}
                     />
                 }
                 {icon &&
