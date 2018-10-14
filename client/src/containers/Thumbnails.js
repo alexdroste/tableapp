@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 import * as imagesActions from '../actions/images';
 import { connect } from 'react-redux';
-import { Image } from 'semantic-ui-react';
 import { ImageModal } from './ImageModal';
 import { getThumbnailDict } from '../reducers/images';
 import { Thumbnail } from '../components/Thumbnail';
+import { ThumbnailGroup } from '../components/ThumbnailGroup';
 
 
 class Thumbnails extends React.Component {
@@ -118,7 +117,7 @@ class Thumbnails extends React.Component {
 
         return (
             <div>
-                <Image.Group>
+                <ThumbnailGroup>
                     {imageIds.map((id) => this._renderThumbnail(id))}
                     {placeholderThumbnailProps &&
                         <Thumbnail
@@ -126,7 +125,7 @@ class Thumbnails extends React.Component {
                             {...placeholderThumbnailProps}
                         />
                     }
-                </Image.Group>
+                </ThumbnailGroup>
                 {openId &&
                     <ImageModal
                         imageId={openId}
