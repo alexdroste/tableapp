@@ -16,6 +16,7 @@ import { DynamicRowsCache } from '../DynamicRowsCache';
 import { isDesktopApp } from '../reducers/desktopApp';
 import { MiniControlView } from './MiniControlView';
 import { EventSettingsView } from './EventSettingsView';
+import { ScreenBroadcastHelper } from './ScreenBroadcastHelper';
 import { getActiveEventUserPermissionLevel } from '../reducers/events';
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
 
@@ -72,28 +73,33 @@ class ActiveEventView extends React.Component {
 
 
     render() {
-        const {isDesktopApp, userCanManageActiveEvent} = this.props;
+        const { isDesktopApp, userCanManageActiveEvent } = this.props;
         return (
-            <Switch>
-                <Route exact path="/" render={() => (
-                    <Redirect to="/entries"/>
-                )}/>
-                <Route path="/entries/:entryId/:commentId/new" component={UserPostView}/>,
-                <Route path="/entries/:entryId" component={CommentsView}/>,
-                <Route path="/entries" render={() => <EntriesView dynamicRowsCache={this._entriesViewDynamicRowsCache} />}/>,
-                <Route path="/polls" component={PollsView}/>,
-                <Route path="/settings" component={SettingsView}/>
-                {userCanManageActiveEvent &&
-                    <Route path="/eventsettings" component={EventSettingsView}/>
+            <div>
+                <Switch>
+                    <Route exact path="/" render={() => (
+                        <Redirect to="/entries"/>
+                    )}/>
+                    <Route path="/entries/:entryId/:commentId/new" component={UserPostView}/>,
+                    <Route path="/entries/:entryId" component={CommentsView}/>,
+                    <Route path="/entries" render={() => <EntriesView dynamicRowsCache={this._entriesViewDynamicRowsCache} />}/>,
+                    <Route path="/polls" component={PollsView}/>,
+                    <Route path="/settings" component={SettingsView}/>
+                    {userCanManageActiveEvent &&
+                        <Route path="/eventsettings" component={EventSettingsView}/>
+                    }
+                    <Route path='/join/:eventId' component={JoinEventView}/>
+                    <Route path='/join' component={JoinEventView}/>
+                    <Route path='/switchevent' component={SwitchEventView}/>
+                    {isDesktopApp &&
+                        <Route path='/minicontrol' component={MiniControlView}/>
+                    }
+                    <Route path="*" component={NotFoundView} status={404}/>
+                </Switch>
+                {isDesktopApp && 
+                    <ScreenBroadcastHelper/>
                 }
-                <Route path='/join/:eventId' component={JoinEventView}/>
-                <Route path='/join' component={JoinEventView}/>
-                <Route path='/switchevent' component={SwitchEventView}/>
-                {isDesktopApp &&
-                    <Route path='/minicontrol' component={MiniControlView}/>
-                }
-                <Route path="*" component={NotFoundView} status={404}/>
-            </Switch>
+            </div>
         );
     }
 }

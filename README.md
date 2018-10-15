@@ -12,7 +12,7 @@
 - [x] moderation options: delete entry
 - [x] moderation options: delete comment
 - [ ] screencapture module for windows / desktop-app for windows
-- [ ] fix: screenshots of active window not working sometimes => allow screenshots per screen (& maybe screenshot preview for presenter)
+- [x] fix: screenshots of active window not working sometimes => allow screenshots per screen (& maybe screenshot preview for presenter)
 - [ ] ssl
 - [ ] data-tracking
 - [ ] surveys
