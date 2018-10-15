@@ -58,6 +58,12 @@ class ImageModal extends React.Component {
     };
 
 
+    _handleClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+
     _handleCloseClick = (e) => {
         this.props.onClose(e);
     };
@@ -77,6 +83,7 @@ class ImageModal extends React.Component {
                 closeIcon
                 closeOnDocumentClick={false}
                 size="fullscreen"
+                onClick={this._handleClick}
                 onClose={this._handleCloseClick}
             >
                 <Modal.Content>
