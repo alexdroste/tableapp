@@ -2,7 +2,7 @@
 let custom = {};
 try { custom = require('./config.custom.js').config } 
 catch (e) { console.log('Using default configuration. No overrides were defined.'); }
-const {api, ...rest} = custom;
+const {api, desktopApp, ...rest} = custom;
 
 
 /**
@@ -32,6 +32,26 @@ export const config = {
          */
         socketUrl: 'http://localhost:4898',
         ...api
+    },
+    /**
+     * Config values used in desktop app.
+     */
+    desktopApp: {
+        /** 
+         * Interval in ms for capturing screenshots during broadcast. 
+         * Defaults to 15000.
+         * @type {number}
+         */
+        broadcastImageInterval: 15000,
+        /** 
+         * Max. width or height of captured screenshot in px. 
+         * If screenshot is too large, it will be scaled down til width and height
+         * are less or equal to the specified value.
+         * Defaults to 1200.
+         * @type {number}
+         */
+        screenshotMaxRes: 1200, // 1200px width or height
+        ...desktopApp
     },
     /**
      * Base-URL of client. Needs to end with a slash.
