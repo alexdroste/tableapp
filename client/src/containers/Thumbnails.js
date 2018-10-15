@@ -103,7 +103,7 @@ class Thumbnails extends React.Component {
                 key={id}
                 alt={id}
                 isSelectable={selectable}
-                isSelected={selectedIds.indexOf(id) !== -1}
+                isSelected={selectable && selectedIds.indexOf(id) !== -1}
                 onClick={this._handleThumbnailClick(id)}
                 src={data}
             />
