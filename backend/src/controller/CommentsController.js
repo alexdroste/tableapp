@@ -167,8 +167,8 @@ class CommentsController {
     /**
      * Query comments.
      * 
-     * If a comment is deleted (isDeleted == true), its content & authorId props
-     * will be returned as 'null'.
+     * If a comment is deleted (isDeleted == true), its authorId & content props
+     * will be returned as 'null' and imageIds will be '[]'.
      * @async
      * @function
      * @param {ObjectID} eventId id of event
@@ -207,6 +207,7 @@ class CommentsController {
             if (comment.isDeleted) {
                 comment.authorId = null;
                 comment.content = null;
+                comment.imageIds = [];
             }
             commentDict[comment._id] = comment;
             delete comment._id;

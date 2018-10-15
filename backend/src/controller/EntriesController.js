@@ -316,8 +316,8 @@ class EntriesController {
     /**
      * Query entries.
      * 
-     * If an entry is deleted (isDeleted == true), its content & authorId props
-     * will be returned as 'null'.
+     * If an entry is deleted (isDeleted == true), its authorId & content props
+     * will be returned as 'null' and imageIds will be '[]'.
      * @async
      * @function
      * @param {ObjectID} eventId id of event
@@ -376,6 +376,7 @@ class EntriesController {
             if (entry.isDeleted) {
                 entry.authorId = null;
                 entry.content = null;
+                entry.imageIds = [];
             }
             // properly set commentAttendingUserIds & commentCount
             if (comments[entry._id]) {
