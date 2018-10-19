@@ -54,8 +54,9 @@ export class ActionSheet extends React.PureComponent {
                                 selection
                                 size='large'
                             >
-                                {actions.map(action =>
+                                {actions.map((action, idx) =>
                                     <List.Item
+                                        key={idx}
                                         onClick={action.onClick}
                                     >
                                         <ListIconPaddingFix
