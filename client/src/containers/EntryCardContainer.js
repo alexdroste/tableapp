@@ -13,13 +13,14 @@ import { EntryCardActionSheet } from '../components/EntryCardActionSheet';
 
 class EntryCardContainer extends React.Component {
     /**
+     * TODO
      * @property {object} entriesActions object containing entries-actions
      * @property {String} [entry] entry object (injected by redux via id)
      * @property {String} [entryId] id of entry, if unset a Loader will be rendered
      */
     static get propTypes() {
         return {
-            activeEventUserPermissionLevel: PropTypes.bool.isRequired,
+            activeEventUserPermissionLevel: PropTypes.number.isRequired,
             history: PropTypes.object.isRequired,
             entriesActions: PropTypes.object.isRequired,
             entry: PropTypes.object,
