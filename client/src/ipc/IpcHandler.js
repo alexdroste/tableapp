@@ -24,11 +24,11 @@ export class IpcHandler {
      * @param {object} [data={}] data to send
      */
     sendMessage(event, data = {}) {
-        if (!window.electron || !window.electron.ipc) {
+        if (!window.electron || !window.electron.ipcRenderer) {
             console.error("ERROR: ipc unset, electron context missing");
             return
         }
-        window.electron.ipc.send(event, data);
+        window.electron.ipcRenderer.send(event, data);
     }
 
 
@@ -45,10 +45,10 @@ export class IpcHandler {
      * @param {IpcHandler~eventListenerCallback} cb callback for ipc-event
      */
     on(event, cb) {
-        if (!window.electron || !window.electron.ipc) {
+        if (!window.electron || !window.electron.ipcRenderer) {
             console.error("ERROR: ipc unset, electron context missing");
             return
         }
-        window.electron.ipc.on(event, cb);
+        window.electron.ipcRenderer.on(event, cb);
     }
 }
