@@ -124,18 +124,20 @@ class EntryCardContainer extends React.Component {
                     onMoreClick={this._handleMoreClick}
                     onVoteChange={this._handleVoteChange}
                 />
-                <EntryCardActionSheet
-                    canManageEntry={canManageEntry}
-                    isBookmarked={entry && entry.isBookmarked}
-                    isDeleted={entry && entry.isDeleted}
-                    isFollowing={entry && entry.isFollowing}
-                    isOpen={isActionSheetOpen}
-                    onBookmarkToggle={this._handleBookmarkToggle}
-                    onClose={this._handleActionSheetClose}
-                    onDeleteClick={this._handleDeleteClick}
-                    onEditClick={this._handleEditClick}
-                    onFollowToggle={this._handleFollowToggle}
-                />
+                {entry &&
+                    <EntryCardActionSheet
+                        canManageEntry={canManageEntry}
+                        isBookmarked={entry.isBookmarked}
+                        isDeleted={entry.isDeleted}
+                        isFollowing={entry.isFollowing}
+                        isOpen={isActionSheetOpen}
+                        onBookmarkToggle={this._handleBookmarkToggle}
+                        onClose={this._handleActionSheetClose}
+                        onDeleteClick={this._handleDeleteClick}
+                        onEditClick={this._handleEditClick}
+                        onFollowToggle={this._handleFollowToggle}
+                    />
+                }
             </div>
         )
     }
