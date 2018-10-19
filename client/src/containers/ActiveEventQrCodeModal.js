@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { config } from '../config';
-import { Button, Modal } from 'semantic-ui-react';
+import { Modal } from 'semantic-ui-react';
 import QRCode from 'qrcode.react';
 import { getActiveEventId, getActiveEventName } from '../reducers/events';
 
