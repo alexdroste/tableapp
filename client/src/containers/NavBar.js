@@ -271,7 +271,7 @@ class NavBar extends React.Component {
                                     {/* <Icon name="ellipsis horizontal"/> */}
                                 </MenuItemTitle>
                             }
-                            {!hasGoBack && isDesktopApp && canBroadcast && 
+                            {(!hasGoBack || isDesktop) && isDesktopApp && canBroadcast && 
                                 <Menu.Item
                                     content="Präsentation"
                                     icon="record"
