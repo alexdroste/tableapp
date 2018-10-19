@@ -134,18 +134,15 @@ class NavBar extends React.Component {
     }
 
 
+    _handleCloseQRCodeClick = (e) => {
+        this.setState({
+            isActiveEventQrCodeModalOpen: false,
+        });
+    };
+
+
     _handleGoBack = () => {
         this.context.router.history.goBack();
-    };
-
-
-    _handleToggleBroadcastClick = (e) => {
-        this.props.desktopAppActions.setBroadcastActive(!this.props.isBroadcastActive);
-    };
-
-
-    _handleWindowAlwaysOnTopIconClick = (e) => {
-        this.props.desktopAppActions.setWindowAlwaysOnTop(!this.props.isWindowAlwaysOnTop);
     };
 
 
@@ -156,6 +153,23 @@ class NavBar extends React.Component {
 
     _handleNavMainModalClose = (e) => {
         this.setState({ navMainModalOpen: false });
+    };
+
+
+    _handleShowQRCodeClick = (e) => {
+        this.setState({
+            isActiveEventQrCodeModalOpen: true,
+        });
+    };
+
+
+    _handleToggleBroadcastClick = (e) => {
+        this.props.desktopAppActions.setBroadcastActive(!this.props.isBroadcastActive);
+    };
+
+
+    _handleWindowAlwaysOnTopIconClick = (e) => {
+        this.props.desktopAppActions.setWindowAlwaysOnTop(!this.props.isWindowAlwaysOnTop);
     };
 
 
@@ -176,7 +190,7 @@ class NavBar extends React.Component {
         const { activeEventName, activeEventUserPermissionLevel, hasGoBack, 
             isBroadcastActive, isDesktopApp, isWindowAlwaysOnTop,
             mainContent, rightRailContent } = this.props;
-        const { menuHeight, navMainModalOpen } = this.state;
+        const { isActiveEventQrCodeModalOpen, menuHeight, navMainModalOpen } = this.state;
         const menuHeightPlusMargin = menuHeight + 14;
         const canBroadcast = activeEventUserPermissionLevel >= PermissionLevelEnum.ADMINISTRATOR;
         const presentationModeActive = isWindowAlwaysOnTop && isDesktopApp && canBroadcast;
@@ -232,13 +246,10 @@ class NavBar extends React.Component {
                                     </Modal.Description>
                                 </Modal.Content>
                             </Modal>
-                            <ActiveEventQrCodeModal
-                                trigger={
-                                    <Menu.Item
-                                        content="QR"
-                                        icon="qrcode"
-                                    />
-                                }
+                            <Menu.Item
+                                content="QR"
+                                icon="qrcode"
+                                onClick={this._handleShowQRCodeClick}
                             />
                             <Menu.Item
                                 content="Präsentationsmodus beenden"
@@ -321,6 +332,11 @@ class NavBar extends React.Component {
                             {rightRailContent}
                         </Sticky>
                     </CustomRail>
+                }
+                {isActiveEventQrCodeModalOpen && 
+                    <ActiveEventQrCodeModal
+                        onClose={this._handleCloseQRCodeClick}
+                    />
                 }
                 <MainNavActionSheet
                     isOpen={navMainModalOpen}
