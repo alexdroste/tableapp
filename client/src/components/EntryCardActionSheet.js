@@ -35,12 +35,13 @@ export class EntryCardActionSheet extends React.PureComponent {
                 icon: 'bookmark',
                 onClick: onBookmarkToggle,
             },
-            { 
-                color: isFollowing ? 'blue' : null,
-                name: isFollowing ? 'Benachrichtigungen deaktivieren' : 'Benachrichtigungen aktivieren',
-                icon: 'bell',
-                onClick: onFollowToggle,
-            },
+            // todo
+            // { 
+            //     color: isFollowing ? 'blue' : null,
+            //     name: isFollowing ? 'Benachrichtigungen deaktivieren' : 'Benachrichtigungen aktivieren',
+            //     icon: 'bell',
+            //     onClick: onFollowToggle,
+            // },
         ];
         if (canManageEntry && !isDeleted) {
             actions.push(
