@@ -13,7 +13,7 @@ const Group = styled(Image.Group)`
 export class ThumbnailGroup extends React.Component {
     static get propTypes() {
         return {
-            children: PropTypes.object,
+            children: PropTypes.array,
             isCentered: PropTypes.bool,
         };
     };
