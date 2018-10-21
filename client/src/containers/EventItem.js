@@ -105,6 +105,8 @@ class EventItem extends React.Component {
 
 
     _handleModalClose = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         this.setState({
             modalOpen: false
         });
