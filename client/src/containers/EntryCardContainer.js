@@ -9,6 +9,7 @@ import { getActiveEventUserPermissionLevel } from '../reducers/events';
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
 import { EntryCard } from '../components/EntryCard';
 import { EntryCardActionSheet } from '../components/EntryCardActionSheet';
+import { Confirm } from '../components/Confirm';
 
 
 class EntryCardContainer extends React.Component {
@@ -40,6 +41,7 @@ class EntryCardContainer extends React.Component {
 
         this.state = {
             isActionSheetOpen: false,
+            isDeleteConfirmOpen: false,
         };
     }
 
@@ -71,11 +73,26 @@ class EntryCardContainer extends React.Component {
 
 
     _handleDeleteClick = (e) => {
-        this.props.entriesActions.deleteEntry(this.props.entryId);
         this.setState({
             isActionSheetOpen: false,
+            isDeleteConfirmOpen: true,
         });
     };
+
+
+    _handleDeleteConfirmAcceptClick = (e) => {
+        this.props.entriesActions.deleteEntry(this.props.entryId);
+        this.setState({
+            isDeleteConfirmOpen: false,
+        });
+    }
+
+
+    _handleDeleteConfirmCancelClick = (e) => {
+        this.setState({
+            isDeleteConfirmOpen: false,
+        });
+    }
 
     
     _handleEditClick = (e) => {
@@ -108,7 +125,7 @@ class EntryCardContainer extends React.Component {
 
     render() {
         const { activeEventUserPermissionLevel, entry } = this.props;
-        const { isActionSheetOpen } = this.state;
+        const { isActionSheetOpen, isDeleteConfirmOpen } = this.state;
 
         let canManageEntry = activeEventUserPermissionLevel >= PermissionLevelEnum.MODERATOR;
         if (entry) { 
@@ -138,6 +155,16 @@ class EntryCardContainer extends React.Component {
                         onFollowToggle={this._handleFollowToggle}
                     />
                 }
+                <Confirm
+                    confirmText='Löschen'
+                    content='Willst Du den Eintrag wirklich löschen?'
+                    hasCancel
+                    headerText='Eintrag löschen'
+                    isNegative
+                    isOpen={isDeleteConfirmOpen}
+                    onCancel={this._handleDeleteConfirmCancelClick}
+                    onConfirm={this._handleDeleteConfirmAcceptClick}
+                />
             </div>
         )
     }

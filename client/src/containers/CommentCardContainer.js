@@ -9,6 +9,7 @@ import { getActiveEventUserPermissionLevel } from '../reducers/events';
 import { CommentCard } from '../components/CommentCard';
 import { CommentCardActionSheet } from '../components/CommentCardActionSheet';
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
+import { Confirm } from '../components/Confirm';
 
 
 /**
@@ -50,6 +51,7 @@ class CommentCardContainer extends React.Component {
 
         this.state = {
             isActionSheetOpen: false,
+            isDeleteConfirmOpen: false,
         };
     }
 
@@ -62,11 +64,33 @@ class CommentCardContainer extends React.Component {
 
 
     _handleDeleteClick = (e) => {
-        this.props.commentsActions.deleteComment(this.props.entryId, this.props.commentId);
         this.setState({
             isActionSheetOpen: false,
         });
     };
+
+
+    _handleDeleteClick = (e) => {
+        this.setState({
+            isActionSheetOpen: false,
+            isDeleteConfirmOpen: true,
+        });
+    };
+
+
+    _handleDeleteConfirmAcceptClick = (e) => {
+        this.props.commentsActions.deleteComment(this.props.entryId, this.props.commentId);
+        this.setState({
+            isDeleteConfirmOpen: false,
+        });
+    }
+
+
+    _handleDeleteConfirmCancelClick = (e) => {
+        this.setState({
+            isDeleteConfirmOpen: false,
+        });
+    }
 
 
     _handleMoreClick = (e) => {
@@ -88,7 +112,7 @@ class CommentCardContainer extends React.Component {
 
     render() {
         const { activeEventUserPermissionLevel, children, comment, isToplevel } = this.props;
-        const { isActionSheetOpen } = this.state;
+        const { isActionSheetOpen, isDeleteConfirmOpen } = this.state;
 
         let canManageComment = activeEventUserPermissionLevel >= PermissionLevelEnum.MODERATOR;
         if (comment) {
@@ -105,12 +129,24 @@ class CommentCardContainer extends React.Component {
                     onReplyClick={this._handleReplyClick}
                     onVoteChange={this._handleVoteChange}
                 />
-                <CommentCardActionSheet
-                    canManageComment={canManageComment}
-                    isDeleted={comment && comment.isDeleted}
-                    isOpen={isActionSheetOpen}
-                    onClose={this._handleActionSheetClose}
-                    onDeleteClick={this._handleDeleteClick}
+                {comment &&
+                    <CommentCardActionSheet
+                        canManageComment={canManageComment}
+                        isDeleted={comment && comment.isDeleted}
+                        isOpen={isActionSheetOpen}
+                        onClose={this._handleActionSheetClose}
+                        onDeleteClick={this._handleDeleteClick}
+                    />
+                }
+                <Confirm
+                    confirmText='Löschen'
+                    content='Willst Du den Kommentar wirklich löschen?'
+                    hasCancel
+                    headerText='Kommentar löschen'
+                    isNegative
+                    isOpen={isDeleteConfirmOpen}
+                    onCancel={this._handleDeleteConfirmCancelClick}
+                    onConfirm={this._handleDeleteConfirmAcceptClick}
                 />
             </div>
         );
