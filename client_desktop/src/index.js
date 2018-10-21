@@ -33,6 +33,7 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js')
         }
     });
+    mainWindow.setMenu(null);
     ipc = setupIpc(mainWindow);
 
     if (isDev)
@@ -51,9 +52,10 @@ app.on('ready', createWindow);
 
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    app.quit();
+    // if (process.platform !== 'darwin') {
+    //     app.quit();
+    // }
 });
 
 

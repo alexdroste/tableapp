@@ -26,11 +26,13 @@ module.exports = (browserWindow) => {
 
     ipc.on('setWindowAlwaysOnTop', (event, alwaysOnTop) => {
         if (alwaysOnTop) {
-            app.dock.hide();
-            browserWindow.setAlwaysOnTop(true, 'floating');
+            if (app.dock) // macOS
+                app.dock.hide();
+            browserWindow.setAlwaysOnTop(true, 'floating', 99999);
             browserWindow.setVisibleOnAllWorkspaces(true);
             browserWindow.setFullScreenable(false);
-            app.dock.show();
+            if (app.dock) // macOS
+                app.dock.show();
         } else {
             browserWindow.setAlwaysOnTop(false, 'normal');
             browserWindow.setVisibleOnAllWorkspaces(false);
