@@ -7,7 +7,7 @@ import * as desktopAppActions from '../actions/desktopApp';
 import { withRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isSwitchActiveEventPending, getActiveEventId } from '../reducers/events'; 
 import { getConnectionState } from '../reducers/api';
-import { LoginStateEnum, getLoginState } from '../reducers/user';
+import { LoginStateEnum, getLoginState, hasAcceptedTos } from '../reducers/user';
 import { ApiConnectionStateEnum } from '../api/ApiConnectionStateEnum';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { NotFoundView } from '../components/NotFoundView';
@@ -16,6 +16,7 @@ import { ApiDisconnectedView } from '../components/ApiDisconnectedView';
 import { JoinEventView } from './JoinEventView';
 import { SwitchEventView } from './SwitchEventView';
 import { ActiveEventView } from './ActiveEventView';
+import { AcceptTosView } from './AcceptTosView';
 
 
 const ContentWrapper = styled.div`
@@ -37,6 +38,7 @@ const ContentWrapper = styled.div`
  * @param {object} props.history object containing history (injected by router)
  * @param {boolean} props.isActiveEventSet indicates if an event is selected and set active (injected by redux)
  * @param {boolean} props.isSwitchActiveEventPending indicates if currently switching active event (injected by redux)
+ * @param {boolean} props.userHasAcceptedTos indicates if user has accepted terms of service
  * @param {boolean} props.userLoggedIn indicates if user is logged in (injected by redux)
  */
 class App extends React.Component {
@@ -47,6 +49,7 @@ class App extends React.Component {
             history: PropTypes.object.isRequired,
             isActiveEventSet: PropTypes.bool.isRequired,
             isSwitchActiveEventPending: PropTypes.bool.isRequired,
+            userHasAcceptedTos: PropTypes.bool.isRequired,
             userLoggedIn: PropTypes.bool.isRequired,
         };
     };
@@ -75,7 +78,7 @@ class App extends React.Component {
      */
     _renderContent() {
         const {apiDisconnected, isActiveEventSet, isSwitchActiveEventPending, 
-            userLoggedIn} = this.props;
+            userHasAcceptedTos, userLoggedIn} = this.props;
 
         if (apiDisconnected)
             return (
@@ -85,6 +88,11 @@ class App extends React.Component {
         if (!userLoggedIn)
             return (
                 <UserLoginView/>                
+            );
+        
+        if (!userHasAcceptedTos)
+            return (
+                <AcceptTosView/>
             );
 
         if (isSwitchActiveEventPending)
@@ -130,6 +138,7 @@ class App extends React.Component {
 const mapStateToProps = (state, props) => {
     return {
         apiDisconnected: getConnectionState(state.api) === ApiConnectionStateEnum.DISCONNECTED,
+        userHasAcceptedTos: hasAcceptedTos(state.user),
         isActiveEventSet: !!getActiveEventId(state.events),
         isSwitchActiveEventPending: isSwitchActiveEventPending(state.events),
         userLoggedIn: getLoginState(state.user) === LoginStateEnum.LOGGED_IN,

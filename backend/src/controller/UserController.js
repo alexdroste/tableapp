@@ -96,6 +96,26 @@ class UserController {
     // --------- Public ---------
 
     /**
+     * Sets hasAcceptedTos to true for a user.
+     * @async
+     * @function
+     * @param {string} userId id of user
+     * @returns {Promise} indicates success
+     */
+    async acceptTos(userId) {
+        if (!userId)
+            throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
+        
+        const res = await this._db.collection('users')
+            .updateOne({ _id: userId }, { $set: { hasAcceptedTos: true } });
+        if (res.result.ok !== 1)
+            throw utils.createError('error setting hasAcceptedTos for user', statusCodes.INTERNAL_SERVER_ERROR);                
+        if (res.result.n < 1)
+            throw utils.createError('userId not found', statusCodes.NOT_FOUND);
+    }
+
+
+    /**
      * Continue session with supplied sessionToken.
      * @async
      * @function

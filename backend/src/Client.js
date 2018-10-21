@@ -103,6 +103,7 @@ class Client {
         this.on('images/loadImages',                    true,   true,   this._handleLoadImages);
 
         // user
+        this.on('user/acceptTos',                       true,   false,  this._handleAcceptTos);
         this.on('user/continueSession',                 false,  false,  this._handleContinueSession);
         this.on('user/login',                           false,  false,  this._handleLogin);
         this.on('user/logout',                          true,   false,  this._handleLogout);
@@ -185,11 +186,12 @@ class Client {
 
     /**
      * Eventhandler for socket disconnect event.
+     * @async
      * @private
      * @function
      */
-    _handleDisconnect() {
-        this._trackAndSaveUserSessionInfos();
+    async _handleDisconnect() {
+        await this._trackAndSaveUserSessionInfos();
         const disconnectTimestamp = Date.now();
         const sessionDurationMin = ((disconnectTimestamp - this.connectTimestamp) / 1000 / 60).toFixed(1);
         console.log('client disconnected', { clientId: this.id, ip: this.ip, userId: this.userId, sessionDurationMin});
@@ -219,6 +221,13 @@ class Client {
     }
 
 
+    /**
+     * Saves session-infos for user.
+     * @async
+     * @private
+     * @function
+     * @returns {Promise} 
+     */
     async _trackAndSaveUserSessionInfos() {
         if (!this.userId)
             return;
@@ -739,10 +748,13 @@ class Client {
      * @todo reorganize position of this function
      */
     async _switchActiveEvent(newEventId) {
-        const userId = this.userId;
-        console.debug('switch active event', { clientId: this.id, userId, activeEventId: this.activeEventId, newEventId });
-        this._init(); // reset client-state
-        this.userId = userId; // preserve userId from client-state reset (_init)
+        console.debug('switch active event', { clientId: this.id, userId: this.userId, activeEventId: this.activeEventId, newEventId });
+        this.commentsSubscribedForEntryId = null;
+        this.entriesSubscription = {
+            listSubscription: null,
+            subscribedIds: [],
+        };
+        this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
         this.activeEventId = newEventId;
         await this._controller.user.saveLastActiveEventId(this.userId, this.activeEventId);
         if (!this.activeEventId)
@@ -793,6 +805,26 @@ class Client {
     //#endregion images
 
     //#region user
+    /**
+     * Eventhandler for accept terms of service request.
+     * @async
+     * @private
+     * @function
+     * @param {object} data empty object
+     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
+     * @returns {Promise}
+     */
+    async _handleAcceptTos(data, cb) {
+        try {
+            await this._controller.user.acceptTos(this.userId);
+            cb(null);
+        } catch (err) {
+            cb(utils.createError('accepting tos failed', err.code));            
+            throw err;
+        }
+    }
+
+
     /**
      * Eventhandler for continue session request.
      * @async
@@ -851,13 +883,14 @@ class Client {
 
     /**
      * Eventhandler for logout request.
+     * @async
      * @private
      * @function
      * @param {object} data empty object
      * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      */
-    _handleLogout(data, cb) {
-        this._trackAndSaveUserSessionInfos();
+    async _handleLogout(data, cb) {
+        await this._trackAndSaveUserSessionInfos();
         console.log('user logout', { clientId: this.id, ip: this.ip, userId: this.userId });
         this._init(); // reset client-state 
         cb(null);

@@ -1,3 +1,10 @@
+/** user actiontype: accept tos */
+export const ACCEPT_TOS_REQUEST = 'user/ACCEPT_TOS_REQUEST';
+/** user actiontype: accept tos */
+export const ACCEPT_TOS_SUCCESS = 'user/ACCEPT_TOS_SUCCESS';
+/** user actiontype: accept tos */
+export const ACCEPT_TOS_FAILURE = 'user/ACCEPT_TOS_FAILURE';
+
 /** user actiontype: continue a previously started session */
 export const CONTINUE_SESSION_REQUEST = 'user/CONTINUE_SESSION_REQUEST';
 /** user actiontype: continue a previously started session */

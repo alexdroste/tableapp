@@ -19,7 +19,7 @@
 - [ ] prompts & groups
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
-- [ ] opt-in/opt-out
+- [x] opt-in/opt-out
 - [ ] save all screenshots, link them in db
 - [ ] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
 - [x] sign-out

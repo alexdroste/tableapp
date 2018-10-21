@@ -8,6 +8,18 @@
 
 
 /**
+ * API-call: accept tos.
+ * @async
+ * @function
+ * @param {ApiConnection} api ApiConnection instance 
+ * @returns {Promise} indicates success
+ */
+export function acceptTos(api) {
+    return api.request('user/acceptTos');
+}
+
+
+/**
  * API-call: continue session (via sessionToken).
  * @async
  * @function

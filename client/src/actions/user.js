@@ -3,6 +3,25 @@ import * as userApiMethods from '../api/actions/user';
 
 
 /**
+ * Creates action for accepting terms of service.
+ * @function
+ * @returns {object} action
+ */
+export function acceptTos() {
+    return ({
+        type: 'apiCall',
+        apiCall: {
+            key: 'acceptTos',
+            types: [userActionTypes.ACCEPT_TOS_REQUEST, 
+                userActionTypes.ACCEPT_TOS_SUCCESS, 
+                userActionTypes.ACCEPT_TOS_FAILURE],
+            call: (api) => userApiMethods.acceptTos(api)
+        }
+    });
+}
+
+
+/**
  * Creates action for continuing a session.
  * @function
  * @param {string} sessionToken sessionToken
