@@ -12,6 +12,7 @@ let loadUrl;
 let ipc;
 let mainWindow;
 
+app.commandLine.appendSwitch("ignore-certificate-errors");
 
 if (!isDev)
     loadUrl = serve({directory: 'app'});
@@ -35,7 +36,7 @@ function createWindow() {
     ipc = setupIpc(mainWindow);
 
     if (isDev)
-        mainWindow.loadURL('http://localhost:3000/');
+        mainWindow.loadURL('https://localhost:3000/');
     else
         loadUrl(mainWindow);
 
