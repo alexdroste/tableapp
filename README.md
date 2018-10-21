@@ -7,15 +7,16 @@
 
 ## todos 
 
-### high priority / before use
+### high priority
 
 - [x] moderation options: delete entry
 - [x] moderation options: delete comment
 - [ ] screencapture module for windows / desktop-app for windows
 - [x] fix: screenshots of active window not working sometimes => allow screenshots per screen (& maybe screenshot preview for presenter)
-- [ ] ssl
+- [x] ssl: secure websocket connections
+- [ ] ssl: update deployment details (with own certs)
 - [ ] data-tracking
-- [ ] surveys
+- [ ] prompts & groups
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
 - [ ] opt-in/opt-out

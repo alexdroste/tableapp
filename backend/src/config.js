@@ -2,7 +2,7 @@
 let custom = {};
 try { custom = require('./config.custom.js') } 
 catch (e) { console.error('Custom configuration is missing!'); }
-const {ldap, db, sessionToken, eventScreenshots, ...rest} = custom;
+const {ssl, ldap, db, sessionToken, eventScreenshots, ...rest} = custom;
 
 
 /**
@@ -16,6 +16,24 @@ const config = {
      * @type {string}
      */
     loglevel: 'debug',
+    /**
+     * SSL config values.
+     */
+    ssl: {
+        /**
+         * Path to ssl-certificate.
+         * Requires overwrite.
+         * @type {string}
+         */
+        certPath: './localhost.crt',
+        /**
+         * Path to ssl-certificates private key.
+         * Requires overwrite.
+         * @type {string}
+         */
+        keyPath: './localhost.key',
+        ...ssl // overwrite with custom config values
+    },
     /**
      * LDAP config values.
      */

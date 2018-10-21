@@ -17,6 +17,10 @@ In order to build/deploy/run a project you need to install the dependencies (nod
 
 To install the `node_modules` execute: `yarn install` (inside the project-directory).
 
+#### Configure Backend / Client
+
+See: [Configuration](configuration.md).
+
 ---
 
 ## Database
@@ -139,7 +143,7 @@ services:
 
     backend:
         restart: always
-        build: ./qafp/backend
+        build: ./tableapp/backend
         container_name: backend
         ports:
             - "4898:4898"

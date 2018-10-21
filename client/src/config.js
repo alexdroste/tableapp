@@ -30,7 +30,7 @@ export const config = {
          * Defaults to localhost:4898.
          * @type {string}
          */
-        socketUrl: 'http://localhost:4898',
+        socketUrl: 'https://localhost:4898',
         ...api
     },
     /**
@@ -58,7 +58,7 @@ export const config = {
      * Defaults to localhost:3000.
      * @type {string}
      */
-    baseUrl: 'http://localhost:3000/',
+    baseUrl: 'https://localhost:3000/',
     /**
      * Maximum resolution (width or height) in px for an attached image.
      * Larger pictures get resized to this value.

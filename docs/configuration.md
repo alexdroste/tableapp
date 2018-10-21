@@ -44,9 +44,9 @@ To configure the client you need to create a file named `config.custom.js` insid
 ```js
 export const config = {
     api: {
-        socketUrl: 'http://table.rz-housing.tu-clausthal.de:4898',
+        socketUrl: 'https://example.com:4898',
     },
-    baseUrl: 'http://table.rz-housing.tu-clausthal.de/',
+    baseUrl: 'https://example.com/',
 };
 ```
 
