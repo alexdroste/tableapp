@@ -29,6 +29,7 @@ class UserController {
      * Login data object.
      * @typedef {object} UserController~LoginData
      * @property {(ObjectID|null)} activeEventId id of active (or last active) event, null if no event is active
+     * @property {boolean} hasAcceptedTos indicates if user accepted the terms of service
      * @property {string} id id of user
      * @property {string} name name of user
      * @property {string} sessionToken sessionToken (jwt)
@@ -50,9 +51,36 @@ class UserController {
             await ldap.open();
             const id = Buffer.from(dn).toString('base64'); // !important to filter illegal characters ($, .)
             const name = await ldap.getNameFromDn(dn);
-            const activeEventId = await this.getLastActiveEventId(id);
+
+            // create user in db if not exist (first login)
+            const resUpdate = await this._db.collection('users').updateOne(
+                    { _id: id },
+                    {
+                        $setOnInsert: {
+                            hasAcceptedTos: false,
+                            lastActiveEventId: null,
+                            sessionInfos: [],
+                        }
+                    },
+                    { upsert: true }
+                );
+            if (resUpdate.result.ok !== 1)
+                throw utils.createError('error updating/upserting user document', statusCodes.INTERNAL_SERVER_ERROR);
+            
+            // fetch user doc
+            const userDoc = await this._db.collection('users').findOne(
+                    { _id: id },
+                    { projection: {
+                        hasAcceptedTos: 1,
+                        lastActiveEventId: 1,
+                    }}
+                );
+            if (!userDoc)
+                throw utils.createError('userId not found', statusCodes.NOT_FOUND);
+
             return {
-                activeEventId,
+                activeEventId: userDoc.lastActiveEventId,
+                hasAcceptedTos: userDoc.hasAcceptedTos,
                 id,
                 name,
                 sessionToken
@@ -62,7 +90,6 @@ class UserController {
         } finally {
             ldap.close();
         }
-        
     }
 
 
@@ -85,27 +112,27 @@ class UserController {
     }
 
 
-    /**
-     * Retrieves id of last active event for a user.
-     * @async
-     * @function
-     * @param {string} userId id of user
-     * @returns {Promise<(ObjectID|null)>} resolves to last ative event-id (or null)
-     */
-    async getLastActiveEventId(userId) {
-        if (!userId)
-            throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
+    // /**
+    //  * Retrieves id of last active event for a user.
+    //  * @async
+    //  * @function
+    //  * @param {string} userId id of user
+    //  * @returns {Promise<(ObjectID|null)>} resolves to last ative event-id (or null)
+    //  */
+    // async getLastActiveEventId(userId) {
+    //     if (!userId)
+    //         throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
 
-        const arr = await this._db.collection('users')
-            .find({ _id: userId })
-            .project({ lastActiveEventId: 1 })
-            .toArray();
+    //     const arr = await this._db.collection('users')
+    //         .find({ _id: userId })
+    //         .project({ lastActiveEventId: 1 })
+    //         .toArray();
         
-        if (arr.length < 1)
-            return null;
+    //     if (arr.length < 1)
+    //         return null;
         
-        return arr[0].lastActiveEventId;
-    }
+    //     return arr[0].lastActiveEventId;
+    // }
 
 
     /**
@@ -161,11 +188,45 @@ class UserController {
             throw utils.createError('userId param must be set', statusCodes.BAD_REQUEST);
         
         const res = await this._db.collection('users')
-            .updateOne({ _id: userId }, { $set: { lastActiveEventId: eventId } }, {
-                upsert: true,
-            });
+            .updateOne({ _id: userId }, { $set: { lastActiveEventId: eventId } });
         if (res.result.ok !== 1)
             throw utils.createError('error setting lastActiveEventId for user', statusCodes.INTERNAL_SERVER_ERROR);                
+        if (res.result.n < 1)
+            throw utils.createError('userId not found', statusCodes.NOT_FOUND);
+    }
+
+
+    /**
+     * Saves sessionInfo for a user. Used for tracking and analysis.
+     * @async
+     * @function
+     * @param {string} userId id of user
+     * @param {number} fromTimestamp login/auth timestamp
+     * @param {number} toTimestamp logout/disconnect timestamp
+     * @param {string} sessionToken used sessionToken
+     * @param {string} [ip] ip-address
+     * @param {string} [userAgent] userAgent of users browser
+     * @returns {Promise} indicates success
+     */
+    async saveSessionInfos(userId, fromTimestamp, toTimestamp, sessionToken, ip, userAgent) {
+        if (!userId || !fromTimestamp || !toTimestamp || !sessionToken)
+            throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+        
+        const res = await this._db.collection('users')
+            .updateOne({ _id: userId }, {
+                $push: { sessionInfos: {
+                    from: fromTimestamp,
+                    to: toTimestamp,
+                    sessionToken,
+                    ip,
+                    userAgent,
+                }},
+            });
+            
+        if (res.result.ok !== 1)
+            throw utils.createError('error saving user session info', statusCodes.INTERNAL_SERVER_ERROR);
+        if (res.result.n < 1)
+            throw utils.createError('userId not found', statusCodes.NOT_FOUND);
     }
 }
 

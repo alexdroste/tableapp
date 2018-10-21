@@ -149,11 +149,26 @@ class Client {
             subscribedIds: [],
         };
         /**
+         * Indicates if auth-user has accepted the terms of service.
+         * @type {boolean}
+         */
+        this.hasAcceptedTos = false;
+        /**
+         * Timestamp of login / continue session.
+         * @type {(number|null)}
+         */
+        this.loginTimestamp = null;
+        /**
          * Permissionlevel of user for active event. 
          * Defaults to NOT_A_USER.
          * @type {PermissionLevelEnum}
          */
         this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
+        /**
+         * Currently used sessionToken (by authenticated user).
+         * @type {(string|null)}
+         */
+        this.sessionToken = null;
         /**
          * Indicates if client subcribed to full EventDict.
          * Defaults to false.
@@ -174,6 +189,7 @@ class Client {
      * @function
      */
     _handleDisconnect() {
+        this._trackAndSaveUserSessionInfos();
         const disconnectTimestamp = Date.now();
         const sessionDurationMin = ((disconnectTimestamp - this.connectTimestamp) / 1000 / 60).toFixed(1);
         console.log('client disconnected', { clientId: this.id, ip: this.ip, userId: this.userId, sessionDurationMin});
@@ -192,11 +208,26 @@ class Client {
      */
     async _setupAfterAuthentication(loginData) {
         this.activeEventId = loginData.activeEventId;
+        this.hasAcceptedTos = loginData.hasAcceptedTos;
+        this.loginTimestamp = Date.now();
+        this.sessionToken = loginData.sessionToken;
         this.userId = loginData.id;
         console.log('user authorized', { clientId: this.id, ip: this.ip, userId: this.userId });
         this.emitUpdateEventDict(await this._controller.events.getEventDict(this.userId));
         if (this.activeEventId)
             await this._switchActiveEvent(this.activeEventId);
+    }
+
+
+    async _trackAndSaveUserSessionInfos() {
+        if (!this.userId)
+            return;
+        try {
+            await this._controller.user.saveSessionInfos(this.userId, 
+                this.loginTimestamp, Date.now(), this.sessionToken, this.ip, this.userAgent);
+        } catch (err) {
+            console.error('could not save session infos', { clientId: this.id, userId: this.userId }, err);
+        }
     }
 
 
@@ -826,6 +857,7 @@ class Client {
      * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      */
     _handleLogout(data, cb) {
+        this._trackAndSaveUserSessionInfos();
         console.log('user logout', { clientId: this.id, ip: this.ip, userId: this.userId });
         this._init(); // reset client-state 
         cb(null);

@@ -15,7 +15,7 @@
 - [x] fix: screenshots of active window not working sometimes => allow screenshots per screen (& maybe screenshot preview for presenter)
 - [x] ssl: secure websocket connections
 - [ ] ssl: update deployment details (with own certs)
-- [ ] data-tracking
+- [x] data-tracking
 - [ ] prompts & groups
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
@@ -50,6 +50,8 @@
 
 ### low priority
 
+- [ ] update icons/favicons
+- [ ] electron app icon & title
 - [ ] screencapture module for linux / desktop-app for linux
 - [ ] polls / quizzes
 - [ ] integrate with tuc course catalog

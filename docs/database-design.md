@@ -103,8 +103,20 @@ A single document has the following properties:
 
 A single document has the following properties:
 
-| Property  | Type     | Description                          |
-| --------- | -------- | ------------------------------------ |
-| _id       | `string` | id of user                           |
-| data      | `string` | image as base64 encoded              |
-| thumbnail | `string` | thumbnail of image as base64 encoded |
+| Property          | Type                 | Description                                      |
+| ----------------- | -------------------- | ------------------------------------------------ |
+| _id               | `string`             | id of user                                       |
+| hasAcceptedTos    | `boolean`            | indicates if users accepted the terms of service |
+| lastActiveEventId | `ObjectID`           | id of last active event                          |
+| sessionInfos      | `Array<SessionInfo>` | thumbnail of image as base64 encoded             |
+
+A **SessionInfo** object has the following properties:
+
+| Property     | Type     | Description                                 |
+| ------------ | -------- | ------------------------------------------- |
+| from         | `number` | timestamp of session begin (auth)           |
+| ip           | `string` | IP-Address                                  |
+| sessionToken | `string` | used sessionToken                           |
+| to           | `number` | timestamp of sesson end (logout/disconnect) |
+| userAgent    | `string` | user-agent of browser                       |
+
