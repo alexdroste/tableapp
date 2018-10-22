@@ -162,14 +162,14 @@ class CommentsView extends React.Component {
                 />
                 <Header>
                     Kommentare
-                    <Header.Subheader>
+                    {/* <Header.Subheader>
                         <Dropdown text="Neueste">
                         <Dropdown.Menu>
                             <Dropdown.Item text='Neueste' />
                             <Dropdown.Item text='Bestbewertet' />
                         </Dropdown.Menu>
                         </Dropdown>
-                    </Header.Subheader>
+                    </Header.Subheader> */}
                 </Header>
                 {isInitialLoadPending ? (
                     <SegmentLoader/>

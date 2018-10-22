@@ -240,7 +240,7 @@ class EntriesView extends React.Component {
                             onClick={this._handleListOnlyBookmarkedClick}
                         />
                     </Header.Content>
-                    <Header.Subheader>
+                    {/* <Header.Subheader>
                         <Dropdown text="Neueste">
                         <Dropdown.Menu>
                             <Dropdown.Item text='Neueste' />
@@ -248,7 +248,7 @@ class EntriesView extends React.Component {
                             <Dropdown.Item text='Bestbewertet' />
                         </Dropdown.Menu>
                         </Dropdown>
-                    </Header.Subheader>
+                    </Header.Subheader> */}
                 </CustomHeader>
                 <WindowScroller>
                     {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
