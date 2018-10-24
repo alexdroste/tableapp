@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as desktopAppActions from '../actions/desktopApp';
-import { withRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { withRouter, Route, Switch, Redirect, Link } from 'react-router-dom';
 import { isSwitchActiveEventPending, getActiveEventId } from '../reducers/events'; 
 import { getConnectionState } from '../reducers/api';
 import { LoginStateEnum, getLoginState, hasAcceptedTos } from '../reducers/user';
 import { ApiConnectionStateEnum } from '../api/ApiConnectionStateEnum';
-import { Dimmer, Loader } from 'semantic-ui-react';
+import { Container, Dimmer, Loader } from 'semantic-ui-react';
 import { NotFoundView } from '../components/NotFoundView';
 import { UserLoginView } from './UserLoginView';
 import { ApiDisconnectedView } from '../components/ApiDisconnectedView';
@@ -17,6 +17,7 @@ import { JoinEventView } from './JoinEventView';
 import { SwitchEventView } from './SwitchEventView';
 import { ActiveEventView } from './ActiveEventView';
 import { AcceptTosView } from './AcceptTosView';
+import { LegalInfosPage } from '../components/LegalInfosPage';
 
 
 const ContentWrapper = styled.div`
@@ -24,6 +25,12 @@ const ContentWrapper = styled.div`
     max-width: 600px;
     padding: 0 10px 75px 10px;
     margin: 0 auto;
+`;
+
+
+const CenteredP = styled.p`
+    margin-top: 2em;
+    text-align: center;
 `;
 
 
@@ -128,7 +135,15 @@ class App extends React.Component {
     render() {
         return (
             <ContentWrapper id="contentWrapper">
-                {this._renderContent()}        
+                <Switch>
+                    <Route exact path='/legalinfos' component={LegalInfosPage}/>
+                    <Route path='*' render={() => this._renderContent()}/>
+                </Switch>
+                <CenteredP>
+                    <Link to='/legalinfos'>
+                        Impressum / Datenschutz / Nutzungsbedingungen
+                    </Link>
+                </CenteredP>
             </ContentWrapper>
         );
     }

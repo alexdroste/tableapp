@@ -60,6 +60,18 @@ export const config = {
      */
     baseUrl: 'https://localhost:3000/',
     /**
+     * HTML text for contact page.
+     * Requires override.
+     * @type {string}
+     */
+    htmlContactInfos: 'Unconfigured, please contact maintainer.',
+    /**
+     * HTML text for terms of service page.
+     * Requires override.
+     * @type {string}
+     */
+    htmlTermsOfService: 'Unconfigured, please contact maintainer.',
+    /**
      * Maximum resolution (width or height) in px for an attached image.
      * Larger pictures get resized to this value.
      * Defaults to 1200.

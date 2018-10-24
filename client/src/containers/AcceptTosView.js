@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { config } from '../config';
 import * as userActions from '../actions/user';
 import { Button, Modal } from 'semantic-ui-react';
 
@@ -37,20 +38,7 @@ class AcceptTosView extends React.Component {
                     Nutzungsbedingungen
                 </Modal.Header>
                 <Modal.Content>
-                    <strong>Um diese Anwendung nutzen zu können, müssen Sie den folgenden Nutzungsbedingungen zustimmen:</strong>
-                    <br/><br/>
-                    Sie sind damit einverstanden, dass die folgenden Daten gespeichert 
-                    und zu wissenschaftlichen Zwecken weiterverarbeitet bzw. analysiert werden:
-                    <ul>
-                        <li>Nutzungszeiten</li>
-                        <li>User-Agent</li>
-                        <li>IP-Adresse</li>
-                    </ul> 
-                    <br/>
-                    Sie sind ebenfalls damit einverstanden, dass die Anwendung 
-                    Ihre <em>E-Mail</em> bzw. Ihr <em>Kürzel</em> dazu benutzt,
-                    über das Nutzerverzeichnis Ihren <em>Namen</em> abzufragen und mit von 
-                    Ihnen im Zuge der Nutzung der Anwendung erstellten Inhalten zu verlinken.
+                    <div dangerouslySetInnerHTML={ {__html: config.htmlTermsOfService } } />
                 </Modal.Content>
                 <Modal.Actions>
                     <Button
