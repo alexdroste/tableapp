@@ -133,17 +133,21 @@ class App extends React.Component {
 
 
     render() {
+        const renderLegalInfosLink = this.props.location.pathname !== "/minicontrol";
+
         return (
             <ContentWrapper id="contentWrapper">
                 <Switch>
                     <Route exact path='/legalinfos' component={LegalInfosPage}/>
                     <Route path='*' render={() => this._renderContent()}/>
                 </Switch>
-                <CenteredP>
-                    <Link to='/legalinfos'>
-                        Impressum / Datenschutz / Nutzungsbedingungen
-                    </Link>
-                </CenteredP>
+                {renderLegalInfosLink &&
+                    <CenteredP>
+                        <Link to='/legalinfos'>
+                            Impressum / Datenschutz / Nutzungsbedingungen
+                        </Link>
+                    </CenteredP>
+                }
             </ContentWrapper>
         );
     }

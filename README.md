@@ -9,12 +9,16 @@
 
 ### high priority
 
+- [ ] fixes:
+  - [x] remove tos link from minicontrol
+  - [ ] screen broadcast won't stop
+  - [ ] windows-app: zoom does not work
 - [x] moderation options: delete entry
 - [x] moderation options: delete comment
-- [ ] screencapture module for windows / desktop-app for windows
+- [x] screencapture module for windows / desktop-app for windows
 - [x] fix: screenshots of active window not working sometimes => allow screenshots per screen (& maybe screenshot preview for presenter)
 - [x] ssl: secure websocket connections
-- [ ] ssl: update deployment details (with own certs)
+- [ ] ssl: update deployment details (with own certs) 
 - [x] data-tracking
 - [ ] prompts & groups
 - [ ] fully implement manage-event view
@@ -31,6 +35,8 @@
 - [ ] moderation options: edit comment
 - [ ] feed sorting / filter options
 - [ ] notifications (in-app/email)
+- [ ] "weiteres UI-Improvement für desktop wäre: direkt hinzufügen von screenshots, wenn man auf den grauen haken klickt"??
+- [ ] show new entries counter in normal-view
 - [ ] option to add tag to entry -> "discussed in lecture"
 - [ ] improve (really bad atm) container/presentational component split (https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
 - [ ] add documentation for components/containers
@@ -38,6 +44,7 @@
 - [ ] collapse entry content in feed if its too long => add button to "expand" / "collapse" long content
 - [ ] make more than the last 3 screenshots available for use / preview other screenshots in zoomed view
 - [ ] implement or remove archive option for events
+- [ ] post entry: show minimum/maximum characters
 - [ ] rate-limits (e.g. you can only post x new entries in x secs)
 - [ ] ability to ban or temp-ban users
 - [ ] optimize entry virtualisation
