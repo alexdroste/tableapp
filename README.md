@@ -12,7 +12,7 @@
 - [ ] fixes:
   - [x] remove tos link from minicontrol
   - [ ] screen broadcast won't stop
-  - [ ] windows-app: zoom does not work
+  - [x] windows-app: zoom does not work
 - [x] moderation options: delete entry
 - [x] moderation options: delete comment
 - [x] screencapture module for windows / desktop-app for windows

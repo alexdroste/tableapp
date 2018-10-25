@@ -11,6 +11,7 @@ import { isDesktopApp, isWindowAlwaysOnTop, isBroadcastActive } from '../reducer
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
 import { ActiveEventQrCodeModal } from './ActiveEventQrCodeModal';
 import { MainNavActionSheet } from './MainNavActionSheet';
+import { ZoomModal } from './ZoomModal';
 
 
 const FixedTop = styled.div`
@@ -115,6 +116,8 @@ class NavBar extends React.Component {
         super(props);
 
         this.state = {
+            isActiveEventQrCodeModalOpen: false,
+            isZoomModalOpen: false,
             menuHeight: 0,
             navMainModalOpen: false,
         };
@@ -173,6 +176,16 @@ class NavBar extends React.Component {
     };
 
 
+    _handleZoomModalClose = (e) => {
+        this.setState({ isZoomModalOpen: false });
+    };
+
+
+    _handleZoomModalOpen = (e) => {
+        this.setState({ isZoomModalOpen: true });
+    };
+
+
     _updateHeight = () => {
         setTimeout(() => { // timeout needed to queue update after other elements rendered correctly
             if (!this.menuRef) 
@@ -190,7 +203,8 @@ class NavBar extends React.Component {
         const { activeEventName, activeEventUserPermissionLevel, hasGoBack, 
             isBroadcastActive, isDesktopApp, isWindowAlwaysOnTop,
             mainContent, rightRailContent } = this.props;
-        const { isActiveEventQrCodeModalOpen, menuHeight, navMainModalOpen } = this.state;
+        const { isActiveEventQrCodeModalOpen, isZoomModalOpen, 
+            menuHeight, navMainModalOpen } = this.state;
         const menuHeightPlusMargin = menuHeight + 14;
         const canBroadcast = activeEventUserPermissionLevel >= PermissionLevelEnum.ADMINISTRATOR;
         const presentationModeActive = isWindowAlwaysOnTop && isDesktopApp && canBroadcast;
@@ -225,27 +239,11 @@ class NavBar extends React.Component {
                                 icon="font"
                                 onClick={() => alert('todo')}
                             /> */}
-                            <Modal 
-                                trigger={
-                                    <Menu.Item
-                                        content="Zoom"
-                                        icon="font"
-                                    />
-                                }
-                                closeIcon
-                            >
-                                <Modal.Header>Schriftgröße verändern</Modal.Header>
-                                <Modal.Content>
-                                    <Modal.Description>
-                                        <p>Um die Schriftgröße zu verändern, nutzen Sie folgende Tastenkombinationen:</p>
-                                        <p>
-                                            <b>Win:</b> strg + +/- (plus- oder minus-symbol)
-                                            <br/>
-                                            <b>Mac:</b> cmd + +/- (plus- oder minus-symbol)
-                                        </p>
-                                    </Modal.Description>
-                                </Modal.Content>
-                            </Modal>
+                            <Menu.Item
+                                content="Zoom"
+                                icon="font"
+                                onClick={this._handleZoomModalOpen}
+                            />
                             <Menu.Item
                                 content="QR"
                                 icon="qrcode"
@@ -342,6 +340,12 @@ class NavBar extends React.Component {
                     isOpen={navMainModalOpen}
                     onClose={this._handleNavMainModalClose}
                 />
+                {isDesktopApp &&
+                    <ZoomModal
+                        isOpen={isZoomModalOpen}
+                        onClose={this._handleZoomModalClose}
+                    />
+                }
             </div>
         );
     }
