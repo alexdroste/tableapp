@@ -9,9 +9,9 @@
 
 ### high priority
 
-- [ ] fixes:
+- [x] fixes:
   - [x] remove tos link from minicontrol
-  - [ ] screen broadcast won't stop
+  - [x] screen broadcast won't stop
   - [x] windows-app: zoom does not work
 - [x] moderation options: delete entry
 - [x] moderation options: delete comment
@@ -20,6 +20,7 @@
 - [x] ssl: secure websocket connections
 - [ ] ssl: update deployment details (with own certs) 
 - [x] data-tracking
+- [ ] track entries/comments read
 - [ ] prompts & groups
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.

@@ -166,13 +166,20 @@ class NavBar extends React.Component {
     };
 
 
-    _handleToggleBroadcastClick = (e) => {
-        this.props.desktopAppActions.setBroadcastActive(!this.props.isBroadcastActive);
+    _handleStartPresentationModeClick = (e) => {
+        this.props.desktopAppActions.setWindowAlwaysOnTop(true);
     };
 
 
-    _handleWindowAlwaysOnTopIconClick = (e) => {
-        this.props.desktopAppActions.setWindowAlwaysOnTop(!this.props.isWindowAlwaysOnTop);
+    _handleStopPresentationModeClick = (e) => {
+        this.props.desktopAppActions.setWindowAlwaysOnTop(false);
+        if (this.props.isBroadcastActive)
+            this.props.desktopAppActions.setBroadcastActive(false);
+    };
+
+
+    _handleToggleBroadcastClick = (e) => {
+        this.props.desktopAppActions.setBroadcastActive(!this.props.isBroadcastActive);
     };
 
 
@@ -253,7 +260,7 @@ class NavBar extends React.Component {
                                 content="Präsentationsmodus beenden"
                                 icon="close"
                                 position="right"
-                                onClick={this._handleWindowAlwaysOnTopIconClick}
+                                onClick={this._handleStopPresentationModeClick}
                             />
                         </CustomMenu>
                     ) : (
@@ -284,7 +291,7 @@ class NavBar extends React.Component {
                                 <Menu.Item
                                     content="Präsentation"
                                     icon="record"
-                                    onClick={this._handleWindowAlwaysOnTopIconClick}
+                                    onClick={this._handleStartPresentationModeClick}
                                 />
                             }
                         </CustomMenu>
