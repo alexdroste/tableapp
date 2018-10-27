@@ -63,7 +63,7 @@ export class ScreenSelectModal extends React.PureComponent {
                             {thumbnails.map((imageData, idx) => 
                                 <Thumbnail
                                     key={idx}
-                                    alt={idx}
+                                    alt={idx.toString()}
                                     isHuge
                                     isSelectable
                                     isSelected={idx === selectedIdx}
