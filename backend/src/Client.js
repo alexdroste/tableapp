@@ -84,6 +84,10 @@ class Client {
             requiresActiveEvent: true,
             requiresAuthentication: true
         });
+        this.on('comments/readComment',                 this._handleReadComment, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
         this.on('comments/subscribeCommentsForEntry',   this._handleSubscribeCommentsForEntry, {
             requiresActiveEvent: true,
             requiresAuthentication: true
@@ -378,6 +382,24 @@ class Client {
             this.activeEventId, entryId, parentId, this.userId, 
             isAnonymous, content, imageDataArr);
         this._logActivity('comments/postComment', { commentId, entryId, parentId });
+    }
+
+
+    /**
+     * Eventhandler for comment was read by user. 
+     * @async
+     * @private
+     * @function
+     * @param {object} data 
+     * @param {string} data.commentId commentId (as string)
+     * @param {string} data.entryId id of entry (as string)
+     * @param {boolean} data.isScrollOver true if read-event was triggered while scrolling over comment, false otherwise (focus, click)
+     * @returns {Promise} 
+     */
+    async _handleReadComment({ commentId, entryId, isScrollOver }) {
+        commentId = new ObjectID(commentId);
+        entryId = new ObjectID(entryId);
+        this._logActivity('comments/readComment', { commentId, entryId, isScrollOver });
     }
 
 
