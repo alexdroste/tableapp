@@ -59,7 +59,7 @@ class ActiveEventView extends React.Component {
          * @type {DynamicRowsCache}
          * @private
          */
-        this._entriesViewDynamicRowsCache = new DynamicRowsCache();        
+        this._entriesViewDynamicRowsCache = new DynamicRowsCache();
     }
     
     
