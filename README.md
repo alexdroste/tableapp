@@ -20,7 +20,8 @@
 - [x] ssl: secure websocket connections
 - [ ] ssl: update deployment details (with own certs) 
 - [x] data-tracking
-- [ ] track entries/comments read
+- [x] track entries read
+- [ ] track comments read
 - [x] backend: log activities
 - [ ] backend: permission-check for events
 - [ ] client: split von api-anfragen und actions aufheben
