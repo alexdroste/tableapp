@@ -259,17 +259,17 @@ class Client {
      */
     async _handleDisconnect() {
         await this._trackAndSaveUserSessionInfos();
-        // const disconnectTimestamp = Date.now();
-        // const sessionDurationMin = ((disconnectTimestamp - this.connectTimestamp) / 1000 / 60).toFixed(1);
-        // console.log('client disconnected', { clientId: this.id, ip: this.ip, userId: this.userId, sessionDurationMin});
         this._socket = null;
         this._broker.unregisterClient(this);
     }
 
 
     async _logActivity(activity, data) {
-        return this._controller.activityLog.logActivity(activity, this.userId, this.ip, 
-            this.userAgent, this.activeEventId, data);
+        if (!this.userId) {
+            console.error('calling log activity without userId being set is forbidden', activity, data);
+            return;
+        }
+        await this._controller.activityLog.logActivity(activity, this.userId, this.activeEventId, data);
     }
 
 
@@ -287,6 +287,7 @@ class Client {
         this.loginTimestamp = Date.now();
         this.sessionToken = loginData.sessionToken;
         this.userId = loginData.id;
+        this._logActivity('user/beginSession', { ip: this.ip, userAgent: this.userAgent });
         this.emitUpdateEventDict(await this._controller.events.getEventDict(this.userId));
         if (this.activeEventId)
             await this._switchActiveEvent(this.activeEventId);
@@ -303,8 +304,11 @@ class Client {
     async _trackAndSaveUserSessionInfos() {
         if (!this.userId)
             return;
+        const logoutTimestamp = Date.now();
         await this._controller.user.saveSessionInfos(this.userId, 
-            this.loginTimestamp, Date.now(), this.sessionToken, this.ip, this.userAgent);
+            this.loginTimestamp, logoutTimestamp, this.sessionToken, this.ip, this.userAgent);
+        const sessionDurationSec = Math.round((logoutTimestamp - this.loginTimestamp) / 1000);
+        this._logActivity('user/endSession', { sessionDurationSec });
     }
 
 
@@ -317,14 +321,17 @@ class Client {
      * @private
      * @function
      * @param {object} data 
-     * @param {string} data.entryId entryId (as string)
      * @param {string} data.commentId commentId (as string)
+     * @param {string} data.entryId entryId (as string)
      * @param {number} data.vote number representing vote (>0: upvote, 0: no vote, <0: downvote)
      * @returns {Promise} 
      */
-    async _handleChangeVoteForComment(data) {
+    async _handleChangeVoteForComment({ commentId, entryId, vote }) {
+        commentId = new ObjectID(commentId);
+        entryId = new ObjectID(entryId);
         await this._controller.comments.changeUserVote(this.activeEventId, 
-            new ObjectID(data.entryId), new ObjectID(data.commentId), this.userId, data.vote);
+            entryId, commentId, this.userId, vote);
+        this._logActivity('comments/changeVote', { commentId, entryId, vote });
     }
 
 
@@ -334,14 +341,16 @@ class Client {
      * @private
      * @function
      * @param {object} data 
-     * @param {string} data.entryId entryId (as string)
      * @param {string} data.commentId commentId (as string)
+     * @param {string} data.entryId entryId (as string)
      * @returns {Promise} 
      */
-    async _handleDeleteComment(data) {
+    async _handleDeleteComment({ commentId, entryId }) {
         // TODO ensure sufficient permissions
-        await this._controller.comments.deleteComment(
-            this.activeEventId, new ObjectID(data.entryId), new ObjectID(data.commentId));
+        commentId = new ObjectID(commentId);
+        entryId = new ObjectID(entryId);
+        await this._controller.comments.deleteComment(this.activeEventId, entryId, commentId);
+        this._logActivity('comments/deleteComment', { commentId, entryId });
     }
 
 
@@ -358,12 +367,13 @@ class Client {
      * @param {(string|null)} data.parentId id of parent-comment (as string). null for toplevel
      * @returns {Promise} 
      */
-    async _handlePostComment(data) {
-        const entryId = new ObjectID(data.entryId);
-        const parentId = data.parentId ? new ObjectID(data.parentId) : null;
-        await this._controller.comments.postComment(
+    async _handlePostComment({ content, entryId, imageDataArr, isAnonymous, parentId }) {
+        entryId = new ObjectID(entryId);
+        parentId = parentId ? new ObjectID(parentId) : null;
+        const commentId = await this._controller.comments.postComment(
             this.activeEventId, entryId, parentId, this.userId, 
-            data.isAnonymous, data.content, data.imageDataArr);
+            isAnonymous, content, imageDataArr);
+        this._logActivity('comments/postComment', { commentId, entryId, parentId });
     }
 
 
@@ -376,11 +386,12 @@ class Client {
      * @param {string} data.entryId entryId (as string)
      * @returns {Promise<CommentsController~CommentDict>} returns dict of comments
      */
-    async _handleSubscribeCommentsForEntry(data) {
-        const entryId = new ObjectID(data.entryId);
+    async _handleSubscribeCommentsForEntry({ entryId }) {
+        entryId = new ObjectID(entryId);
         const commentDict = await this._controller.comments.getComments(
             this.activeEventId, entryId, this.userId);
         this.commentsSubscribedForEntryId = entryId;
+        this._logActivity('comments/viewCommentList', { entryId });
         return commentDict;
     }
 
@@ -405,11 +416,13 @@ class Client {
      * @async
      * @private
      * @function
-     * @param {string} data base64 image-data of full image
+     * @param {object} data
+     * @param {string} data.imageData base64 image-data of full image
      * @returns {Promise} 
      */
-    async _handleBroadcastNewImage(data) {
-        await this._controller.eventScreenshots.addImageForEvent(this.activeEventId, data);
+    async _handleBroadcastNewImage({ imageData }) {
+        await this._controller.eventScreenshots.addImageForEvent(this.activeEventId, imageData);
+        this._logActivity('desktopApp/broadcastNewImage');
     }
 
         
@@ -426,9 +439,11 @@ class Client {
      * @param {boolean} data.bookmark true sets bookmark, false unsets
      * @returns {Promise} 
      */
-    async _handleChangeBookmark(data) {
+    async _handleChangeBookmark({ entryId, bookmark }) {
+        entryId = new ObjectID(entryId);
         await this._controller.entries.changeUserBookmark(
-            this.activeEventId, new ObjectID(data.entryId), this.userId, data.bookmark);
+            this.activeEventId, entryId, this.userId, bookmark);
+        this._logActivity('entries/changeBookmark', { entryId, bookmark });
     }
 
 
@@ -442,9 +457,11 @@ class Client {
      * @param {boolean} data.follow true sets follow, false unsets
      * @returns {Promise} 
      */
-    async _handleChangeFollow(data) {
+    async _handleChangeFollow({ entryId, follow }) {
+        entryId = new ObjectID(entryId);
         await this._controller.entries.changeUserFollow(
-            this.activeEventId, new ObjectID(data.entryId), this.userId, data.follow);
+            this.activeEventId, entryId, this.userId, follow);
+        this._logActivity('entries/changeFollow', { entryId, follow });
     }
 
 
@@ -458,9 +475,11 @@ class Client {
      * @param {number} data.vote number representing vote (>0: upvote, 0: no vote, <0: downvote)
      * @returns {Promise} 
      */
-    async _handleChangeVote(data) {
+    async _handleChangeVote({ entryId, vote }) {
+        entryId = new ObjectID(entryId);
         await this._controller.entries.changeUserVote(
-            this.activeEventId, new ObjectID(data.entryId), this.userId, data.vote);
+            this.activeEventId, entryId, this.userId, vote);
+        this._logActivity('entries/changeVote', { entryId, vote });
     }
 
     
@@ -473,10 +492,11 @@ class Client {
      * @param {string} data.entryId entryId (as string)
      * @returns {Promise} 
      */
-    async _handleDeleteEntry(data) {
+    async _handleDeleteEntry({ entryId }) {
         // TODO ensure sufficient permissions
-        await this._controller.entries.deleteEntry(
-            this.activeEventId, new ObjectID(data.entryId));
+        entryId = new ObjectID(entryId);
+        await this._controller.entries.deleteEntry(this.activeEventId, entryId);
+        this._logActivity('entries/deleteEntry', { entryId });
     }
 
 
@@ -522,9 +542,10 @@ class Client {
      * @param {boolean} data.isAnonymous true if posting is anonymous, otherwise false
      * @returns {Promise} 
      */
-    async _handlePostEntry(data, cb) {
-        await this._controller.entries.postEntry(
-            this.activeEventId, this.userId, data.isAnonymous, data.content, data.imageDataArr);
+    async _handlePostEntry({ content, imageDataArr, isAnonymous }) {
+        const entryId = await this._controller.entries.postEntry(
+            this.activeEventId, this.userId, isAnonymous, content, imageDataArr);
+        this._logActivity('entries/postEntry', { entryId });
     }
 
 
@@ -537,8 +558,8 @@ class Client {
      * @param {Array<string>} data.entryIds array of entryIds (as strings)
      * @returns {Promise<EntriesController~EntryDict>} resolves to dictionary of entries (that were subscribed)
      */
-    async _handleSubscribeEntries(data) {
-        const entryIds = data.entryIds.map((id) => new ObjectID(id));
+    async _handleSubscribeEntries({ entryIds }) {
+        entryIds = entryIds.map((id) => new ObjectID(id));
         entryIds.forEach((id) => {
             if (this.entriesSubscription.subscribedIds.findIndex((cur) => cur.equals(id)) === -1)
                 this.entriesSubscription.subscribedIds.push(id);
@@ -556,13 +577,14 @@ class Client {
      * @param {EntryListTypeEnum} data.listType list type
      * @param {boolean} data.onlyBookmarked indicates if only bookmarked entries should be included in subscription
      */
-    _handleSubscribeEntryList(data) {
+    _handleSubscribeEntryList({ listType, onlyBookmarked }) {
         this.entriesSubscription.listSubscription = null;
-        if (!Object.values(EntryListTypeEnum).includes(data.listType))
+        if (!Object.values(EntryListTypeEnum).includes(listType))
             throw utils.createError('listType not defined', statusCodes.BAD_REQUEST);
         this.entriesSubscription.listSubscription = new EntryListSubscription(
-            this._controller.entries, data.listType, this.activeEventId, 
-            this.userId, data.onlyBookmarked);
+            this._controller.entries, listType, this.activeEventId, 
+            this.userId, onlyBookmarked);
+        this._logActivity('entries/viewEntryList', { listType, onlyBookmarked });
     }
 
 
@@ -573,8 +595,8 @@ class Client {
      * @param {object} data 
      * @param {Array<string>} data.entryIds array of entryIds (as strings)
      */
-    _handleUnsubscribeEntries(data) {
-        const entryIds = data.entryIds.map((id) => new ObjectID(id));
+    _handleUnsubscribeEntries({ entryIds }) {
+        entryIds = entryIds.map((id) => new ObjectID(id));
         entryIds.forEach((id) => {
             const idx = this.entriesSubscription.subscribedIds.findIndex((cur) => cur.equals(id));
             if (idx !== -1)
@@ -629,9 +651,11 @@ class Client {
      * @param {string} data.eventId eventId (as string)
      * @returns {Promise}
      */
-    async _handleJoinEvent(data) {
+    async _handleJoinEvent({ eventId }) {
+        eventId = new ObjectID(eventId);
         await this._controller.events.changeUserPermissionLevelForEvent(
-            new ObjectID(data.eventId), this.userId, PermissionLevelEnum.USER);
+            eventId, this.userId, PermissionLevelEnum.USER);
+        this._logActivity('events/joinEvent', { eventId });
     }
 
 
@@ -644,10 +668,12 @@ class Client {
      * @param {string} data.eventId eventId (as string)
      * @returns {Promise}
      */
-    async _handleLeaveEvent(data) {
+    async _handleLeaveEvent({ eventId }) {
+        eventId = new ObjectID(eventId);
         await this._controller.events.changeUserPermissionLevelForEvent(
-            new ObjectID(data.eventId), this.userId, PermissionLevelEnum.NOT_A_USER);
-        if (this.activeEventId.equals(new ObjectID(data.eventId)))
+            eventId, this.userId, PermissionLevelEnum.NOT_A_USER);
+        this._logActivity('events/leaveEvent', { eventId });
+        if (this.activeEventId.equals(eventId))
             await this._switchActiveEvent(null);
     }
 
@@ -661,8 +687,8 @@ class Client {
      * @param {string} data.eventId eventId (as string)
      * @returns {Promise}
      */
-    async _handleSwitchActiveEvent(data) {
-        await this._switchActiveEvent(new ObjectID(data.eventId));
+    async _handleSwitchActiveEvent({ eventId }) {
+        await this._switchActiveEvent(new ObjectID(eventId));
     }
 
 
@@ -676,6 +702,7 @@ class Client {
      * @todo reorganize position of this function
      */
     async _switchActiveEvent(newEventId) {
+        this._logActivity('events/switchActiveEvent', { fromEventId: this.activeEventId, toEventId: newEventId });
         this.commentsSubscribedForEntryId = null;
         this.entriesSubscription = {
             listSubscription: null,
@@ -716,9 +743,9 @@ class Client {
      * @param {boolean} data.onlyThumbnails indicates if only the thumbnails should be queried
      * @returns {Promise<ImagesController~GetImagesResult>} resolves to an object containing an imageDict and thumbnailDict property, if onlyThumbnails is set imageDict will be an empty object
      */
-    async _handleLoadImages(data) {
-        const imageIds = data.imageIds.map((id) => new ObjectID(id));
-        return await this._controller.images.getImages(imageIds, data.onlyThumbnails);
+    async _handleLoadImages({ imageIds, onlyThumbnails }) {
+        imageIds = imageIds.map((id) => new ObjectID(id));
+        return await this._controller.images.getImages(imageIds, onlyThumbnails);
     }
 
 
@@ -734,6 +761,7 @@ class Client {
      */
     async _handleAcceptTos() {
         await this._controller.user.acceptTos(this.userId);
+        this._logActivity('user/acceptTos');
     }
 
 
@@ -746,9 +774,9 @@ class Client {
      * @param {string} data.sessionToken sessionToken
      * @returns {Promise<UserController~LoginData>} returns loginData
      */
-    async _handleContinueSession(data) {
+    async _handleContinueSession({ sessionToken }) {
         try {
-            const loginData = await this._controller.user.continueSession(data.sessionToken);
+            const loginData = await this._controller.user.continueSession(sessionToken);
             await this._setupAfterAuthentication(loginData);
             return loginData;
         } catch (err) {
@@ -768,16 +796,16 @@ class Client {
      * @param {string} data.password password of user
      * @returns {Promise<UserController~LoginData>} returns loginData
      */
-    async _handleLogin(data) {
+    async _handleLogin({ email, password }) {
         try {
-            const loginData = await this._controller.user.login(data.email, data.password);
+            const loginData = await this._controller.user.login(email, password);
             await this._setupAfterAuthentication(loginData);
             return loginData;
         } catch (err) {
             if (err.name === 'InvalidCredentialsError' 
                     || err.statusCode === statusCodes.NOT_FOUND 
                     || err.statusCode === statusCodes.BAD_REQUEST) {
-                console.log(`login failed ${this.id} ${this.ip} ${data.email}`);
+                console.log(`login failed ${this.id} ${this.ip} ${email}`);
                 err.doNotLog = true;
             }
             err.statusCode = statusCodes.UNAUTHORIZED;

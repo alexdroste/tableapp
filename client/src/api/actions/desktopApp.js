@@ -7,5 +7,5 @@
  * @returns {Promise} indicates success
  */
 export function broadcastNewImage(api, imageData) {
-    return api.request('desktopApp/broadcastNewImage', imageData);
+    return api.request('desktopApp/broadcastNewImage', { imageData });
 }
