@@ -75,7 +75,11 @@ const entryDict = (state = initialState.entryDict, action) => {
         case entriesActionTypes.LOAD_MORE_ENTRIES_SUCCESS:
         case entriesActionTypes.SUBSCRIBE_ENTRIES_SUCCESS:
         case entriesActionTypes.UPDATE_ENTRIES:
-            const updateDict = action.result ? action.result.entryDict : action.entryDict;
+            let updateDict = action.entryDict;
+            if (action.type === entriesActionTypes.LOAD_MORE_ENTRIES_SUCCESS) 
+                updateDict = action.result.entryDict;
+            if (action.type === entriesActionTypes.SUBSCRIBE_ENTRIES_SUCCESS) 
+                updateDict = action.result;
             if (Object.keys(updateDict).length === 0)
                 return state;
             const newDict = {

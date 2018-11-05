@@ -7,16 +7,16 @@ const Jimp = require('jimp');
 
 
 /**
- * Creates a new Error object with a custom code attribute
+ * Creates a new Error object with a custom statusCode attribute
  * @function
  * @param {string} msg error-message
- * @param {(number|string)} [code=500] code (status-code) property, defaults to internal server error (500)
+ * @param {(number|string)} [statusCode=500] code (status-code) property, defaults to internal server error (500)
  * @returns {Error} error object
  */
-function createError(msg, code = statusCodes.INTERNAL_SERVER_ERROR) {
+function createError(msg, statusCode = statusCodes.INTERNAL_SERVER_ERROR) {
     const err = new Error(msg);
     Error.captureStackTrace(err, createError);
-    err.code = code;
+    err.statusCode = statusCode;
     return err;
 };
 module.exports.createError = createError;

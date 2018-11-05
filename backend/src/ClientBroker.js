@@ -63,7 +63,7 @@ class ClientBroker {
      */
     _handleConnection(socket) {
         let client = new Client(socket, this._controller, this);
-        console.log('client connected', { clientId: client.id, ip: client.ip, userAgent: client.userAgent });
+        console.debug(`BROKER-EVENT\t${'connection'.padEnd(40)}\t${client.id}\t${client.ip}\t${client.userAgent}`);
         this._clients.push(client);
     }
 

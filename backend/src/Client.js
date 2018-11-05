@@ -68,45 +68,112 @@ class Client {
         this._init();
 
         // setup listeners
-        this.on('disconnect',                           false,  false,  this._handleDisconnect);
+        this.on('disconnect',                           this._handleDisconnect, {
+        });
 
         // comments
-        this.on('comments/changeVote',                  true,   true,   this._handleChangeVoteForComment);
-        this.on('comments/deleteComment',               true,   true,   this._handleDeleteComment);
-        this.on('comments/postComment',                 true,   true,   this._handlePostComment);
-        this.on('comments/subscribeCommentsForEntry',   true,   true,   this._handleSubscribeCommentsForEntry);
-        this.on('comments/unsubscribeCommentsForEntry', true,   true,   this._handleUnsubscribeCommentsForEntry);
+        this.on('comments/changeVote',                  this._handleChangeVoteForComment, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('comments/deleteComment',               this._handleDeleteComment, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('comments/postComment',                 this._handlePostComment, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('comments/subscribeCommentsForEntry',   this._handleSubscribeCommentsForEntry, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('comments/unsubscribeCommentsForEntry', this._handleUnsubscribeCommentsForEntry, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
 
         // desktopApp
-        this.on('desktopApp/broadcastNewImage',         true,   true,   this._handleBroadcastNewImage);
+        this.on('desktopApp/broadcastNewImage',         this._handleBroadcastNewImage, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
 
         // entries
-        this.on('entries/changeBookmark',               true,   true,   this._handleChangeBookmark);
-        this.on('entries/changeFollow',                 true,   true,   this._handleChangeFollow);
-        this.on('entries/changeVote',                   true,   true,   this._handleChangeVote);
-        this.on('entries/deleteEntry',                  true,   true,   this._handleDeleteEntry);
-        this.on('entries/loadMoreEntries',              true,   true,   this._handleLoadMoreEntries);
-        this.on('entries/postEntry',                    true,   true,   this._handlePostEntry);
-        this.on('entries/subscribeEntries',             true,   true,   this._handleSubscribeEntries);
-        this.on('entries/subscribeEntryList',           true,   true,   this._handleSubscribeEntryList);
-        this.on('entries/unsubscribeEntries',           true,   true,   this._handleUnsubscribeEntries);
-        this.on('entries/unsubscribeEntryList',         true,   true,   this._handleUnsubscribeEntryList);
+        this.on('entries/changeBookmark',               this._handleChangeBookmark, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('entries/changeFollow',                 this._handleChangeFollow, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('entries/changeVote',                   this._handleChangeVote, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('entries/deleteEntry',                  this._handleDeleteEntry, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('entries/loadMoreEntries',              this._handleLoadMoreEntries, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('entries/postEntry',                    this._handlePostEntry, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('entries/subscribeEntries',             this._handleSubscribeEntries, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('entries/subscribeEntryList',           this._handleSubscribeEntryList, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('entries/unsubscribeEntries',           this._handleUnsubscribeEntries, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
+        this.on('entries/unsubscribeEntryList',         this._handleUnsubscribeEntryList, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true
+        });
         
         // events
-        this.on('events/subscribeFullEventDict',        true,   false,  this._handleSubscribeFullEventDict);
-        this.on('events/unsubscribeFullEventDict',      true,   false,  this._handleUnsubscribeFullEventDict);
-        this.on('events/joinEvent',                     true,   false,  this._handleJoinEvent);
-        this.on('events/leaveEvent',                    true,   false,  this._handleLeaveEvent);
-        this.on('events/switchActiveEvent',             true,   false,  this._handleSwitchActiveEvent);
+        this.on('events/subscribeFullEventDict',        this._handleSubscribeFullEventDict, {
+            requiresAuthentication: true
+        });
+        this.on('events/unsubscribeFullEventDict',      this._handleUnsubscribeFullEventDict, {
+            requiresAuthentication: true
+        });
+        this.on('events/joinEvent',                     this._handleJoinEvent, {
+            requiresAuthentication: true
+        });
+        this.on('events/leaveEvent',                    this._handleLeaveEvent, {
+            requiresAuthentication: true
+        });
+        this.on('events/switchActiveEvent',             this._handleSwitchActiveEvent, {
+            requiresAuthentication: true
+        });
 
         // images
-        this.on('images/loadImages',                    true,   true,   this._handleLoadImages);
+        this.on('images/loadImages',                    this._handleLoadImages, {
+            requiresAuthentication: true
+        });
 
         // user
-        this.on('user/acceptTos',                       true,   false,  this._handleAcceptTos);
-        this.on('user/continueSession',                 false,  false,  this._handleContinueSession);
-        this.on('user/login',                           false,  false,  this._handleLogin);
-        this.on('user/logout',                          true,   false,  this._handleLogout);
+        this.on('user/acceptTos',                       this._handleAcceptTos, {
+            requiresAuthentication: true
+        });
+        this.on('user/continueSession',                 this._handleContinueSession, {
+        });
+        this.on('user/login',                           this._handleLogin, {
+        });
+        this.on('user/logout',                          this._handleLogout, {
+            requiresAuthentication: true
+        });
     }
 
 
@@ -192,11 +259,17 @@ class Client {
      */
     async _handleDisconnect() {
         await this._trackAndSaveUserSessionInfos();
-        const disconnectTimestamp = Date.now();
-        const sessionDurationMin = ((disconnectTimestamp - this.connectTimestamp) / 1000 / 60).toFixed(1);
-        console.log('client disconnected', { clientId: this.id, ip: this.ip, userId: this.userId, sessionDurationMin});
+        // const disconnectTimestamp = Date.now();
+        // const sessionDurationMin = ((disconnectTimestamp - this.connectTimestamp) / 1000 / 60).toFixed(1);
+        // console.log('client disconnected', { clientId: this.id, ip: this.ip, userId: this.userId, sessionDurationMin});
         this._socket = null;
         this._broker.unregisterClient(this);
+    }
+
+
+    async _logActivity(activity, data) {
+        return this._controller.activityLog.logActivity(activity, this.userId, this.ip, 
+            this.userAgent, this.activeEventId, data);
     }
 
 
@@ -214,7 +287,6 @@ class Client {
         this.loginTimestamp = Date.now();
         this.sessionToken = loginData.sessionToken;
         this.userId = loginData.id;
-        console.log('user authorized', { clientId: this.id, ip: this.ip, userId: this.userId });
         this.emitUpdateEventDict(await this._controller.events.getEventDict(this.userId));
         if (this.activeEventId)
             await this._switchActiveEvent(this.activeEventId);
@@ -231,21 +303,9 @@ class Client {
     async _trackAndSaveUserSessionInfos() {
         if (!this.userId)
             return;
-        try {
-            await this._controller.user.saveSessionInfos(this.userId, 
-                this.loginTimestamp, Date.now(), this.sessionToken, this.ip, this.userAgent);
-        } catch (err) {
-            console.error('could not save session infos', { clientId: this.id, userId: this.userId }, err);
-        }
+        await this._controller.user.saveSessionInfos(this.userId, 
+            this.loginTimestamp, Date.now(), this.sessionToken, this.ip, this.userAgent);
     }
-
-
-    /**
-     * Socket message callback function.
-     * @callback Client~messageAcknowledgementCallback
-     * @param {*} error error object, message / null or undefined for "no error"
-     * @param {*} result data to send back to client
-     */
 
 
     //#endregion general
@@ -260,18 +320,11 @@ class Client {
      * @param {string} data.entryId entryId (as string)
      * @param {string} data.commentId commentId (as string)
      * @param {number} data.vote number representing vote (>0: upvote, 0: no vote, <0: downvote)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handleChangeVoteForComment(data, cb) {
-        try {
-            await this._controller.comments.changeUserVote(this.activeEventId, 
-                new ObjectID(data.entryId), new ObjectID(data.commentId), this.userId, data.vote);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('change user vote for comment failed', err.code));
-            throw err;
-        }
+    async _handleChangeVoteForComment(data) {
+        await this._controller.comments.changeUserVote(this.activeEventId, 
+            new ObjectID(data.entryId), new ObjectID(data.commentId), this.userId, data.vote);
     }
 
 
@@ -283,19 +336,12 @@ class Client {
      * @param {object} data 
      * @param {string} data.entryId entryId (as string)
      * @param {string} data.commentId commentId (as string)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handleDeleteComment(data, cb) {
-        try {
-            // TODO ensure sufficient permissions
-            await this._controller.comments.deleteComment(
-                this.activeEventId, new ObjectID(data.entryId), new ObjectID(data.commentId));
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('could not delete comment', err.code));
-            throw err;
-        }
+    async _handleDeleteComment(data) {
+        // TODO ensure sufficient permissions
+        await this._controller.comments.deleteComment(
+            this.activeEventId, new ObjectID(data.entryId), new ObjectID(data.commentId));
     }
 
 
@@ -310,21 +356,14 @@ class Client {
      * @param {Array<string>} data.imageDataArr array of attached images (base64 encoded)
      * @param {boolean} data.isAnonymous true if posting is anonymous, otherwise false
      * @param {(string|null)} data.parentId id of parent-comment (as string). null for toplevel
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handlePostComment(data, cb) {
-        try {
-            const entryId = new ObjectID(data.entryId);
-            const parentId = data.parentId ? new ObjectID(data.parentId) : null;
-            await this._controller.comments.postComment(
-                this.activeEventId, entryId, parentId, this.userId, 
-                data.isAnonymous, data.content, data.imageDataArr);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('could not post comment', err.code));
-            throw err;
-        }
+    async _handlePostComment(data) {
+        const entryId = new ObjectID(data.entryId);
+        const parentId = data.parentId ? new ObjectID(data.parentId) : null;
+        await this._controller.comments.postComment(
+            this.activeEventId, entryId, parentId, this.userId, 
+            data.isAnonymous, data.content, data.imageDataArr);
     }
 
 
@@ -335,20 +374,14 @@ class Client {
      * @function
      * @param {object} data 
      * @param {string} data.entryId entryId (as string)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
-     * @returns {Promise} 
+     * @returns {Promise<CommentsController~CommentDict>} returns dict of comments
      */
-    async _handleSubscribeCommentsForEntry(data, cb) {
-        try {
-            const entryId = new ObjectID(data.entryId);
-            const commentDict = await this._controller.comments.getComments(
-                this.activeEventId, entryId, this.userId);
-            this.commentsSubscribedForEntryId = entryId;
-            cb(null, { commentDict })
-        } catch (err) {
-            cb(utils.createError('could not subscribe comments for entry', err.code));
-            throw err;
-        }
+    async _handleSubscribeCommentsForEntry(data) {
+        const entryId = new ObjectID(data.entryId);
+        const commentDict = await this._controller.comments.getComments(
+            this.activeEventId, entryId, this.userId);
+        this.commentsSubscribedForEntryId = entryId;
+        return commentDict;
     }
 
 
@@ -357,18 +390,10 @@ class Client {
      * @async
      * @private
      * @function
-     * @param {object} data empty object
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handleUnsubscribeCommentsForEntry(data, cb) {
-        try {
-            this.commentsSubscribedForEntryId = null;
-            cb(null)
-        } catch (err) {
-            cb(utils.createError('could not unsubscribe comments for entry', err.code));
-            throw err;
-        }
+    async _handleUnsubscribeCommentsForEntry() {
+        this.commentsSubscribedForEntryId = null;
     }
 
 
@@ -381,17 +406,10 @@ class Client {
      * @private
      * @function
      * @param {string} data base64 image-data of full image
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handleBroadcastNewImage(data, cb) {
-        try {
-            await this._controller.eventScreenshots.addImageForEvent(this.activeEventId, data);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('could not broadcast image', err.code));
-            throw err;
-        }
+    async _handleBroadcastNewImage(data) {
+        await this._controller.eventScreenshots.addImageForEvent(this.activeEventId, data);
     }
 
         
@@ -403,21 +421,14 @@ class Client {
      * @async
      * @private
      * @function
-     * @param {string} data 
+     * @param {object} data 
      * @param {string} data.entryId id of entry (as string)
      * @param {boolean} data.bookmark true sets bookmark, false unsets
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handleChangeBookmark(data, cb) {
-        try {
-            await this._controller.entries.changeUserBookmark(
-                this.activeEventId, new ObjectID(data.entryId), this.userId, data.bookmark);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('change user bookmark for entry failed', err.code));
-            throw err;
-        }
+    async _handleChangeBookmark(data) {
+        await this._controller.entries.changeUserBookmark(
+            this.activeEventId, new ObjectID(data.entryId), this.userId, data.bookmark);
     }
 
 
@@ -426,21 +437,14 @@ class Client {
      * @async
      * @private
      * @function
-     * @param {string} data 
+     * @param {object} data 
      * @param {string} data.entryId id of entry (as string)
      * @param {boolean} data.follow true sets follow, false unsets
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handleChangeFollow(data, cb) {
-        try {
-            await this._controller.entries.changeUserFollow(
-                this.activeEventId, new ObjectID(data.entryId), this.userId, data.follow);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('change user follow for entry failed', err.code));
-            throw err;
-        }
+    async _handleChangeFollow(data) {
+        await this._controller.entries.changeUserFollow(
+            this.activeEventId, new ObjectID(data.entryId), this.userId, data.follow);
     }
 
 
@@ -452,18 +456,11 @@ class Client {
      * @param {object} data 
      * @param {string} data.entryId entryId (as string)
      * @param {number} data.vote number representing vote (>0: upvote, 0: no vote, <0: downvote)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handleChangeVote(data, cb) {
-        try {
-            await this._controller.entries.changeUserVote(
-                this.activeEventId, new ObjectID(data.entryId), this.userId, data.vote);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('change user vote for entry failed', err.code));
-            throw err;
-        }
+    async _handleChangeVote(data) {
+        await this._controller.entries.changeUserVote(
+            this.activeEventId, new ObjectID(data.entryId), this.userId, data.vote);
     }
 
     
@@ -474,20 +471,22 @@ class Client {
      * @function
      * @param {object} data 
      * @param {string} data.entryId entryId (as string)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handleDeleteEntry(data, cb) {
-        try {
-            // TODO ensure sufficient permissions
-            await this._controller.entries.deleteEntry(
-                this.activeEventId, new ObjectID(data.entryId));
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('could not delete entry', err.code));
-            throw err;
-        }
+    async _handleDeleteEntry(data) {
+        // TODO ensure sufficient permissions
+        await this._controller.entries.deleteEntry(
+            this.activeEventId, new ObjectID(data.entryId));
     }
+
+
+    /**
+     * Result of _handleLoadMoreEntries call.
+     * @typedef {object} Client~LoadMoreEntriesResult
+     * @property {EntriesController~EntryDict} entryDict dict containing next entries
+     * @property {boolean} hasMoreEntriesToLoad indicates if more entries can be loaded
+     * @property {Array<ObjectID>} idList array of entry-ids (see EntryListSubscription.getIdList())
+     */
 
 
     /**
@@ -495,27 +494,20 @@ class Client {
      * @async
      * @private
      * @function
-     * @param {object} data empty object
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
-     * @returns {Promise} 
+     * @returns {Promise<Client~LoadMoreEntriesResult>} returns more entries 
      */
-    async _handleLoadMoreEntries(data, cb) {
-        try {
-            if (!this.entriesSubscription.listSubscription)
-                throw utils.createError('there must be a subscription to an entrylist', statusCodes.BAD_REQUEST);
-            
-            const res = await this.entriesSubscription.listSubscription.getMoreEntries();
-            const entryDict = await this._controller.entries
-                .getEntries(this.activeEventId, this.userId, res.addedEntryIds);
-            cb(null, { 
-                entryDict, 
-                idList: this.entriesSubscription.listSubscription.getIdList(),
-                hasMoreEntriesToLoad: res.hasMoreEntriesToLoad,
-            });
-        } catch (err) {
-            cb(utils.createError('load more entries failed'));
-            throw err;
-        }
+    async _handleLoadMoreEntries() {
+        if (!this.entriesSubscription.listSubscription)
+            throw utils.createError('there must be a subscription to an entrylist', statusCodes.FAILED_DEPENDENCY);
+        
+        const res = await this.entriesSubscription.listSubscription.getMoreEntries();
+        const entryDict = await this._controller.entries
+            .getEntries(this.activeEventId, this.userId, res.addedEntryIds);
+        return { 
+            entryDict, 
+            hasMoreEntriesToLoad: res.hasMoreEntriesToLoad,
+            idList: this.entriesSubscription.listSubscription.getIdList(),
+        };
     }
 
 
@@ -528,19 +520,11 @@ class Client {
      * @param {string} data.content content of comment
      * @param {Array<string>} data.imageDataArr array of attached images (base64 encoded)
      * @param {boolean} data.isAnonymous true if posting is anonymous, otherwise false
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
     async _handlePostEntry(data, cb) {
-        try {
-            // TODO check if active event is set
-            await this._controller.entries.postEntry(
-                this.activeEventId, this.userId, data.isAnonymous, data.content, data.imageDataArr);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('post entry failed', err.code));
-            throw err;
-        }
+        await this._controller.entries.postEntry(
+            this.activeEventId, this.userId, data.isAnonymous, data.content, data.imageDataArr);
     }
 
 
@@ -551,23 +535,16 @@ class Client {
      * @function
      * @param {object} data 
      * @param {Array<string>} data.entryIds array of entryIds (as strings)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
-     * @returns {Promise} 
+     * @returns {Promise<EntriesController~EntryDict>} resolves to dictionary of entries (that were subscribed)
      */
-    async _handleSubscribeEntries(data, cb) {
-        try {
-            const entryIds = data.entryIds.map((id) => new ObjectID(id));
-            entryIds.forEach((id) => {
-                if (this.entriesSubscription.subscribedIds.findIndex((cur) => cur.equals(id)) === -1)
-                    this.entriesSubscription.subscribedIds.push(id);
-            });
-            const entryDict = await this._controller.entries
-                .getEntries(this.activeEventId, this.userId, entryIds);
-            cb(null, { entryDict });
-        } catch (err) {
-            cb(utils.createError('subscribe entries failed', err.code));
-            throw err;
-        }
+    async _handleSubscribeEntries(data) {
+        const entryIds = data.entryIds.map((id) => new ObjectID(id));
+        entryIds.forEach((id) => {
+            if (this.entriesSubscription.subscribedIds.findIndex((cur) => cur.equals(id)) === -1)
+                this.entriesSubscription.subscribedIds.push(id);
+        });
+        return await this._controller.entries
+            .getEntries(this.activeEventId, this.userId, entryIds);
     }
 
 
@@ -578,21 +555,14 @@ class Client {
      * @param {object} data 
      * @param {EntryListTypeEnum} data.listType list type
      * @param {boolean} data.onlyBookmarked indicates if only bookmarked entries should be included in subscription
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      */
-    _handleSubscribeEntryList(data, cb) {
-        try {
-            this.entriesSubscription.listSubscription = null;
-            if (!Object.values(EntryListTypeEnum).includes(data.listType))
-                throw utils.createError('listType not defined', statusCodes.BAD_REQUEST);
-            this.entriesSubscription.listSubscription = new EntryListSubscription(
-                this._controller.entries, data.listType, this.activeEventId, 
-                this.userId, data.onlyBookmarked);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('subscribe entrylist failed', err.code));
-            throw err;
-        }
+    _handleSubscribeEntryList(data) {
+        this.entriesSubscription.listSubscription = null;
+        if (!Object.values(EntryListTypeEnum).includes(data.listType))
+            throw utils.createError('listType not defined', statusCodes.BAD_REQUEST);
+        this.entriesSubscription.listSubscription = new EntryListSubscription(
+            this._controller.entries, data.listType, this.activeEventId, 
+            this.userId, data.onlyBookmarked);
     }
 
 
@@ -602,21 +572,14 @@ class Client {
      * @function
      * @param {object} data 
      * @param {Array<string>} data.entryIds array of entryIds (as strings)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      */
-    _handleUnsubscribeEntries(data, cb) {
-        try {
-            const entryIds = data.entryIds.map((id) => new ObjectID(id));
-            entryIds.forEach((id) => {
-                const idx = this.entriesSubscription.subscribedIds.findIndex((cur) => cur.equals(id));
-                if (idx !== -1)
-                    this.entriesSubscription.subscribedIds.splice(idx, 1);
-            });
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('subscribe entries failed', err.code));
-            throw err;
-        }
+    _handleUnsubscribeEntries(data) {
+        const entryIds = data.entryIds.map((id) => new ObjectID(id));
+        entryIds.forEach((id) => {
+            const idx = this.entriesSubscription.subscribedIds.findIndex((cur) => cur.equals(id));
+            if (idx !== -1)
+                this.entriesSubscription.subscribedIds.splice(idx, 1);
+        });
     }
 
 
@@ -624,12 +587,9 @@ class Client {
      * Eventhandler for unsubscribe from (previously subscribed) entry-list request.
      * @private
      * @function
-     * @param {object} data empty object
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      */
-    _handleUnsubscribeEntryList(data, cb) {
+    _handleUnsubscribeEntryList() {
         this.entriesSubscription.listSubscription = null;
-        cb(null);
     }
 
 
@@ -641,20 +601,12 @@ class Client {
      * @async
      * @private
      * @function
-     * @param {object} data empty object
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise} 
      */
-    async _handleSubscribeFullEventDict(data, cb) {
-        try {
-            this.subscribedFullEventDict = true;        
-            const fullDict = await this._controller.events.getEventDict(this.userId, true);
-            this.emitUpdateEventDict(fullDict);
-            cb(null);    
-        } catch (err) {
-            cb(utils.createError('subscribe full eventDict failed', statusCodes.INTERNAL_SERVER_ERROR));   
-            throw err;
-        }
+    async _handleSubscribeFullEventDict() {
+        this.subscribedFullEventDict = true;        
+        const fullDict = await this._controller.events.getEventDict(this.userId, true);
+        this.emitUpdateEventDict(fullDict);
     }
 
 
@@ -662,12 +614,9 @@ class Client {
      * Eventhandler for unsubscribe from full EventDict request.
      * @private
      * @function
-     * @param {object} data empty object
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      */
-    _handleUnsubscribeFullEventDict(data, cb) {
+    _handleUnsubscribeFullEventDict() {
         this.subscribedFullEventDict = false;                
-        cb(null);
     }
 
 
@@ -678,18 +627,11 @@ class Client {
      * @function
      * @param {object} data 
      * @param {string} data.eventId eventId (as string)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise}
      */
-    async _handleJoinEvent(data, cb) {
-        try {
-            await this._controller.events.changeUserPermissionLevelForEvent(
-                new ObjectID(data.eventId), this.userId, PermissionLevelEnum.USER);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('could not join event', err.code));
-            throw err;
-        }
+    async _handleJoinEvent(data) {
+        await this._controller.events.changeUserPermissionLevelForEvent(
+            new ObjectID(data.eventId), this.userId, PermissionLevelEnum.USER);
     }
 
 
@@ -700,20 +642,13 @@ class Client {
      * @function
      * @param {object} data 
      * @param {string} data.eventId eventId (as string)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise}
      */
-    async _handleLeaveEvent(data, cb) {
-        try {
-            await this._controller.events.changeUserPermissionLevelForEvent(
-                new ObjectID(data.eventId), this.userId, PermissionLevelEnum.NOT_A_USER);
-            if (this.activeEventId.equals(new ObjectID(data.eventId)))
-                await this._switchActiveEvent(null);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('could not leave event', err.code));
-            throw err;
-        }
+    async _handleLeaveEvent(data) {
+        await this._controller.events.changeUserPermissionLevelForEvent(
+            new ObjectID(data.eventId), this.userId, PermissionLevelEnum.NOT_A_USER);
+        if (this.activeEventId.equals(new ObjectID(data.eventId)))
+            await this._switchActiveEvent(null);
     }
 
 
@@ -724,17 +659,10 @@ class Client {
      * @function
      * @param {object} data 
      * @param {string} data.eventId eventId (as string)
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise}
      */
-    async _handleSwitchActiveEvent(data, cb) {
-        try {
-            await this._switchActiveEvent(new ObjectID(data.eventId));
-            cb(null);    
-        } catch (err) {
-            cb(utils.createError('switch active event failed', statusCodes.INTERNAL_SERVER_ERROR));
-            throw err;
-        }    
+    async _handleSwitchActiveEvent(data) {
+        await this._switchActiveEvent(new ObjectID(data.eventId));
     }
 
 
@@ -748,7 +676,6 @@ class Client {
      * @todo reorganize position of this function
      */
     async _switchActiveEvent(newEventId) {
-        console.debug('switch active event', { clientId: this.id, userId: this.userId, activeEventId: this.activeEventId, newEventId });
         this.commentsSubscribedForEntryId = null;
         this.entriesSubscription = {
             listSubscription: null,
@@ -787,18 +714,11 @@ class Client {
      * @param {object} data 
      * @param {Array<string>} data.imageIds array of ids of images (as string) to retrieve
      * @param {boolean} data.onlyThumbnails indicates if only the thumbnails should be queried
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
-     * @returns {Promise}
+     * @returns {Promise<ImagesController~GetImagesResult>} resolves to an object containing an imageDict and thumbnailDict property, if onlyThumbnails is set imageDict will be an empty object
      */
-    async _handleLoadImages(data, cb) {
-        try {
-            const imageIds = data.imageIds.map((id) => new ObjectID(id));
-            const ret = await this._controller.images.getImages(imageIds, data.onlyThumbnails);
-            cb(null, ret);
-        } catch (err) {
-            cb(utils.createError('load images failed', err.code));            
-            throw err;
-        }
+    async _handleLoadImages(data) {
+        const imageIds = data.imageIds.map((id) => new ObjectID(id));
+        return await this._controller.images.getImages(imageIds, data.onlyThumbnails);
     }
 
 
@@ -810,18 +730,10 @@ class Client {
      * @async
      * @private
      * @function
-     * @param {object} data empty object
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      * @returns {Promise}
      */
-    async _handleAcceptTos(data, cb) {
-        try {
-            await this._controller.user.acceptTos(this.userId);
-            cb(null);
-        } catch (err) {
-            cb(utils.createError('accepting tos failed', err.code));            
-            throw err;
-        }
+    async _handleAcceptTos() {
+        await this._controller.user.acceptTos(this.userId);
     }
 
 
@@ -832,22 +744,16 @@ class Client {
      * @function
      * @param {object} data 
      * @param {string} data.sessionToken sessionToken
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
-     * @returns {Promise}
+     * @returns {Promise<UserController~LoginData>} returns loginData
      */
-    async _handleContinueSession(data, cb) {
+    async _handleContinueSession(data) {
         try {
             const loginData = await this._controller.user.continueSession(data.sessionToken);
             await this._setupAfterAuthentication(loginData);
-            // TODO move callback before _setupAfterAuthentication and fix client behaviour
-            cb(null, loginData);
+            return loginData;
         } catch (err) {
-            cb(utils.createError('continue session failed', statusCodes.UNAUTHORIZED));            
-            if (err.code === statusCodes.BAD_REQUEST) {
-                console.log('continue session failed', { clientId: this.id, ip: this.ip, sessionToken: data.sessionToken });
-            } else {
-                throw err;
-            }
+            err.statusCode = statusCodes.UNAUTHORIZED;
+            throw err;
         }
     }
 
@@ -860,23 +766,22 @@ class Client {
      * @param {object} data 
      * @param {string} data.email email of user
      * @param {string} data.password password of user
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
-     * @returns {Promise}
+     * @returns {Promise<UserController~LoginData>} returns loginData
      */
-    async _handleLogin(data, cb) {
+    async _handleLogin(data) {
         try {
             const loginData = await this._controller.user.login(data.email, data.password);
             await this._setupAfterAuthentication(loginData);
-            cb(null, loginData);
+            return loginData;
         } catch (err) {
-            cb(utils.createError('login failed', statusCodes.UNAUTHORIZED));
             if (err.name === 'InvalidCredentialsError' 
-                    || err.code === statusCodes.NOT_FOUND 
-                    || err.code === statusCodes.BAD_REQUEST) {
-                console.log('login failed', { clientId: this.id, ip: this.ip, email: data.email });
-            } else {
-                throw err;
+                    || err.statusCode === statusCodes.NOT_FOUND 
+                    || err.statusCode === statusCodes.BAD_REQUEST) {
+                console.log(`login failed ${this.id} ${this.ip} ${data.email}`);
+                err.doNotLog = true;
             }
+            err.statusCode = statusCodes.UNAUTHORIZED;
+            throw err;
         }
     }
 
@@ -886,14 +791,11 @@ class Client {
      * @async
      * @private
      * @function
-     * @param {object} data empty object
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      */
-    async _handleLogout(data, cb) {
+    async _handleLogout() {
         await this._trackAndSaveUserSessionInfos();
-        console.log('user logout', { clientId: this.id, ip: this.ip, userId: this.userId });
+        this._logActivity('user/logout');
         this._init(); // reset client-state 
-        cb(null);
     }
 
 
@@ -907,41 +809,55 @@ class Client {
     //#region general
     /**
      * Handler for client-event.
+     * Can be async.
+     * Response data must be returned.
      * @callback Client~eventHandler
      * @param {object} data event-data
-     * @param {Client~messageAcknowledgementCallback} cb data-handled callback
      */
 
 
     /**
      * Registers an event-handler. Calls event handler with current context (this).
      * @param {string} event event-identifier
-     * @param {boolean} requiresAuthentication true if event-handler requries authentication
-     * @param {boolean} requiresActiveEvent true if event-handler requires an event to be active
      * @param {Client~eventHandler} handler event-handler
+     * @param {object} [options] additional options
+     * @param {boolean} [options.requiresActiveEvent=false] true if event-handler requires an event to be active
+     * @param {boolean} [options.requiresAuthentication=false] true if event-handler requries authentication
+     * @param {PermissionLevelEnum} [options.requiredPermissionLevel=PermissionLevelEnum.NOT_A_USER] required permission level
      */
-    on(event, requiresAuthentication, requiresActiveEvent, handler) {
+    on(event, handler, options) {
+        const opts = {
+            requiresActiveEvent: false,
+            requiresAuthentication: false, 
+            requiredPermissionLevel: PermissionLevelEnum.NOT_A_USER, 
+            ...options,
+        };
+
         this._socket.on(event, async (data, cb) => {
-            const debugInfo = { clientEvent: event, clientId: this.id };
+            const debugInfo = `\t${event.padEnd(40)}\t${this.id}\t${this.userId}`;
             try {
+                let err = null;
                 // check for authentication
-                if (requiresAuthentication && !this.userId) {
-                    let err = utils.createError(`event: "${event}" requires authentication`, statusCodes.UNAUTHORIZED);
-                    console.warn(debugInfo, err);
-                    return cb(err);
-                }
+                if (opts.requiresAuthentication && !this.userId)
+                    err = utils.createError('authentication required', statusCodes.UNAUTHORIZED);
                 // check for activeEvent set
-                if (requiresActiveEvent && !this.activeEventId) {
-                    let err = utils.createError(`event: "${event}" requires an event to be active`, statusCodes.UNAUTHORIZED);
-                    console.warn(debugInfo, err);
-                    return cb(err);
+                if (opts.requiresActiveEvent && !this.activeEventId)
+                    err = utils.createError('event requires an event to be active', statusCodes.FAILED_DEPENDENCY);
+                if (err) {
+                    console.warn('EVENT', debugInfo, err.statusCode, err);
+                    return cb(utils.createError(`${event} failed`, err.statusCode));
                 }
-                console.debug(debugInfo);
                 // handle event with current context, Promise.resolve is needed to support async and sync handlers
                 // in case of error: handler is responsible for calling socket-cb with custom error data
-                await Promise.resolve(handler.call(this, data, cb));
+                const res = await Promise.resolve(handler.call(this, data));
+                console.debug('EVENT', debugInfo);
+                if (cb)
+                    cb(null, res);
             } catch (err) {
-                console.error(debugInfo, err);
+                if (!err.doNotLog)
+                    console.error('EVENT', debugInfo, err.statusCode, err);
+                if (cb)
+                    cb(utils.createError(`${event} failed`, err.statusCode));
             }
         });
     }

@@ -52,12 +52,6 @@ export const user = (state = initialState, action) => {
                 ...state,
                 loginState: LoginStateEnum.PENDING,
             };
-        case userActionTypes.CONTINUE_SESSION_FAILURE:
-            return {
-                ...state,
-                loginState: LoginStateEnum.LOGGED_OUT,
-                sessionToken: null
-            };
         case userActionTypes.LOGIN_FAILURE:
             return {
                 ...state,
@@ -79,6 +73,7 @@ export const user = (state = initialState, action) => {
                 ...state,
                 hasAcceptedTos: true,
             };
+        case userActionTypes.CONTINUE_SESSION_FAILURE:
         case userActionTypes.LOGOUT_SUCCESS:
             return initialState;
         default:

@@ -59,7 +59,7 @@ const initialState = {
 export const commentDict = (state = initialState.commentDict, action) => {
     switch (action.type) {
         case commentsActionTypes.SUBSCRIBE_COMMENTS_FOR_ENTRY_SUCCESS:
-            return action.result.commentDict;
+            return action.result; // contains CommentDict
         case commentsActionTypes.UPDATE_COMMENT_DICT:
             return {
                 ...state,
