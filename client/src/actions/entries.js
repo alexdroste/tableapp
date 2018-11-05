@@ -102,6 +102,26 @@ export function loadMoreEntries() {
 
 
 /**
+ * Creates an action for marking/logging an entry as read by user.
+ * @function
+ * @param {string} entryId id of entry
+ * @param {boolean} isScrollOver true if read-event was triggered while scrolling over entry, false otherwise (focus, click)
+ * @returns {object} action
+ */
+export function readEntry(entryId, isScrollOver) {
+    return ({
+        type: 'apiCall',
+        apiCall: {
+            types: [entriesActionTypes.READ_ENTRY_REQUEST,
+                entriesActionTypes.READ_ENTRY_SUCCESS,
+                entriesActionTypes.READ_ENTRY_FAILURE],
+            call: api => api.request('entries/readEntry', { entryId, isScrollOver })
+        }
+    })
+}
+
+
+/**
  * Creates action for posting a new entry.
  * @function
  * @param {boolean} isAnonymous true if posting is anonymous, otherwise false

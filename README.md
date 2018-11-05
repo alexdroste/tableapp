@@ -31,6 +31,7 @@
 - [x] opt-in/opt-out
 - [ ] save all screenshots, link them in db
 - [ ] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
+  - [ ] maybe? log read event for entry/comment in post comment view
 - [x] sign-out
 
 

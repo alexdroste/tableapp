@@ -139,6 +139,13 @@ class EntriesView extends React.Component {
         }
     };
 
+
+    _handleRowInView = entryId => () => {
+        if (!entryId)
+            return;
+        this.props.entriesActions.readEntry(entryId, true);
+    };
+
     
     _handleRowsRendered = ({ startIndex, stopIndex }) => {
         // console.log('rows rendered');
@@ -157,7 +164,7 @@ class EntriesView extends React.Component {
     _loadMoreRows = throttle(() => {
         // console.log('load called');
         this.props.entriesActions.loadMoreEntries();
-    }, 3000);
+    }, 1000);
 
 
     _resize = (index) => {
@@ -184,7 +191,8 @@ class EntriesView extends React.Component {
                 cache={this.props.dynamicRowsCache}
                 id={entryId}
                 key={key}
-                style={style}                
+                onRowInView={this._handleRowInView(entryId)}
+                style={style}
             >
                 <EntryCardContainer
                     entryId={entryId}

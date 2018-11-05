@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import debounce from 'lodash/debounce';
 import Measure from 'react-measure';
 
 
-export class DynamicRow extends React.Component {
+export class DynamicRow extends React.PureComponent {
     static get propTypes() {
         return {};
     };
@@ -18,13 +19,54 @@ export class DynamicRow extends React.Component {
 
         this.lastHeight = null;
         this._innerWrapperRef = null;
+        this._lastIsVisible = false;
+        this._nodeRef = React.createRef();
+    }
+
+
+    componentDidMount() {
+        window.addEventListener('scroll', this._checkVisibility);
+        window.addEventListener('resize', this._checkVisibility);
+        this._checkVisibility();
     }
 
 
     componentDidUpdate(prevProps) {
+        this._checkVisibility();
         if (this.props.id !== prevProps.id)
             this._onResize(this.lastHeight);
     }
+
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this._checkVisibility);
+        window.removeEventListener('resize', this._checkVisibility);
+    }
+
+
+    _checkVisibility = debounce(() => {
+        if (!this.props.onRowInView)
+            return;
+
+        setTimeout(() => {
+            // _checkVisibility might be called from componentDidMount, before component ref is assigned
+            if (!this._nodeRef.current || !this._nodeRef.current.getBoundingClientRect) 
+                return;
+            
+            const { top, height } = this._nodeRef.current.getBoundingClientRect();
+            if (height === 0)
+                return;
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            const middle = top + height / 2;
+            // determine visibility state by checking if middle-point is in viewport TODO improve
+            const isVisible = middle >= 0 && middle <= windowHeight;
+
+            if (!this._lastIsVisible && isVisible)
+                this.props.onRowInView();
+
+            this._lastIsVisible = isVisible;
+        }, 0);
+    }, 500);
 
 
     _onResize = (height) => {
@@ -46,6 +88,7 @@ export class DynamicRow extends React.Component {
 
         return (
             <div
+                ref={this._nodeRef}
                 style={style}
             >
                 <Measure

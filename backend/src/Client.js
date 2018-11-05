@@ -124,6 +124,10 @@ class Client {
             requiresActiveEvent: true,
             requiresAuthentication: true
         });
+        this.on('entries/readEntry',                    this._handleReadEntry, {
+            requiresActiveEvent: true,
+            requiresAuthentication: true,
+        });
         this.on('entries/subscribeEntries',             this._handleSubscribeEntries, {
             requiresActiveEvent: true,
             requiresAuthentication: true
@@ -546,6 +550,22 @@ class Client {
         const entryId = await this._controller.entries.postEntry(
             this.activeEventId, this.userId, isAnonymous, content, imageDataArr);
         this._logActivity('entries/postEntry', { entryId });
+    }
+
+
+    /**
+     * Eventhandler for entry was read by user. 
+     * @async
+     * @private
+     * @function
+     * @param {object} data 
+     * @param {string} data.entryId id of entry (as string)
+     * @param {boolean} data.isScrollOver true if read-event was triggered while scrolling over entry, false otherwise (focus, click)
+     * @returns {Promise} 
+     */
+    async _handleReadEntry({ entryId, isScrollOver }) {
+        entryId = new ObjectID(entryId);
+        this._logActivity('entries/readEntry', { entryId, isScrollOver });
     }
 
 

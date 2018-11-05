@@ -72,8 +72,10 @@ class CommentsView extends React.Component {
      */
     componentDidMount() {
         const entryId = this.props.match.params.entryId;
-        this.props.entriesActions.subscribeEntries([entryId]);        
+        this.props.entriesActions.subscribeEntries([entryId]);
         this.props.commentsActions.subscribeCommentsForEntry(entryId);
+        // mark entry as read
+        this.props.entriesActions.readEntry(entryId, false);
     }
 
 
