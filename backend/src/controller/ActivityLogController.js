@@ -29,14 +29,12 @@ class ActivityLogController {
 
     // methods
 
-    async logActivity(activity, userId, ip, userAgent, activeEventId, data) {
-        console.debug(`ACTIVITY\t${activity.padEnd(40)}\t${userId}\t${ip}\t${userAgent}\t${activeEventId}\t${JSON.stringify(data)}`);
+    async logActivity(activity, userId, activeEventId, data) {
+        console.debug(`ACTIVITY\t${activity.padEnd(40)}\t${userId}\t${activeEventId}\t${JSON.stringify(data)}`);
         const logDoc = {
             timestamp: Date.now(),
             activity,
             userId,
-            ip,
-            userAgent,
             activeEventId,
             data,
         };

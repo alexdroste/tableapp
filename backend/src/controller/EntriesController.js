@@ -432,7 +432,7 @@ class EntriesController {
      * @param {boolean} isAnonymous true if posting is anonymous, otherwise false
      * @param {string} content content of entry
      * @param {Array<string>} imageDataArr array of attached images (base64 encoded)
-     * @returns {Promise} indicates success
+     * @returns {Promise<ObjectID>} resolves to ObjectID of inserted entry
      */
     async postEntry(eventId, userId, isAnonymous, content, imageDataArr) {
         if (!eventId || !userId || isAnonymous == null || !content || !imageDataArr)
@@ -471,6 +471,7 @@ class EntriesController {
             throw utils.createError('entry could not be posted');
         
         this._onEntryUpdated(eventId, res.insertedId);
+        return res.insertedId;
     }
 }
 

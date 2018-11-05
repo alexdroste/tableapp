@@ -228,6 +228,7 @@ class CommentsController {
      * @param {string} content content of comment
      * @param {Array<string>} imageDataArr array of attached images (base64 encoded)
      * @returns {Promise} indicates success
+     * @returns {Promise<ObjectID>} resolves to ObjectID of inserted Comment
      */
     async postComment(eventId, entryId, parentId, userId, isAnonymous, content, imageDataArr) {
         if (!eventId || !entryId || !userId || isAnonymous == null || !content || !imageDataArr)
@@ -289,6 +290,7 @@ class CommentsController {
             throw utils.createError('comment could not be posted');
         
         this._onCommentUpdated(eventId, entryId, res.insertedId, true);
+        return res.insertedId;
     }
 }
 
