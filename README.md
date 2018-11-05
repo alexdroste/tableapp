@@ -21,6 +21,10 @@
 - [ ] ssl: update deployment details (with own certs) 
 - [x] data-tracking
 - [ ] track entries/comments read
+- [x] backend: log activities
+- [ ] backend: permission-check for events
+- [ ] client: split von api-anfragen und actions aufheben
+- [ ] client: [REQUEST, SUCCESS, FAILED] generieren => { type: CHANGE_VOTE, apiRequestState: REQUEST}
 - [ ] prompts & groups
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
@@ -32,6 +36,8 @@
 
 ### normal priority
 
+- [ ] document api events (client->backend, backend->client) & activities
+- [ ] split full-name into tuple (title, first name, last name)
 - [ ] moderation options: edit entry
 - [ ] moderation options: edit comment
 - [ ] feed sorting / filter options

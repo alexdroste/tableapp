@@ -13,6 +13,19 @@ The database consists of the following collections:
 
 * **UserIds** are strings (not ObjectIDs). They **are base64 encoded** ldap **DNs**. This design of userIds allow faster user-data lookups for instance.
 
+## activitylog
+
+A single document is a single log entry and has the following properties:
+
+| Property      | Type       | Description                |
+| ------------- | ---------- | -------------------------- |
+| _id           | `ObjectID` | (not relevant)             |
+| activeEventId | `ObjectID` | id of users active event   |
+| activity      | `string`   | name of activity           |
+| data          | `object`   | additional data            |
+| timestamp     | `number`   | timestamp of log-date/time |
+| userId        | `string`   | id of user                 |
+
 ## comments
 
 A single document has the following properties:
