@@ -1,3 +1,4 @@
+const ActivityLogController = require('./ActivityLogController');
 const CommentsController = require('./CommentsController');
 const EntriesController = require('./EntriesController');
 const EventsController = require('./EventsController');
@@ -8,6 +9,7 @@ const UserController = require('./UserController');
 /**
  * Controller object.
  * @typedef {object} Controller
+ * @property {ActivityLogController} activityLog
  * @property {CommentsController} comments
  * @property {EntriesController} entries
  * @property {EventsController} events
@@ -24,6 +26,7 @@ const UserController = require('./UserController');
  */
 const configureController = (dbConnection) => {
     return {
+        activityLog: new ActivityLogController(dbConnection),
         comments: new CommentsController(dbConnection),
         entries: new EntriesController(dbConnection),
         events: new EventsController(dbConnection),
