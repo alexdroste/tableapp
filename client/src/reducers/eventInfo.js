@@ -44,12 +44,30 @@ import * as utils from '../utils';
  * Shape of eventInfo reducers state.
  * Default values are the initial state.
  * @typedef {object} EventInfoState
+ * @property {number} [promptGroup=0]
  * @property {RoleList} [roleList=[]]
  * @property {UserDict} [userDict={}]
  */
 const initialState = {
+    promptGroup: 0, // extra-code for prompts
     roleList: [],
     userDict: {},
+};
+
+
+const promptGroup = (state = initialState.promptGroup, action) => { // extra-code for prompts
+    switch (action.type) {
+        case eventInfoActionTypes.UPDATE_PROMPT_GROUP:
+            return action.group;
+        // reset
+        case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
+        case userActionTypes.CONTINUE_SESSION_REQUEST:
+        case userActionTypes.LOGIN_REQUEST:
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.promptGroup;
+        default:
+            return state;
+    }
 };
 
 
@@ -99,6 +117,7 @@ const userDict = (state = initialState.userDict, action) => {
  * @param {object} action
  */
 export const eventInfo = combineReducers({
+    promptGroup, // extra-code for prompts
     roleList,
     userDict,
 });

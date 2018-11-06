@@ -26,7 +26,9 @@
 - [ ] backend: permission-check for events
 - [ ] client: split von api-anfragen und actions aufheben
 - [ ] client: [REQUEST, SUCCESS, FAILED] generieren => { type: CHANGE_VOTE, apiRequestState: REQUEST}
-- [ ] prompts & groups
+- [ ] prompts
+  - [x] groups
+  - [ ] ui
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
 - [x] opt-in/opt-out

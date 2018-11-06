@@ -4,6 +4,7 @@ const EntriesController = require('./EntriesController');
 const EventsController = require('./EventsController');
 const EventScreenshotsController = require('./EventScreenshotsController');
 const ImagesController = require('./ImagesController');
+const PromptGroupController = require('./PromptGroupController'); // extra-code for prompts
 const UserController = require('./UserController');
 
 /**
@@ -15,6 +16,7 @@ const UserController = require('./UserController');
  * @property {EventsController} events
  * @property {EventScreenshotsController} eventScreenshots
  * @property {ImagesController} images
+ * @property {PromptGroupController} promptGroup // extra-code for prompts
  * @property {UserController} user
  */
 
@@ -32,6 +34,7 @@ const configureController = (dbConnection) => {
         events: new EventsController(dbConnection),
         eventScreenshots: new EventScreenshotsController(dbConnection),
         images: new ImagesController(dbConnection),
+        promptGroup: new PromptGroupController(dbConnection), // extra-code for prompts
         user: new UserController(dbConnection),
     };
 };

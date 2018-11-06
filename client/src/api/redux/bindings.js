@@ -25,6 +25,10 @@ export const setupListeners = (api, dispatch) => {
     };
 
     // eventInfo
+    const _handleUpdatePromptGroup = (group) => { // extra-code for prompts
+        dispatch(eventInfoActions.updatePromptGroup(group));
+    };
+
     const _handleUpdateRoleList = (roleList) => {
         dispatch(eventInfoActions.updateRoleList(roleList));
     };
@@ -52,6 +56,7 @@ export const setupListeners = (api, dispatch) => {
     api.on('entries/updateEntries', _handleUpdateEntries);
 
     // eventInfo
+    api.on('eventInfo/updatePromptGroup', _handleUpdatePromptGroup); // extra-code for prompts
     api.on('eventInfo/updateRoleList', _handleUpdateRoleList);
     api.on('eventInfo/updateUserDict', _handleUpdateUserDict);
 

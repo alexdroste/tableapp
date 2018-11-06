@@ -757,6 +757,9 @@ class Client {
             return;
         
         // TODO cancel if newEventId does not exist
+
+        this.emitUpdatePromptGroup(await this._controller.promptGroup.getGroup(this.userId, this.activeEventId)); // extra-code for prompts
+
         const event = (await this._controller.events.getEventDict(
             this.userId, true, [newEventId]))[newEventId];
         this.permissionLevel = event.permissionLevel;
@@ -1005,6 +1008,16 @@ class Client {
     //#endregion entries
 
     //#region eventInfo
+    /**
+     * Sends users prompt group to client.
+     * @function
+     * @param {number} group prompt-group
+     */
+    emitUpdatePromptGroup(group) { // extra-code for prompts
+        this._socket.emit('eventInfo/updatePromptGroup', group);
+    }
+
+
     /**
      * Sends a specified RoleList to client.
      * @function
