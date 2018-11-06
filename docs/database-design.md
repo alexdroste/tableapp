@@ -112,6 +112,19 @@ A single document has the following properties:
 | data      | `string`   | image as base64 encoded              |
 | thumbnail | `string`   | thumbnail of image as base64 encoded |
 
+## promptgroup
+
+A single document has the following properties:
+
+| Property | Type       | Description           |
+| -------- | ---------- | --------------------- |
+| _id      | `ObjectID` | (not relevant)        |
+| eventId  | `ObjectID` | id of event           |
+| fromDate | `Date`     | valid-from            |
+| group    | `number`   | group-number (0 or 1) |
+| toDate   | `Date`     | valid-to              |
+| userId   | `string`   | id of user            |
+
 ## users
 
 A single document has the following properties:
