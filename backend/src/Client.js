@@ -922,8 +922,9 @@ class Client {
                 }
                 // handle event with current context, Promise.resolve is needed to support async and sync handlers
                 // in case of error: handler is responsible for calling socket-cb with custom error data
+                const profileStart = Date.now();
                 const res = await Promise.resolve(handler.call(this, data));
-                console.debug('EVENT', debugInfo);
+                console.debug('EVENT', debugInfo, `\t+${Date.now() - profileStart}ms`);
                 if (cb)
                     cb(null, res);
             } catch (err) {

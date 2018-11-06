@@ -23,9 +23,6 @@
 - [x] track entries read
 - [ ] track comments read
 - [x] backend: log activities
-- [ ] backend: permission-check for events
-- [ ] client: split von api-anfragen und actions aufheben
-- [ ] client: [REQUEST, SUCCESS, FAILED] generieren => { type: CHANGE_VOTE, apiRequestState: REQUEST}
 - [ ] prompts
   - [x] groups
   - [ ] ui
@@ -40,6 +37,9 @@
 
 ### normal priority
 
+- [ ] backend: permission-check for events
+- [ ] client: no longer split api-actions and actions
+- [ ] maybe? client: [REQUEST, SUCCESS, FAILED] generate => { type: CHANGE_VOTE, apiRequestState: REQUEST}
 - [ ] document api events (client->backend, backend->client) & activities
 - [ ] split full-name into tuple (title, first name, last name)
 - [ ] moderation options: edit entry
