@@ -1,5 +1,4 @@
 import * as entriesActionTypes from '../actiontypes/entries';
-import * as entriesApiMethods from '../api/actions/entries';
 import { getImage } from '../reducers/images';
 
 
@@ -17,7 +16,7 @@ export function changeBookmark(entryId, bookmark) {
             types: [entriesActionTypes.CHANGE_BOOKMARK_REQUEST,
                 entriesActionTypes.CHANGE_BOOKMARK_SUCCESS,
                 entriesActionTypes.CHANGE_BOOKMARK_FAILURE],
-            call: (api) => entriesApiMethods.changeBookmark(api, entryId, bookmark)
+            call: (api) => api.request('entries/changeBookmark', { entryId, bookmark })
         }
     });
 }
@@ -37,7 +36,7 @@ export function changeFollow(entryId, follow) {
             types: [entriesActionTypes.CHANGE_FOLLOW_REQUEST,
                 entriesActionTypes.CHANGE_FOLLOW_SUCCESS,
                 entriesActionTypes.CHANGE_FOLLOW_FAILURE],
-            call: (api) => entriesApiMethods.changeFollow(api, entryId, follow)
+            call: (api) => api.request('entries/changeFollow', { entryId, follow })
         }
     });
 }
@@ -57,7 +56,7 @@ export function changeVote(entryId, vote) {
             types: [entriesActionTypes.CHANGE_VOTE_REQUEST,
                 entriesActionTypes.CHANGE_VOTE_SUCCESS,
                 entriesActionTypes.CHANGE_VOTE_FAILURE],
-            call: (api) => entriesApiMethods.changeVote(api, entryId, vote)
+            call: (api) => api.request('entries/changeVote', { entryId, vote })
         }
     });
 }
@@ -76,7 +75,7 @@ export function deleteEntry(entryId) {
             types: [entriesActionTypes.DELETE_ENTRY_REQUEST,
                 entriesActionTypes.DELETE_ENTRY_SUCCESS,
                 entriesActionTypes.DELETE_ENTRY_FAILURE],
-            call: (api) => entriesApiMethods.deleteEntry(api, entryId)
+            call: (api) => api.request('entries/deleteEntry', { entryId })
         }
     });
 }
@@ -95,7 +94,7 @@ export function loadMoreEntries() {
             types: [entriesActionTypes.LOAD_MORE_ENTRIES_REQUEST,
                 entriesActionTypes.LOAD_MORE_ENTRIES_SUCCESS,
                 entriesActionTypes.LOAD_MORE_ENTRIES_FAILURE],
-            call: (api) => entriesApiMethods.loadMoreEntries(api)
+            call: (api) => api.request('entries/loadMoreEntries')
         }
     });
 }
@@ -117,7 +116,19 @@ export function readEntry(entryId, isScrollOver) {
                 entriesActionTypes.READ_ENTRY_FAILURE],
             call: api => api.request('entries/readEntry', { entryId, isScrollOver })
         }
-    })
+    });
+    // return (dispatch, getState) => {
+    //     dispatch({
+    //         type: 'apiCall',
+    //         apiCall: {
+    //             types: [entriesActionTypes.READ_ENTRY_REQUEST,
+    //                 entriesActionTypes.READ_ENTRY_SUCCESS,
+    //                 entriesActionTypes.READ_ENTRY_FAILURE],
+    //             call: api => api.request('entries/readEntry', { entryId, isScrollOver })
+    //         },
+    //         dbgContent: getState().entries.entryDict[entryId].content,
+    //     });
+    // };
 }
 
 
@@ -127,9 +138,10 @@ export function readEntry(entryId, isScrollOver) {
  * @param {boolean} isAnonymous true if posting is anonymous, otherwise false
  * @param {string} content content of comment
  * @param {Array<string>} imageIds array of images (by id) to attach
+ * @param {Array<string>} extraQuestion array of question to append (prompts)
  * @returns {object} action
  */
-export function postEntry(isAnonymous, content, imageIds) {
+export function postEntry(isAnonymous, content, imageIds, extraQuestions) { // extra-code for prompts
     return (dispatch, getState) => {
         const imageDataArr = imageIds.map((id) => getImage(getState().images, id));
         dispatch({
@@ -139,7 +151,7 @@ export function postEntry(isAnonymous, content, imageIds) {
                 types: [entriesActionTypes.POST_ENTRY_REQUEST,
                     entriesActionTypes.POST_ENTRY_SUCCESS,
                     entriesActionTypes.POST_ENTRY_FAILURE],
-                call: (api) => entriesApiMethods.postEntry(api, isAnonymous, content, imageDataArr)
+                call: (api) => api.request('entries/postEntry', { isAnonymous, content, imageDataArr })
             }
         });
     }
@@ -160,7 +172,7 @@ export function subscribeEntries(entryIds) {
             types: [entriesActionTypes.SUBSCRIBE_ENTRIES_REQUEST,
                 entriesActionTypes.SUBSCRIBE_ENTRIES_SUCCESS,
                 entriesActionTypes.SUBSCRIBE_ENTRIES_FAILURE],
-            call: (api) => entriesApiMethods.subscribeEntries(api, entryIds)
+            call: (api) => api.request('entries/subscribeEntries', { entryIds })
         }
     };
 }
@@ -181,7 +193,7 @@ export function subscribeEntryList(listType, onlyBookmarked) {
             types: [entriesActionTypes.SUBSCRIBE_ENTRY_LIST_REQUEST,
                 entriesActionTypes.SUBSCRIBE_ENTRY_LIST_SUCCESS,
                 entriesActionTypes.SUBSCRIBE_ENTRY_LIST_FAILURE],
-            call: (api) => entriesApiMethods.subscribeEntryList(api, listType, onlyBookmarked)
+            call: (api) => api.request('entries/subscribeEntryList', { listType, onlyBookmarked })
         },
         listType,
         onlyBookmarked,
@@ -203,7 +215,7 @@ export function unsubscribeEntries(entryIds) {
             types: [entriesActionTypes.UNSUBSCRIBE_ENTRIES_REQUEST,
                 entriesActionTypes.UNSUBSCRIBE_ENTRIES_SUCCESS,
                 entriesActionTypes.UNSUBSCRIBE_ENTRIES_FAILURE],
-            call: (api) => entriesApiMethods.unsubscribeEntries(api, entryIds)
+            call: (api) => api.request('entries/unsubscribeEntries', { entryIds })
         }
     });
 }
@@ -222,7 +234,7 @@ export function unsubscribeEntryList() {
             types: [entriesActionTypes.UNSUBSCRIBE_ENTRY_LIST_REQUEST,
                 entriesActionTypes.UNSUBSCRIBE_ENTRY_LIST_SUCCESS,
                 entriesActionTypes.UNSUBSCRIBE_ENTRY_LIST_FAILURE],
-            call: (api) => entriesApiMethods.unsubscribeEntryList(api)
+            call: (api) => api.request('entries/unsubscribeEntryList')
         }
     });
 }

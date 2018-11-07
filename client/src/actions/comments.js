@@ -1,5 +1,4 @@
 import * as commentsActionTypes from '../actiontypes/comments';
-import * as commentsApiMethods from '../api/actions/comments';
 import { getImage } from '../reducers/images';
 
 
@@ -18,7 +17,7 @@ export function changeVote(entryId, commentId, vote) {
             types: [commentsActionTypes.CHANGE_VOTE_REQUEST,
                 commentsActionTypes.CHANGE_VOTE_SUCCESS,
                 commentsActionTypes.CHANGE_VOTE_FAILURE],
-            call: (api) => commentsApiMethods.changeVote(api, entryId, commentId, vote)
+            call: (api) => api.request('comments/changeVote', { entryId, commentId, vote })
         }
     });
 }
@@ -38,7 +37,7 @@ export function deleteComment(entryId, commentId) {
             types: [commentsActionTypes.DELETE_COMMENT_REQUEST,
                 commentsActionTypes.DELETE_COMMENT_SUCCESS,
                 commentsActionTypes.DELETE_COMMENT_FAILURE], 
-            call: (api) => commentsApiMethods.deleteComment(api, entryId, commentId)
+            call: (api) => api.request('comments/deleteComment', { entryId, commentId })
         }
     });
 }
@@ -64,7 +63,13 @@ export function postComment(entryId, parentId, isAnonymous, content, imageIds) {
                 types: [commentsActionTypes.POST_COMMENT_REQUEST,
                     commentsActionTypes.POST_COMMENT_SUCCESS,
                     commentsActionTypes.POST_COMMENT_FAILURE],
-                call: (api) => commentsApiMethods.postComment(api, entryId, parentId, isAnonymous, content, imageDataArr)
+                call: (api) => api.request('comments/postComment', { 
+                    content,
+                    entryId,
+                    imageDataArr,
+                    isAnonymous,
+                    parentId: parentId === '0' ? null : parentId,
+                })
             }
         });
     }
@@ -85,7 +90,7 @@ export function subscribeCommentsForEntry(entryId) {
             types: [commentsActionTypes.SUBSCRIBE_COMMENTS_FOR_ENTRY_REQUEST,
                 commentsActionTypes.SUBSCRIBE_COMMENTS_FOR_ENTRY_SUCCESS,
                 commentsActionTypes.SUBSCRIBE_COMMENTS_FOR_ENTRY_FAILURE],
-            call: (api) => commentsApiMethods.subscribeCommentsForEntry(api, entryId)
+            call: (api) => api.request('comments/subscribeCommentsForEntry', { entryId })
         },
         entryId
     };
@@ -105,7 +110,7 @@ export function unsubscribeCommentsForEntry() {
             types: [commentsActionTypes.UNSUBSCRIBE_COMMENTS_FOR_ENTRY_REQUEST,
                 commentsActionTypes.UNSUBSCRIBE_COMMENTS_FOR_ENTRY_SUCCESS,
                 commentsActionTypes.UNSUBSCRIBE_COMMENTS_FOR_ENTRY_FAILURE],
-            call: (api) => commentsApiMethods.unsubscribeCommentsForEntry(api)
+            call: (api) => api.request('comments/unsubscribeCommentsForEntry')
         }
     });
 }

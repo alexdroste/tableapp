@@ -1,5 +1,4 @@
 import * as desktopAppActionTypes from '../actiontypes/desktopApp';
-import * as desktopAppApiMethods from '../api/actions/desktopApp';
 import * as ipcActions from '../ipc/actions';
 
 
@@ -28,7 +27,7 @@ export function broadcastNewImage(imageData) {
             types: [desktopAppActionTypes.BROADCAST_NEW_IMAGE_REQUEST,
                 desktopAppActionTypes.BROADCAST_NEW_IMAGE_SUCCESS,
                 desktopAppActionTypes.BROADCAST_NEW_IMAGE_FAILURE],
-            call: (api) => desktopAppApiMethods.broadcastNewImage(api, imageData)
+            call: (api) => api.request('desktopApp/broadcastNewImage', { imageData })
         },
     });
 }

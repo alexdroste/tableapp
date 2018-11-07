@@ -1,5 +1,4 @@
 import * as eventsActionTypes from '../actiontypes/events';
-import * as eventsApiMethods from '../api/actions/events';
 
 
 /**
@@ -15,7 +14,7 @@ export function subscribeFullEventDict() {
             types: [eventsActionTypes.SUBSCRIBE_FULL_EVENT_DICT_REQUEST,
                 eventsActionTypes.SUBSCRIBE_FULL_EVENT_DICT_SUCCESS,
                 eventsActionTypes.SUBSCRIBE_FULL_EVENT_DICT_FAILURE],
-            call: (api) => eventsApiMethods.subscribeFullEventDict(api)
+            call: (api) => api.request('events/subscribeFullEventDict')
         }
     });
 }
@@ -34,7 +33,7 @@ export function unsubscribeFullEventDict() {
             types: [eventsActionTypes.UNSUBSCRIBE_FULL_EVENT_DICT_REQUEST,
                 eventsActionTypes.UNSUBSCRIBE_FULL_EVENT_DICT_SUCCESS,
                 eventsActionTypes.UNSUBSCRIBE_FULL_EVENT_DICT_FAILURE],
-            call: (api) => eventsApiMethods.unsubscribeFullEventDict(api)
+            call: (api) => api.request('events/unsubscribeFullEventDict')
         }
     });
 }
@@ -53,7 +52,7 @@ export function joinEvent(eventId) {
             types: [eventsActionTypes.JOIN_EVENT_REQUEST,
                 eventsActionTypes.JOIN_EVENT_SUCCESS,
                 eventsActionTypes.JOIN_EVENT_FAILURE],
-            call: (api) => eventsApiMethods.joinEvent(api, eventId)
+            call: (api) => api.request('events/joinEvent', { eventId })
         },
         eventId
     });
@@ -73,7 +72,7 @@ export function leaveEvent(eventId) {
             types: [eventsActionTypes.LEAVE_EVENT_REQUEST,
                 eventsActionTypes.LEAVE_EVENT_SUCCESS,
                 eventsActionTypes.LEAVE_EVENT_FAILURE],
-            call: (api) => eventsApiMethods.leaveEvent(api, eventId)
+            call: (api) => api.request('events/leaveEvent', { eventId })
         },
         eventId
     });
@@ -94,7 +93,7 @@ export function switchActiveEvent(eventId) {
             types: [eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST, 
                 eventsActionTypes.SWITCH_ACTIVE_EVENT_SUCCESS, 
                 eventsActionTypes.SWITCH_ACTIVE_EVENT_FAILURE],
-            call: (api) => eventsApiMethods.switchActiveEvent(api, eventId)
+            call: (api) => api.request('events/switchActiveEvent', { eventId })
         },
         eventId
     });

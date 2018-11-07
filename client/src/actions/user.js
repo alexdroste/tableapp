@@ -1,5 +1,4 @@
 import * as userActionTypes from '../actiontypes/user';
-import * as userApiMethods from '../api/actions/user';
 
 
 /**
@@ -15,7 +14,7 @@ export function acceptTos() {
             types: [userActionTypes.ACCEPT_TOS_REQUEST, 
                 userActionTypes.ACCEPT_TOS_SUCCESS, 
                 userActionTypes.ACCEPT_TOS_FAILURE],
-            call: (api) => userApiMethods.acceptTos(api)
+            call: (api) => api.request('user/acceptTos')
         }
     });
 }
@@ -35,7 +34,7 @@ export function continueSession(sessionToken) {
             types: [userActionTypes.CONTINUE_SESSION_REQUEST, 
                 userActionTypes.CONTINUE_SESSION_SUCCESS, 
                 userActionTypes.CONTINUE_SESSION_FAILURE],
-            call: (api) => userApiMethods.continueSession(api, sessionToken)
+            call: (api) => api.request('user/continueSession', { sessionToken })
         }
     });
 }
@@ -56,7 +55,7 @@ export function login(email, password) {
             types: [userActionTypes.LOGIN_REQUEST, 
                 userActionTypes.LOGIN_SUCCESS, 
                 userActionTypes.LOGIN_FAILURE],
-            call: (api) => userApiMethods.login(api, email, password)
+            call: (api) => api.request('user/login', { email, password })
         }
     });
 }
@@ -75,7 +74,7 @@ export function logout() {
             types: [userActionTypes.LOGOUT_REQUEST, 
                 userActionTypes.LOGOUT_SUCCESS, 
                 userActionTypes.LOGOUT_FAILURE],
-            call: (api) => userApiMethods.logout(api)
+            call: (api) => api.request('user/logout')
         }
     });
 }

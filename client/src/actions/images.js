@@ -1,5 +1,4 @@
 import * as imagesActionTypes from '../actiontypes/images';
-import * as imagesApiMethods from '../api/actions/images';
 
 
 /**
@@ -39,7 +38,7 @@ export function loadImages(imageIds, onlyThumbnails) {
                 types: [imagesActionTypes.LOAD_IMAGES_REQUEST,
                     imagesActionTypes.LOAD_IMAGES_SUCCESS,
                     imagesActionTypes.LOAD_IMAGES_FAILURE],
-                call: (api) => imagesApiMethods.loadImages(api, imageIds, onlyThumbnails)
+                call: (api) => api.request('images/loadImages', { imageIds, onlyThumbnails })
             }
         });
     }

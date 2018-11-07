@@ -32,15 +32,18 @@
 - [ ] save all screenshots, link them in db
 - [ ] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
   - [ ] maybe? log read event for entry/comment in post comment view
+- [ ] desktop-client: window-move & check for screen border on restore
+  - https://electronjs.org/docs/api/screen
+  - https://github.com/electron/electron/blob/master/docs/api/browser-window.md 
 - [x] sign-out
 
 
 ### normal priority
 
 - [ ] backend: permission-check for events
-- [ ] client: no longer split api-actions and actions
+- [x] client: no longer split api-actions and actions
 - [ ] maybe? client: [REQUEST, SUCCESS, FAILED] generate => { type: CHANGE_VOTE, apiRequestState: REQUEST}
-- [ ] document api events (client->backend, backend->client) & activities
+- [ ] document api messages (client->backend, backend->client & data) & activities
 - [ ] split full-name into tuple (title, first name, last name)
 - [ ] moderation options: edit entry
 - [ ] moderation options: edit comment
