@@ -32,9 +32,11 @@ export class DynamicRow extends React.PureComponent {
 
 
     componentDidUpdate(prevProps) {
-        this._checkVisibility();
-        if (this.props.id !== prevProps.id)
+        // this._checkVisibility();
+        if (this.props.id !== prevProps.id) {
+            this._lastIsVisible = false;
             this._onResize(this.lastHeight);
+        }
     }
 
 
@@ -45,7 +47,7 @@ export class DynamicRow extends React.PureComponent {
 
 
     _checkVisibility = debounce(() => {
-        if (!this.props.onRowInView)
+        if (!this.props.onVisibilityChange)
             return;
 
         setTimeout(() => {
@@ -61,12 +63,12 @@ export class DynamicRow extends React.PureComponent {
             // determine visibility state by checking if middle-point is in viewport TODO improve
             const isVisible = middle >= 0 && middle <= windowHeight;
 
-            if (!this._lastIsVisible && isVisible)
-                this.props.onRowInView();
+            if (this._lastIsVisible !== isVisible)
+                this.props.onVisibilityChange(isVisible);
 
             this._lastIsVisible = isVisible;
         }, 0);
-    }, 500);
+    }, 1000);
 
 
     _onResize = (height) => {
@@ -75,6 +77,7 @@ export class DynamicRow extends React.PureComponent {
         this.lastHeight = height;
         const {cache, id} = this.props;
         cache.setHeightForId(id, height);
+        this._checkVisibility();
     };
 
 

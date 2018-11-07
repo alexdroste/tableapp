@@ -59,6 +59,7 @@ class EntriesView extends React.Component {
         this.props.dynamicRowsCache.onHeightChanged(this._handleRowHeightChanged);
         this.props.dynamicRowsCache.setIdOrder(props.idList);
 
+        this._idVisibilityMap = {}; // saves last visibility state by entryId
         this._listRef = null;
         this._userPostFormRef = React.createRef();
     }
@@ -140,10 +141,12 @@ class EntriesView extends React.Component {
     };
 
 
-    _handleRowInView = entryId => () => {
+    _handleRowVisibilityChange = (entryId) => (isVisible) => {
         if (!entryId)
             return;
-        this.props.entriesActions.readEntry(entryId, true);
+        if (!this._idVisibilityMap[entryId] && isVisible) // change from not visible to visible
+            this.props.entriesActions.readEntry(entryId, true);
+        this._idVisibilityMap[entryId] = isVisible;
     };
 
     
@@ -191,7 +194,7 @@ class EntriesView extends React.Component {
                 cache={this.props.dynamicRowsCache}
                 id={entryId}
                 key={key}
-                onRowInView={this._handleRowInView(entryId)}
+                onVisibilityChange={this._handleRowVisibilityChange(entryId)}
                 style={style}
             >
                 <EntryCardContainer
