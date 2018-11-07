@@ -15,6 +15,12 @@ import { FormFieldAction } from '../components/FormFieldAction';
 import { Thumbnails } from './Thumbnails';
 import { getScreenshotIds } from '../reducers/eventScreenshots';
 import { InputImageModal } from './InputImageModal';
+import { CheckboxWithInput } from '../components/CheckboxWithInput';
+import { CheckboxList } from '../components/CheckboxList';
+import { isPromptEnabled } from '../reducers/eventInfo';
+
+
+
 
 
 /**
@@ -65,11 +71,15 @@ class UserPostForm extends React.Component {
     constructor(props) {
         super(props);
 
-        /**
-         * Holds text of textarea
-         * @type {?string}
-         */
-        this.textAreaValue = null;
+
+        // IMPORTANT:
+        // code expects that there is only one input field (isInput=true) and
+        // that this input field is the last item in the array
+        this._initialPromptListData = [ // extra-code for prompts
+            { label: "Hattest du schon mal ein ähnliches Problem? Was hast du getan?", isChecked: false },
+            { label: "Was glaubst du, wie kann ich das Problem angehen?", isChecked: false },
+            { label: "Stell eine konkrete Frage (optional)", isInput: true, isChecked: false },
+        ];
 
         /**
          * @type {object}
@@ -81,6 +91,7 @@ class UserPostForm extends React.Component {
          * @property {boolean} submitted indicates if entry was submitted recently
          */
         this.state = {
+            promptListData: this._initialPromptListData, // extra-code for prompts
             imageIds: [],
             inputImageModalOpen: false,
             postAnonymously: true,
@@ -89,11 +100,19 @@ class UserPostForm extends React.Component {
             submitted: false,
         };
 
+        this._promptListRef = React.createRef(); // extra-code for prompts
+        this._promptListInputValue = '';
+
         /**
          * Dom-ref to textarea
          * @type {?object}
          */
         this.textAreaRef = React.createRef();
+        /**
+         * Holds text of textarea
+         * @type {?string}
+         */
+        this.textAreaValue = null;
     }
 
 
@@ -158,6 +177,22 @@ class UserPostForm extends React.Component {
             imageIds,
             selectedImageIds,
         });
+    };
+
+
+    _getExtraQuestions = () => { // extra-code for prompts
+        // IMPORTANT:
+        // code expects that there is only one input field (isInput=true) and
+        // that this input field is the last item in the array
+        const arr = [];
+        const data = this.state.promptListData;
+        data.forEach((dat) => {
+            if (!dat.isInput && dat.isChecked)
+                arr.push(dat.label);
+        });
+        if (this._promptListInputValue.length && data[data.length-1].isChecked)
+            arr.push(this._promptListInputValue);
+        return arr;
     };
 
 
@@ -266,6 +301,23 @@ class UserPostForm extends React.Component {
     };
 
 
+    _handlePromptListCheckedChange = (idx, isChecked) => { // extra-code for prompts
+        const promptListData = this.state.promptListData.slice();
+        // console.dir(promptListData);
+        promptListData[idx] = { 
+            ...promptListData[idx],
+            isChecked,
+        };
+        // console.dir(promptListData);
+        this.setState({ promptListData });
+    };
+
+
+    _handlePromptListValueChange = (idx, value) => { // extra-code for prompts
+        this._promptListInputValue = value;
+    };
+
+
     /**
      * Handles input changes in textarea.
      * @function
@@ -315,11 +367,20 @@ class UserPostForm extends React.Component {
                 this.state.postAnonymously, this.textAreaValue, this.state.selectedImageIds);
         } else {
             this.props.entriesActions.postEntry(this.state.postAnonymously, this.textAreaValue, 
-                this.state.selectedImageIds);
+                this.state.selectedImageIds, this._getExtraQuestions());
         }
         this._deleteImportedLocalImages();
         this._updateImageIds();
-        this.setState({ submitted: true, sendDisabled: true, selectedImageIds: [] });
+        this.setState({ 
+            promptListData: this._initialPromptListData, 
+            submitted: true, 
+            sendDisabled: true, 
+            selectedImageIds: [] 
+        });
+        if (this._promptListRef.current) { // extra-code for prompts
+            this._promptListRef.current.clearInputs();
+            this._promptListInputValue = '';
+        }
         if (this.props.onSubmit)
             this.props.onSubmit();
     };
@@ -336,8 +397,8 @@ class UserPostForm extends React.Component {
             );
         }
 
-        const {isComment, replyAuthorId, replyContent, replyTimeStamp, userId} = this.props;
-        const {imageIds, inputImageModalOpen, postAnonymously, selectedImageIds, 
+        const {isComment, isPromptEnabled, replyAuthorId, replyContent, replyTimeStamp, userId} = this.props; // extra-code for prompts
+        const {promptListData, imageIds, inputImageModalOpen, postAnonymously, selectedImageIds, // extra-code for prompts
             sendDisabled, submitted} = this.state;
         const DimmerMainText = isComment ?
             "Kommentar versandt" : "Eintrag versandt";
@@ -401,6 +462,16 @@ class UserPostForm extends React.Component {
                                 ref={this.textAreaRef}
                             />
                         </Form.Field>
+                        {(!isComment && isPromptEnabled) &&
+                            <Form.Field>
+                                <CheckboxList // extra-code for prompts
+                                    data={promptListData}
+                                    onCheckedChange={this._handlePromptListCheckedChange}
+                                    onValueChange={this._handlePromptListValueChange}
+                                    ref={this._promptListRef}
+                                />
+                            </Form.Field>
+                        }
                         <Form.Field>
                             <Thumbnails
                                 imageIds={imageIds}
@@ -452,6 +523,7 @@ const mapStateToProps = (state, props) => {
         alert("Fehler: Beitrag nicht gefunden (subscription missing)!");
     return {
         isComment: !!isComment,
+        isPromptEnabled: isPromptEnabled(state.eventInfo), // extra-code for prompts
         replyAuthorId: replyData ? replyData.authorId : null,
         replyContent: replyData ? replyData.content : null,
         replyIsDeleted: replyData ? replyData.isDeleted : null,

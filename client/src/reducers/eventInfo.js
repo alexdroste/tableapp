@@ -125,6 +125,9 @@ export const eventInfo = combineReducers({
 
 // selectors
 
+export const isPromptEnabled = (state) => // extra-code for prompts
+    state.promptGroup === 1;
+
 /**
  * Selector to select specific role by id from eventInfo-state.
  * @function

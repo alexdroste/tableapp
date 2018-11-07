@@ -185,6 +185,6 @@ export const getCommentsView = (state) => {
         ));
     });
     commentsViewCache.view = view;
-    console.log(view);
+    // console.log(view);
     return view;
 };
