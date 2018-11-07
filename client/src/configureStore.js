@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 import throttle from 'lodash/throttle';
@@ -47,15 +47,18 @@ export const configureStore = (api, ipc) => {
         apiMiddleware(api),
     ];
 
+    let composeEnhancers = compose;
+
     // debug extras
     if (process.env.NODE_ENV !== 'production') {
         middlewares.push(createLogger());
+        composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     }
 
     const store = createStore(
         reducers,
         preloadedState,
-        applyMiddleware(...middlewares)
+        composeEnhancers(applyMiddleware(...middlewares))
     );
 
     // save state to local storage handler
