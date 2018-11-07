@@ -45,7 +45,7 @@ class PromptGroupController {
     }
 
 
-    async _getNextGroup() {
+    async _getNextGroup(eventId) {
         const groupRatio = await this._db.collection('promptgroup').aggregate([
             { $match: { 
                 eventId,
@@ -71,7 +71,7 @@ class PromptGroupController {
 
     async _joinGroup(userId, eventId, group) {
         if (typeof group !== 'number')
-            group = await this._getNextGroup();
+            group = await this._getNextGroup(eventId);
 
         const res = await this._db.collection('promptgroup').insertOne({
             eventId,
