@@ -6,6 +6,7 @@ import { UpDownVote } from '../components/UpDownVote';
 import { SortedUserRolesByPriority } from '../containers/SortedUserRolesByPriority';
 import { Content } from '../components/Content';
 import { Thumbnails } from '../containers/Thumbnails';
+import { ExtraQuestions } from './ExtraQuestions';
 
 
 const CustomCard = styled(Card)`
@@ -77,6 +78,7 @@ export class EntryCard extends React.PureComponent {
                 commentAttendingUserIds: PropTypes.arrayOf(PropTypes.string),
                 commentCount: PropTypes.number.isRequired,
                 content: PropTypes.string,
+                extraQuestions: PropTypes.arrayOf(PropTypes.string), // extra-code for prompts
                 imageIds: PropTypes.arrayOf(PropTypes.string),
                 isDeleted: PropTypes.bool,
                 isLiveAnswered: PropTypes.bool,
@@ -84,6 +86,7 @@ export class EntryCard extends React.PureComponent {
                 timestamp: PropTypes.number,
                 vote: PropTypes.number,
             }),
+            isPromptEnabled: PropTypes.bool, // extra-code for prompts
             onCommentClick: PropTypes.func.isRequired,
             onContentClick: PropTypes.func.isRequired,
             onMoreClick: PropTypes.func.isRequired,
@@ -110,9 +113,9 @@ export class EntryCard extends React.PureComponent {
                 </Dimmer.Dimmable>
             );
 
-        const { onContentClick, onCommentClick, onMoreClick, onVoteChange } = this.props;
+        const { isPromptEnabled, onContentClick, onCommentClick, onMoreClick, onVoteChange } = this.props; // extra-code for prompts
 
-        const { authorId, commentAttendingUserIds, commentCount, content, 
+        const { authorId, commentAttendingUserIds, commentCount, content, extraQuestions, // extra-code for prompts 
             imageIds, isDeleted, isLiveAnswered, score, timestamp, vote } = this.props.entry;
 
         return (
@@ -128,6 +131,10 @@ export class EntryCard extends React.PureComponent {
                             content={content}
                             isDeleted={isDeleted}
                             timestamp={timestamp}
+                        />
+                        <ExtraQuestions
+                            extraQuestions={extraQuestions}
+                            isPromptEnabled={isPromptEnabled}
                         />
                         <Thumbnails imageIds={imageIds}/>
                     </Card.Description>
@@ -150,7 +157,6 @@ export class EntryCard extends React.PureComponent {
                                 </Label>
                             }
                     </CardMetaFlexAligned>
-                    
                 </Card.Content>
                 <CardContentSubControls>
                     <ControlItem>

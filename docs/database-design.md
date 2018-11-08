@@ -2,11 +2,13 @@
 
 The database consists of the following collections:
 
+* activitylog
 * comments
 * entries
 * events
 * eventscreenshots
 * images
+* promptgroup
 * users
 
 ## Important design hints
@@ -57,6 +59,7 @@ A single document has the following properties:
 | content        | `string`               | text content                                                 |
 | downvotes      | `Array<ObjectID>`      | array of userIds that downvoted                              |
 | eventId        | `ObjectID`             | id of related event                                          |
+| extraQuestions | `Array<string>`        | array of extra questions to attach (prompts)                 |
 | following      | `Array<ObjectID>`      | array of userIds that follow the entry                       |
 | imageIds       | `Array<ObjectID>`      | array of imageIds (of attached images)                       |
 | isDeleted      | `boolean`              | indicates if entry is deleted                                |

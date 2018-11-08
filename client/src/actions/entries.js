@@ -151,7 +151,7 @@ export function postEntry(isAnonymous, content, imageIds, extraQuestions) { // e
                 types: [entriesActionTypes.POST_ENTRY_REQUEST,
                     entriesActionTypes.POST_ENTRY_SUCCESS,
                     entriesActionTypes.POST_ENTRY_FAILURE],
-                call: (api) => api.request('entries/postEntry', { isAnonymous, content, imageDataArr })
+                call: (api) => api.request('entries/postEntry', { content, extraQuestions, imageDataArr, isAnonymous })
             }
         });
     }

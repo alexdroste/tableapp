@@ -23,9 +23,7 @@
 - [x] track entries read
 - [ ] track comments read
 - [x] backend: log activities
-- [ ] prompts
-  - [x] groups
-  - [ ] ui
+- [x] prompts (groups & ui)
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
 - [x] opt-in/opt-out

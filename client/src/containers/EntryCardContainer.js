@@ -10,6 +10,7 @@ import { PermissionLevelEnum } from '../PermissionLevelEnum';
 import { EntryCard } from '../components/EntryCard';
 import { EntryCardActionSheet } from '../components/EntryCardActionSheet';
 import { Confirm } from '../components/Confirm';
+import { isPromptEnabled } from '../reducers/eventInfo';
 
 
 class EntryCardContainer extends React.Component {
@@ -124,7 +125,7 @@ class EntryCardContainer extends React.Component {
 
 
     render() {
-        const { activeEventUserPermissionLevel, entry } = this.props;
+        const { activeEventUserPermissionLevel, entry, isPromptEnabled } = this.props; // extra-code for prompts
         const { isActionSheetOpen, isDeleteConfirmOpen } = this.state;
 
         let canManageEntry = activeEventUserPermissionLevel >= PermissionLevelEnum.MODERATOR;
@@ -136,6 +137,7 @@ class EntryCardContainer extends React.Component {
             <div>
                 <EntryCard
                     entry={entry}
+                    isPromptEnabled={isPromptEnabled} // extra-code for prompts
                     onCommentClick={this._handleCommentClick}
                     onContentClick={this._handleContentClick}
                     onMoreClick={this._handleMoreClick}
@@ -175,6 +177,7 @@ const mapStateToProps = (state, props) => {
     return {
         activeEventUserPermissionLevel: getActiveEventUserPermissionLevel(state.events),
         entry: getEntry(state.entries, props.entryId),
+        isPromptEnabled: isPromptEnabled(state.eventInfo), // extra-code for prompts
     }
 };
 

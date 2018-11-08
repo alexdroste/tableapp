@@ -81,6 +81,7 @@ export class CheckboxWithInput extends React.PureComponent {
                 />
                 <SmallInput
                     innerRef={this._inputRef}
+                    maxLength={120}
                     onChange={this._handleInputChange}
                     placeholder={placeholder}
                 />

@@ -15,12 +15,8 @@ import { FormFieldAction } from '../components/FormFieldAction';
 import { Thumbnails } from './Thumbnails';
 import { getScreenshotIds } from '../reducers/eventScreenshots';
 import { InputImageModal } from './InputImageModal';
-import { CheckboxWithInput } from '../components/CheckboxWithInput';
 import { CheckboxList } from '../components/CheckboxList';
 import { isPromptEnabled } from '../reducers/eventInfo';
-
-
-
 
 
 /**
