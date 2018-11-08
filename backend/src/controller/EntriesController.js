@@ -334,6 +334,7 @@ class EntriesController {
             { $project: {
                 authorId: 1, 
                 content: 1,
+                extraQuestions: 1, // extra-code for prompts
                 imageIds: 1,
                 isDeleted: 1,
                 isBookmarked: { $in: [ userId, "$bookmarks" ] },
@@ -376,6 +377,7 @@ class EntriesController {
             if (entry.isDeleted) {
                 entry.authorId = null;
                 entry.content = null;
+                entry.extraQuestions = []; // extra-code for prompts
                 entry.imageIds = [];
             }
             // properly set commentAttendingUserIds & commentCount
@@ -432,9 +434,10 @@ class EntriesController {
      * @param {boolean} isAnonymous true if posting is anonymous, otherwise false
      * @param {string} content content of entry
      * @param {Array<string>} imageDataArr array of attached images (base64 encoded)
+     * @param {Array<string>} extraQuestions array of extra questions to attach (prompts)
      * @returns {Promise<ObjectID>} resolves to ObjectID of inserted entry
      */
-    async postEntry(eventId, userId, isAnonymous, content, imageDataArr) {
+    async postEntry(eventId, userId, isAnonymous, content, imageDataArr, extraQuestions = []) { // extra-code for prompts
         if (!eventId || !userId || isAnonymous == null || !content || !imageDataArr)
             throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
         
@@ -458,6 +461,7 @@ class EntriesController {
             content,
             downvotes: [],
             eventId,
+            extraQuestions, // extra-code for prompts
             following: [],
             imageIds,
             isDeleted: false,

@@ -564,13 +564,14 @@ class Client {
      * @function
      * @param {object} data 
      * @param {string} data.content content of comment
+     * @param {Array<string>} data.extraQuestions array of extra questions to attach (prompts)
      * @param {Array<string>} data.imageDataArr array of attached images (base64 encoded)
      * @param {boolean} data.isAnonymous true if posting is anonymous, otherwise false
      * @returns {Promise} 
      */
-    async _handlePostEntry({ content, imageDataArr, isAnonymous }) {
+    async _handlePostEntry({ content, extraQuestions, imageDataArr, isAnonymous }) { // extra-code for prompts
         const entryId = await this._controller.entries.postEntry(
-            this.activeEventId, this.userId, isAnonymous, content, imageDataArr);
+            this.activeEventId, this.userId, isAnonymous, content, imageDataArr, extraQuestions);
         this._logActivity('entries/postEntry', { entryId });
     }
 
