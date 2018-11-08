@@ -61,6 +61,7 @@ class EntriesView extends React.Component {
 
         this._idVisibilityMap = {}; // saves last visibility state by entryId
         this._listRef = null;
+        this._outerListRef = null;
         this._userPostFormRef = React.createRef();
     }
 
@@ -115,8 +116,16 @@ class EntriesView extends React.Component {
 
     _handleScrollMemoryRestoreScroll = (e) => {
         // e.detail == scrollY (page position to restore)
-        // recalc scrollbars, FIXME scrollY isnt really correct: scrollY - offsetY of WindowScroller
-        this._listRef.scrollToPosition(e.detail);
+        const offsetY = (window.pageYOffset || document.documentElement.scrollTop)
+            + this._outerListRef.getBoundingClientRect().top;
+        const sy = e.detail - offsetY;
+        // TODO FIXME react-virtualized scrollToPosition breaks with React 16.4+
+        window.requestAnimationFrame(() => {
+            this._listRef.scrollToPosition(sy);
+            window.requestAnimationFrame(() => {
+                window.scrollTo({ top: e.detail ? e.detail : 0, behavior: "instant" });
+            });
+        });
     };
 
 
@@ -261,20 +270,20 @@ class EntriesView extends React.Component {
                         </Dropdown>
                     </Header.Subheader> */}
                 </CustomHeader>
-                <WindowScroller>
+                <WindowScroller >
                     {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
                         <AutoSizer disableHeight>
                             {({ width }) => (
-                                <div ref={registerChild}>
+                                <div ref={ref => { this._outerListRef = ref; registerChild(ref); }}>
                                     <CustomList
                                         autoHeight
                                         height={height}
+                                        innerRef={ref => this._listRef = ref}
                                         isScrolling={isScrolling}
                                         noRowsRenderer={this._noRowsRenderer}
                                         onRowsRendered={this._handleRowsRendered}
                                         onScroll={onChildScroll}
                                         overscanRowCount={2}
-                                        innerRef={ref => this._listRef = ref}
                                         rowCount={rowCount}
                                         rowHeight={dynamicRowsCache.getHeightByIndexObj}
                                         rowRenderer={this._rowRenderer}

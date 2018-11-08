@@ -12,6 +12,7 @@ import { createSafeBrowserHistory } from './createSafeBrowserHistory';
 import { ScrollMemory } from './containers/ScrollMemory';
 import { IpcHandler } from './ipc/IpcHandler';
 
+console.log(React.version);
 const api = new ApiConnection();
 const ipc = new IpcHandler();
 const store = configureStore(api, ipc);

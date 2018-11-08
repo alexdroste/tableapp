@@ -13,6 +13,9 @@
   - [x] remove tos link from minicontrol
   - [x] screen broadcast won't stop
   - [x] windows-app: zoom does not work
+  - [x] entries-view: scroll restore broken (React 16.4 breaks scrollToPosition)
+    - https://github.com/bvaughn/react-virtualized/issues/1179
+    - https://github.com/bvaughn/react-virtualized/issues/1226
 - [x] moderation options: delete entry
 - [x] moderation options: delete comment
 - [x] screencapture module for windows / desktop-app for windows
@@ -60,6 +63,7 @@
 - [ ] rate-limits (e.g. you can only post x new entries in x secs)
 - [ ] ability to ban or temp-ban users
 - [ ] optimize entry virtualisation
+- [ ] fix jumping comments page on open
 - [ ] virtualize comment section
 - [ ] optimize design, especially for desktop
 - [ ] use Flow typechecking (https://flow.org)
