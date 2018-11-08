@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Message } from 'semantic-ui-react';
+import { NameSpan } from '../containers/NameSpan';
 
 
 const MDiv = styled.div`
@@ -22,6 +23,7 @@ export class ExtraQuestions extends React.PureComponent {
      */
     static get propTypes() {
         return {
+            authorId: PropTypes.string,
             extraQuestions: PropTypes.arrayOf(PropTypes.string),
             isPromptEnabled: PropTypes.bool,
         };
@@ -33,13 +35,17 @@ export class ExtraQuestions extends React.PureComponent {
 
 
     render() {
-        const { extraQuestions, isPromptEnabled } = this.props;
+        const { authorId, extraQuestions, isPromptEnabled } = this.props;
         const questions = extraQuestions ? extraQuestions : [];
 
         if (!questions.length)
             return null;
 
-        const question = questions.reduce((acc, cur) => acc + "\n" + cur, "");
+        let question = questions.reduce((acc, cur) => acc + "\n" + cur, "");
+        question = question.trim();
+        // ensure that question ends with a '?'
+        if (question.slice(-1) !== '?')
+            question += '?';
 
         if (!isPromptEnabled)
             return (
@@ -52,8 +58,9 @@ export class ExtraQuestions extends React.PureComponent {
         return (
             <CustomMessage
                 info
-                content={question}
-            />
+            >
+                <i><NameSpan authorId={authorId}/> fragt:</i> {question}
+            </CustomMessage>
         );
     }
 }

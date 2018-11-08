@@ -16,7 +16,6 @@ import { Thumbnails } from './Thumbnails';
 import { getScreenshotIds } from '../reducers/eventScreenshots';
 import { InputImageModal } from './InputImageModal';
 import { CheckboxList } from '../components/CheckboxList';
-import { isPromptEnabled } from '../reducers/eventInfo';
 
 
 /**
@@ -393,7 +392,7 @@ class UserPostForm extends React.Component {
             );
         }
 
-        const {isComment, isPromptEnabled, replyAuthorId, replyContent, replyTimeStamp, userId} = this.props; // extra-code for prompts
+        const {isComment, replyAuthorId, replyContent, replyTimeStamp, userId} = this.props; // extra-code for prompts
         const {promptListData, imageIds, inputImageModalOpen, postAnonymously, selectedImageIds, // extra-code for prompts
             sendDisabled, submitted} = this.state;
         const DimmerMainText = isComment ?
@@ -458,7 +457,7 @@ class UserPostForm extends React.Component {
                                 ref={this.textAreaRef}
                             />
                         </Form.Field>
-                        {(!isComment && isPromptEnabled) &&
+                        {!isComment &&
                             <Form.Field>
                                 <label>Welche Fragen möchtest du diskutieren?</label>
                                 <CheckboxList // extra-code for prompts
@@ -520,7 +519,6 @@ const mapStateToProps = (state, props) => {
         alert("Fehler: Beitrag nicht gefunden (subscription missing)!");
     return {
         isComment: !!isComment,
-        isPromptEnabled: isPromptEnabled(state.eventInfo), // extra-code for prompts
         replyAuthorId: replyData ? replyData.authorId : null,
         replyContent: replyData ? replyData.content : null,
         replyIsDeleted: replyData ? replyData.isDeleted : null,

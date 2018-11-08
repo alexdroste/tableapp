@@ -41,6 +41,7 @@
 
 ### normal priority
 
+- [ ] windows: desktop-client prebuild script
 - [ ] backend: permission-check for events
 - [x] client: no longer split api-actions and actions
 - [ ] maybe? client: [REQUEST, SUCCESS, FAILED] generate => { type: CHANGE_VOTE, apiRequestState: REQUEST}
@@ -63,6 +64,7 @@
 - [ ] rate-limits (e.g. you can only post x new entries in x secs)
 - [ ] ability to ban or temp-ban users
 - [ ] optimize entry virtualisation
+  - [ ] maybe? scroll to entry by entryId not last scrollY 
 - [ ] fix jumping comments page on open
 - [ ] virtualize comment section
 - [ ] optimize design, especially for desktop

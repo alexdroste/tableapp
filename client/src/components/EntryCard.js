@@ -133,6 +133,7 @@ export class EntryCard extends React.PureComponent {
                             timestamp={timestamp}
                         />
                         <ExtraQuestions
+                            authorId={authorId}
                             extraQuestions={extraQuestions}
                             isPromptEnabled={isPromptEnabled}
                         />
