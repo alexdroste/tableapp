@@ -131,6 +131,7 @@ class ScreenBroadcastHelper extends React.Component {
     _handleSelect = (selectedScreenIdx, e) => {
         this.setState({ 
             isBroadcasting: true,
+            isOpen: false,
             selectedScreenIdx 
         });
     };
@@ -144,6 +145,7 @@ class ScreenBroadcastHelper extends React.Component {
     _unselectScreen = () => {
         this.setState({ 
             isBroadcasting: false,
+            isOpen: this.props.isBroadcastActive,
             selectedScreenIdx: null 
         });
         // todo check if /minicontrol => if, restore to full view (goBack)
