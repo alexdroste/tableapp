@@ -9,6 +9,14 @@ const MDiv = styled.div`
 `;
 
 
+const CustomMessage = styled(Message)`
+    &&& {
+        margin: .7rem 0;
+        padding: .75em 1em;
+    }
+`;
+
+
 export class ExtraQuestions extends React.PureComponent {
     /**
      */
@@ -38,12 +46,12 @@ export class ExtraQuestions extends React.PureComponent {
                 <MDiv>{question}</MDiv>
             );
 
+        // return (
+        //     <MDiv><strong>{question}</strong></MDiv>
+        // );
         return (
-            <MDiv><strong>{question}</strong></MDiv>
-        );
-        return (
-            <Message
-                warning
+            <CustomMessage
+                info
                 content={question}
             />
         );

@@ -11,11 +11,11 @@ const CustomCheckbox = styled(Checkbox)`
 
 const FlexDiv = styled.div`
     display: flex;
-    align-items: center;
 `;
 
 
 const SmallInput = styled(Input)`
+    transform: translateY(-5px);
     &&& > input {
         padding: 0.25em 0.4em;
     }

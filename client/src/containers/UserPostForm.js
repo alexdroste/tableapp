@@ -460,6 +460,7 @@ class UserPostForm extends React.Component {
                         </Form.Field>
                         {(!isComment && isPromptEnabled) &&
                             <Form.Field>
+                                <label>Welche Fragen möchtest du diskutieren?</label>
                                 <CheckboxList // extra-code for prompts
                                     data={promptListData}
                                     onCheckedChange={this._handlePromptListCheckedChange}

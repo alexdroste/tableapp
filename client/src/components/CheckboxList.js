@@ -8,8 +8,7 @@ import { CheckboxWithInput } from './CheckboxWithInput';
 const FlexSubDivs = styled.div`
     &&& > * {
         display: flex;
-        align-items: center;
-        height: 30px;
+        margin: .5em 0 .65em 0;
     }
 `;
 
