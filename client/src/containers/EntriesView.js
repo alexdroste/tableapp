@@ -15,6 +15,7 @@ import { UserPostForm } from './UserPostForm';
 import { NavBar } from './NavBar';
 import { DynamicRow } from './DynamicRow';
 import 'react-virtualized/styles.css';
+import { isPresentationmodeActive } from '../reducers/desktopApp';
 
 
 const HeaderActionButton = styled(Button).attrs({
@@ -215,8 +216,8 @@ class EntriesView extends React.Component {
 
 
     render() {
-        const { dynamicRowsCache, idList, hasListOnlyBookmarked, 
-            hasMoreEntriesToLoad } = this.props;
+        const { dynamicRowsCache, idList, isPresentationmodeActive, 
+            hasListOnlyBookmarked, hasMoreEntriesToLoad } = this.props;
         let rowCount = idList.length;
         if (hasMoreEntriesToLoad)
             ++rowCount;
@@ -247,9 +248,11 @@ class EntriesView extends React.Component {
                         onClick={this._handleFloatingActionButtonClick}
                     />
                 </Responsive>
-                <UserPostForm
-                    ref={this._userPostFormRef}
-                />
+                {!isPresentationmodeActive &&
+                    <UserPostForm
+                        ref={this._userPostFormRef}
+                    />
+                }
                 <CustomHeader>
                     <Header.Content>
                         Einträge
@@ -305,6 +308,7 @@ const mapStateToProps = (state, props) => {
     return {
         idList: getIdList(state.entries),
         isListSubscribed: isListSubscribed(state.entries),
+        isPresentationmodeActive: isPresentationmodeActive(state.desktopApp),
         hasListOnlyBookmarked: hasListOnlyBookmarked(state.entries),
         hasMoreEntriesToLoad: hasMoreEntriesToLoad(state.entries),
         listType: getListType(state.entries),

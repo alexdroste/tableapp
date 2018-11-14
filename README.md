@@ -26,7 +26,7 @@
 - [x] data-tracking
 - [x] track entries read
 - [ ] track comments read
-- [ ] ability to hide "new entry"-dialogue
+- [x] hide "new entry"-dialogue in presentation-mode
 - [ ] mongodb scripts for stats
 - [ ] usability: button "comment" comments-view
 - [x] backend: log activities
@@ -45,6 +45,9 @@
 
 ### normal priority
 
+- [ ] redesign posting design
+  - [ ] "new entry"-dialogue in EntriesView should be minimized and open on click (like FB)
+  - [ ] input bar at bottom of viewport
 - [ ] windows: desktop-client prebuild script
 - [ ] desktop-client: option to mark entry as unread
 - [ ] option to add tag to entry -> "discussed in lecture"

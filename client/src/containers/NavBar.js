@@ -7,7 +7,7 @@ import * as desktopAppActions from '../actions/desktopApp';
 import { withRouter, NavLink } from 'react-router-dom';
 import { Button, Icon, Menu, Modal, Rail, Responsive, Sticky } from 'semantic-ui-react';
 import { getActiveEventId, getActiveEventName, getActiveEventUserPermissionLevel } from '../reducers/events'; 
-import { isDesktopApp, isWindowAlwaysOnTop, isBroadcastActive } from '../reducers/desktopApp';
+import { isDesktopApp, isWindowAlwaysOnTop, isBroadcastActive, isPresentationmodeActive } from '../reducers/desktopApp';
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
 import { ActiveEventQrCodeModal } from './ActiveEventQrCodeModal';
 import { MainNavActionSheet } from './MainNavActionSheet';
@@ -167,11 +167,13 @@ class NavBar extends React.Component {
 
 
     _handleStartPresentationModeClick = (e) => {
+        this.props.desktopAppActions.setPresentationmodeActive(true);
         this.props.desktopAppActions.setWindowAlwaysOnTop(true);
     };
 
 
     _handleStopPresentationModeClick = (e) => {
+        this.props.desktopAppActions.setPresentationmodeActive(false);
         this.props.desktopAppActions.setWindowAlwaysOnTop(false);
         if (this.props.isBroadcastActive)
             this.props.desktopAppActions.setBroadcastActive(false);
@@ -208,13 +210,12 @@ class NavBar extends React.Component {
 
     _renderBar(isDesktop) {
         const { activeEventName, activeEventUserPermissionLevel, hasGoBack, 
-            isBroadcastActive, isDesktopApp, isWindowAlwaysOnTop,
+            isBroadcastActive, isDesktopApp, isPresentationmodeActive, isWindowAlwaysOnTop,
             mainContent, rightRailContent } = this.props;
         const { isActiveEventQrCodeModalOpen, isZoomModalOpen, 
             menuHeight, navMainModalOpen } = this.state;
         const menuHeightPlusMargin = menuHeight + 14;
         const canBroadcast = activeEventUserPermissionLevel >= PermissionLevelEnum.ADMINISTRATOR;
-        const presentationModeActive = isWindowAlwaysOnTop && isDesktopApp && canBroadcast;
 
         return (
             <div>
@@ -222,7 +223,7 @@ class NavBar extends React.Component {
                     innerRef={menuRef => menuRef && (this.menuRef = menuRef) }
                     data-desktop={isDesktop}
                 >
-                    {presentationModeActive ? ( 
+                    {isPresentationmodeActive ? ( 
                         <CustomMenu
                             pointing
                             secondary
@@ -298,7 +299,7 @@ class NavBar extends React.Component {
                     )}
                 </FixedTop>
                 <MenuHeight data-height={menuHeightPlusMargin}/>
-                {hasGoBack && (isDesktop || (isDesktopApp && presentationModeActive)) &&
+                {hasGoBack && (isDesktop || (isDesktopApp && isPresentationmodeActive)) &&
                     <CustomRail 
                         close
                         position='left' 
@@ -385,6 +386,7 @@ const mapStateToProps = (state, props) => {
         hideNavigation: !getActiveEventId(state.events) || props.hideNavigation,
         isBroadcastActive: isBroadcastActive(state.desktopApp),
         isDesktopApp: isDesktopApp(state.desktopApp),
+        isPresentationmodeActive: isPresentationmodeActive(state.desktopApp),
         isWindowAlwaysOnTop: isWindowAlwaysOnTop(state.desktopApp),
     }
 };

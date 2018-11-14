@@ -16,6 +16,8 @@ export const INIT_DESKTOP_APP = 'desktopApp/INIT_DESKTOP_APP';
 export const RESIZE_WINDOW = 'desktopApp/RESIZE_WINDOW';
 /** desktopApp actiontype: restore of last saved app-window size */
 export const RESTORE_LAST_WINDOW_SIZE = 'desktopApp/RESTORE_LAST_WINDOW_SIZE';
+/** desktopApp actiontype: changes presentationmode-active state */
+export const SET_PRESENTATION_MODE_ACTIVE = 'desktopApp/SET_PRESENTATION_MODE_ACTIVE';
 /** desktopApp actiontype: changes always-on-top state of window */
 export const SET_WINDOW_ALWAYS_ON_TOP = 'desktopApp/SET_WINDOW_ALWAYS_ON_TOP';
 

@@ -74,6 +74,20 @@ export function restoreLastWindowSize() {
 
 
 /**
+ * Creates action for setting presentationmode-active state.
+ * @function
+ * @param {boolean} active indicates if presentationmode should be activated 
+ * @returns {object} action
+ */
+export function setPresentationmodeActive(active) {
+    return {
+        type: desktopAppActionTypes.SET_PRESENTATION_MODE_ACTIVE,
+        active,
+    };
+}
+
+
+/**
  * Creates action for setting always-on-top state.
  * @function
  * @param {boolean} alwaysOnTop indicates if app-window should be always on top of other windows
@@ -98,5 +112,5 @@ export function setBroadcastActive(active) {
     return {
         type: desktopAppActionTypes.SET_BROADCAST_ACTIVE,
         active,
-    }
+    };
 }
