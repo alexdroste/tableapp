@@ -135,20 +135,6 @@ class CommentsView extends React.Component {
                     hasGoBack
                     hideNavigation
                     mainContent="Kommentare anzeigen"
-                    rightRailContent={
-                        <Responsive
-                            minWidth={801}
-                        >
-                            <Button
-                                as={Link}
-                                color="blue"
-                                circular
-                                icon="reply"
-                                size="big"
-                                to={`/entries/${entryId}/0/new`}
-                            />
-                        </Responsive>
-                    }
                 />
                 <Responsive
                     maxWidth={800}
@@ -184,6 +170,14 @@ class CommentsView extends React.Component {
                         </Message>
                     )
                 )}
+                <Button
+                    as={Link}
+                    color="blue"
+                    content="Kommentieren"
+                    fluid
+                    icon="reply"
+                    to={`/entries/${entryId}/0/new`}
+                />
             </div>
         );
     }

@@ -28,7 +28,7 @@
 - [ ] track comments read
 - [x] hide "new entry"-dialogue in presentation-mode
 - [ ] mongodb scripts for stats
-- [ ] usability: button "comment" comments-view
+- [x] usability: button "comment" comments-view
 - [x] backend: log activities
 - [x] prompts (groups & ui)
 - [ ] fully implement manage-event view
