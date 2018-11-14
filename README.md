@@ -16,6 +16,7 @@
   - [x] entries-view: scroll restore broken (React 16.4 breaks scrollToPosition)
     - https://github.com/bvaughn/react-virtualized/issues/1179
     - https://github.com/bvaughn/react-virtualized/issues/1226
+  - [x] fix TimeStamp.js:42 language
 - [x] moderation options: delete entry
 - [x] moderation options: delete comment
 - [x] screencapture module for windows / desktop-app for windows
@@ -25,6 +26,9 @@
 - [x] data-tracking
 - [x] track entries read
 - [ ] track comments read
+- [ ] ability to hide "new entry"-dialogue
+- [ ] mongodb scripts for stats
+- [ ] usability: button "comment" comments-view
 - [x] backend: log activities
 - [x] prompts (groups & ui)
 - [ ] fully implement manage-event view
@@ -42,7 +46,10 @@
 ### normal priority
 
 - [ ] windows: desktop-client prebuild script
+- [ ] desktop-client: option to mark entry as unread
+- [ ] option to add tag to entry -> "discussed in lecture"
 - [ ] backend: permission-check for events
+- [ ] notifications (in-app/email)
 - [x] client: no longer split api-actions and actions
 - [ ] maybe? client: [REQUEST, SUCCESS, FAILED] generate => { type: CHANGE_VOTE, apiRequestState: REQUEST}
 - [ ] document api messages (client->backend, backend->client & data) & activities
@@ -50,10 +57,7 @@
 - [ ] moderation options: edit entry
 - [ ] moderation options: edit comment
 - [ ] feed sorting / filter options
-- [ ] notifications (in-app/email)
-- [ ] "weiteres UI-Improvement für desktop wäre: direkt hinzufügen von screenshots, wenn man auf den grauen haken klickt"??
 - [ ] show new entries counter in normal-view
-- [ ] option to add tag to entry -> "discussed in lecture"
 - [ ] improve (really bad atm) container/presentational component split (https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
 - [ ] add documentation for components/containers
 - [ ] max character limit for comments/entries
@@ -81,6 +85,7 @@
 - [ ] polls / quizzes
 - [ ] integrate with tuc course catalog
 - [ ] comment-section: add person-tracking for anonymous comments (@1, @2, ...)
+- [ ] pwa
 
 
 ## documentation

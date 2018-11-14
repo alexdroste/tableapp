@@ -21,7 +21,6 @@ export class TimeStamp extends React.PureComponent {
 
     /**
      * Creates text from difference between now and provided timestamp
-     * @todo unit-test
      * @param {number} timestamp timestamp (unix-timestamp)
      * @returns {string} time difference as text
      */
@@ -39,7 +38,7 @@ export class TimeStamp extends React.PureComponent {
             const days = Math.round(diff / (60 * 24));
             return `Vor ${days} ${days > 1 ? "Tagen" : "Tag"}`;
         } else { // else: show date
-            return (new Date(timestamp)).toLocaleDateString();
+            return (new Date(timestamp)).toLocaleDateString('de-DE');
         }
     }
 
