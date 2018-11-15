@@ -48,7 +48,7 @@ export class ScreenSelectModal extends React.PureComponent {
         const { selectedIdx } = this.state;
 
         return (
-            <TransitionablePortal
+            <TransitionablePortal // TODO fix close itself bug
                 transition={{ animation: 'scale', duration: 300 }}
                 open={isOpen}
             >

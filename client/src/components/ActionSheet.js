@@ -40,12 +40,13 @@ export class ActionSheet extends React.PureComponent {
             <TransitionablePortal
                 transition={{ animation: 'fade up', duration: 300 }}
                 open={isOpen}
+                onClose={onClose} // TODO
             >
                 <Modal
                     open={true}
                     size="mini"
-                    onClose={onClose}
                     centered={isCentered}
+                    onClose={onClose}
                 >
                     {/* <Modal.Header>Aktion wählen</Modal.Header> */}
                     <Modal.Content>

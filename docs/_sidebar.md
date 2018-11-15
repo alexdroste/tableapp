@@ -4,6 +4,7 @@
 * [Development](development.md)
 * [Deployment](deployment.md)
 * [Database Design](database-design.md)
+* [Known Bugs](known-bugs.md)
 
 ---
 

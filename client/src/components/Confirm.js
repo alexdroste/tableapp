@@ -35,6 +35,7 @@ export class Confirm extends React.PureComponent {
             <TransitionablePortal
                 transition={{ animation: 'scale', duration: 300 }}
                 open={isOpen}
+                onClose={onCancel} // TODO
             >
                 <Modal
                     open={true}

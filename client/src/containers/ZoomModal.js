@@ -49,6 +49,7 @@ export class ZoomModal extends React.PureComponent {
             <TransitionablePortal
                 transition={{ animation: 'scale', duration: 300 }}
                 open={isOpen}
+                onClose={onClose} // TODO
             >
                 <Modal
                     open={true}

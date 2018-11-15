@@ -17,6 +17,9 @@
     - https://github.com/bvaughn/react-virtualized/issues/1179
     - https://github.com/bvaughn/react-virtualized/issues/1226
   - [x] fix TimeStamp.js:42 language
+  - [ ] fix TransitionablePortal close bug somehow (see known-bugs inside docs)
+    - implement own component (or Modal with Animation)
+    - remove dual-trigger onClose workaround for TransitionablePortal/Modal combo 
 - [x] moderation options: delete entry
 - [x] moderation options: delete comment
 - [x] screencapture module for windows / desktop-app for windows
@@ -28,12 +31,14 @@
 - [ ] track comments read
 - [x] hide "new entry"-dialogue in presentation-mode
 - [ ] mongodb scripts for stats
+- [ ] restructure TitleBar & NavBar rendering => also set height as paddingTop of contentWrapper to fix jumping of page switch
 - [x] usability: button "comment" comments-view
 - [x] backend: log activities
 - [x] prompts (groups & ui)
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
 - [x] opt-in/opt-out
+- [ ] client-desktop: show last broadcasted pic
 - [ ] save all screenshots, link them in db
 - [ ] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
   - [ ] maybe? log read event for entry/comment in post comment view
@@ -45,6 +50,9 @@
 
 ### normal priority
 
+- [ ] optimize desktop-client zoom (track cmd + +/-, add overlay)
+- [ ] popups on entry send: "add screenshot"/""
+- [ ] choose proper text-font
 - [ ] redesign posting design
   - [ ] "new entry"-dialogue in EntriesView should be minimized and open on click (like FB)
   - [ ] input bar at bottom of viewport
