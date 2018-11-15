@@ -227,17 +227,18 @@ class EntriesView extends React.Component {
                 {/*remove the responsive element here => navbar does not render railcontent when mobile*/}
                 <NavBar
                     rightRailContent={
-                        <Responsive
-                            minWidth={801}
-                        >
-                            <Button
-                                color="blue"
-                                circular
-                                icon="add"
-                                size="big"
-                                onClick={this._handleFloatingActionButtonClick}
-                            />
-                        </Responsive>
+                        !isPresentationmodeActive &&
+                            <Responsive
+                                minWidth={801}
+                            >
+                                <Button
+                                    color="blue"
+                                    circular
+                                    icon="add"
+                                    size="big"
+                                    onClick={this._handleFloatingActionButtonClick}
+                                />
+                            </Responsive>
                     }
                 />
                 <Responsive
