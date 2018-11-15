@@ -18,6 +18,8 @@ import { SwitchEventView } from './SwitchEventView';
 import { ActiveEventView } from './ActiveEventView';
 import { AcceptTosView } from './AcceptTosView';
 import { LegalInfosPage } from '../components/LegalInfosPage';
+import { TitleBar } from '../components/TitleBar';
+import { isDesktopApp } from '../reducers/desktopApp';
 
 
 const ContentWrapper = styled.div`
@@ -44,6 +46,7 @@ const CenteredP = styled.p`
  * @param {object} props.desktopAppActions object containing bound desktopAppAction (injected by redux)
  * @param {object} props.history object containing history (injected by router)
  * @param {boolean} props.isActiveEventSet indicates if an event is selected and set active (injected by redux)
+ * @param {boolean} props.isDesktopApp indicates if client is run as desktop-app
  * @param {boolean} props.isSwitchActiveEventPending indicates if currently switching active event (injected by redux)
  * @param {boolean} props.userHasAcceptedTos indicates if user has accepted terms of service
  * @param {boolean} props.userLoggedIn indicates if user is logged in (injected by redux)
@@ -55,6 +58,7 @@ class App extends React.Component {
             desktopAppActions: PropTypes.object.isRequired,
             history: PropTypes.object.isRequired,
             isActiveEventSet: PropTypes.bool.isRequired,
+            isDesktopApp: PropTypes.bool.isRequired,
             isSwitchActiveEventPending: PropTypes.bool.isRequired,
             userHasAcceptedTos: PropTypes.bool.isRequired,
             userLoggedIn: PropTypes.bool.isRequired,
@@ -133,10 +137,14 @@ class App extends React.Component {
 
 
     render() {
+        const { isDesktopApp } = this.props;
         const renderLegalInfosLink = this.props.location.pathname !== "/minicontrol";
 
         return (
             <ContentWrapper id="contentWrapper">
+                {isDesktopApp &&
+                    <TitleBar/>
+                }
                 <Switch>
                     <Route exact path='/legalinfos' component={LegalInfosPage}/>
                     <Route path='*' render={() => this._renderContent()}/>
@@ -159,6 +167,7 @@ const mapStateToProps = (state, props) => {
         apiDisconnected: getConnectionState(state.api) === ApiConnectionStateEnum.DISCONNECTED,
         userHasAcceptedTos: hasAcceptedTos(state.user),
         isActiveEventSet: !!getActiveEventId(state.events),
+        isDesktopApp: isDesktopApp(state.desktopApp),
         isSwitchActiveEventPending: isSwitchActiveEventPending(state.events),
         userLoggedIn: getLoginState(state.user) === LoginStateEnum.LOGGED_IN,
     }

@@ -16,7 +16,7 @@ import { ZoomModal } from './ZoomModal';
 
 const FixedTop = styled.div`
     position: fixed;
-    top: 0;
+    top: ${props => props['data-withtitlebar'] ? '22px' : '0'}; // TitleBar height
     left: 0;
     right: 0;
     z-index: 101;
@@ -199,10 +199,10 @@ class NavBar extends React.Component {
         setTimeout(() => { // timeout needed to queue update after other elements rendered correctly
             if (!this.menuRef) 
                 return;
-            const newHeight = this.menuRef.clientHeight;
+            const newHeight = this.menuRef.clientHeight + this.menuRef.offsetTop;
             if (newHeight !== this.state.menuHeight)
                 this.setState({
-                    menuHeight: this.menuRef.clientHeight
+                    menuHeight: newHeight
                 });
         }, 0);
     };
@@ -215,13 +215,14 @@ class NavBar extends React.Component {
         const { isActiveEventQrCodeModalOpen, isZoomModalOpen, 
             menuHeight, navMainModalOpen } = this.state;
         const menuHeightPlusMargin = menuHeight + 14;
+        const isMenuHeightMeasured = menuHeight > 0;
         const canBroadcast = activeEventUserPermissionLevel >= PermissionLevelEnum.ADMINISTRATOR;
 
         return (
             <div>
                 <FixedTop 
                     innerRef={menuRef => menuRef && (this.menuRef = menuRef) }
-                    data-desktop={isDesktop}
+                    data-withtitlebar={isDesktopApp}
                 >
                     {isPresentationmodeActive ? ( 
                         <CustomMenu
@@ -299,7 +300,8 @@ class NavBar extends React.Component {
                     )}
                 </FixedTop>
                 <MenuHeight data-height={menuHeightPlusMargin}/>
-                {hasGoBack && (isDesktop || (isDesktopApp && isPresentationmodeActive)) &&
+                {/** check if menu height > 0 before render because offset for sticky will only be used on first render */}
+                {isMenuHeightMeasured && hasGoBack && (isDesktop || (isDesktopApp && isPresentationmodeActive)) &&
                     <CustomRail 
                         close
                         position='left' 
@@ -325,7 +327,8 @@ class NavBar extends React.Component {
                         </Sticky>
                     </CustomRail>
                 }
-                {isDesktop && rightRailContent &&
+                {/** check if menu height > 0 before render because offset for sticky will only be used on first render */}
+                {isMenuHeightMeasured && isDesktop && rightRailContent &&
                     <CustomRail 
                         close
                         position='right' 
