@@ -28,6 +28,7 @@ class ScreenBroadcastHelper extends React.Component {
         super(props);
 
         this.state = {
+            canContinueOnScreenSetupChange: false,
             isBroadcasting: false,
             isOpen: false,
             selectedScreenIdx: null,
@@ -95,11 +96,17 @@ class ScreenBroadcastHelper extends React.Component {
 
 
     _captureAndBroadcast = async () => {
-        const { selectedScreenIdx } = this.state;
+        const { canContinueOnScreenSetupChange } = this.state;
+        let { selectedScreenIdx } = this.state;
         const sources = await this._screenCapturer.capture(); 
+        // check and correct display to capture
         if (selectedScreenIdx >= sources.length) {
-            this._unselectScreen();
-            return;
+            if (canContinueOnScreenSetupChange) {
+                selectedScreenIdx = sources.length - 1; // choose display with highest index, if display-switch reduced screen count
+            } else {
+                this._unselectScreen();
+                return;
+            }
         }
 
         const thumbnail = sources[selectedScreenIdx].thumbnail;
@@ -124,12 +131,15 @@ class ScreenBroadcastHelper extends React.Component {
 
 
     _handleScreenSetupChanged = () => {
+        if (this.state.canContinueOnScreenSetupChange)
+            return;
         this._unselectScreen();
     };
 
 
-    _handleSelect = (selectedScreenIdx, e) => {
+    _handleSelect = (selectedScreenIdx, canContinueOnScreenSetupChange, e) => {
         this.setState({ 
+            canContinueOnScreenSetupChange,
             isBroadcasting: true,
             isOpen: false,
             selectedScreenIdx 
@@ -154,6 +164,7 @@ class ScreenBroadcastHelper extends React.Component {
 
     _updateThumbnails = async () => {
         const sources = await this._screenCapturer.capture(); 
+        console.dir(sources);
         this.setState({ 
             thumbnails: sources.map(source => source.thumbnail.toDataURL()),
         });

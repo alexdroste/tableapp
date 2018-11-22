@@ -17,6 +17,9 @@
     - https://github.com/bvaughn/react-virtualized/issues/1179
     - https://github.com/bvaughn/react-virtualized/issues/1226
   - [x] fix TimeStamp.js:42 language
+  - [ ] fix presentationmode add entry button still there
+  - [ ] fix restore full view if screen unselects in miniview
+  - [ ] desktop-client: fix TitleBar in viewport => render to Frame?
   - [ ] fix TransitionablePortal close bug somehow (see known-bugs inside docs)
     - implement own component (or Modal with Animation)
     - remove dual-trigger onClose workaround for TransitionablePortal/Modal combo 
@@ -31,6 +34,7 @@
 - [ ] track comments read
 - [x] hide "new entry"-dialogue in presentation-mode
 - [ ] mongodb scripts for stats
+- [x] desktop-client: continue streaming on monitor change
 - [ ] restructure TitleBar & NavBar rendering => also set height as paddingTop of contentWrapper to fix jumping of page switch
 - [x] usability: button "comment" comments-view
 - [x] backend: log activities

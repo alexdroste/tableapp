@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Container, Modal, TransitionablePortal } from 'semantic-ui-react';
+import { Button, Checkbox, Container, Modal, TransitionablePortal } from 'semantic-ui-react';
 import { Thumbnail } from './Thumbnail';
 import { ThumbnailGroup } from './ThumbnailGroup';
 
@@ -26,9 +26,17 @@ export class ScreenSelectModal extends React.PureComponent {
         super(props);
 
         this.state = {
+            canContinueOnScreenSetupChange: false,
             selectedIdx: null,
         };
     }
+
+
+    _handleCanContinueOnScreenSetupChangeToggle = () => {
+        this.setState({ 
+            canContinueOnScreenSetupChange: !this.state.canContinueOnScreenSetupChange
+        });
+    };
 
 
     _handleThumbnailClick = (idx) => (e) => {
@@ -39,13 +47,13 @@ export class ScreenSelectModal extends React.PureComponent {
 
 
     _handleSelectClick = (e) => {
-        this.props.onSelect(this.state.selectedIdx, e);
+        this.props.onSelect(this.state.selectedIdx, this.state.canContinueOnScreenSetupChange, e);
     };
 
 
     render() {
         const { isOpen, onCancel, thumbnails } = this.props;
-        const { selectedIdx } = this.state;
+        const { canContinueOnScreenSetupChange, selectedIdx } = this.state;
 
         return (
             <TransitionablePortal // TODO fix close itself bug
@@ -57,6 +65,7 @@ export class ScreenSelectModal extends React.PureComponent {
                 >
                     <Modal.Header>Bildschirmübertragung starten</Modal.Header>
                     <Modal.Content>
+                        {/* TODO show text "loading" if thumbnails.length == 0*/}
                         <ThumbnailGroup
                             isCentered
                         >
@@ -75,7 +84,14 @@ export class ScreenSelectModal extends React.PureComponent {
                         <Container
                             textAlign='center'
                         >
-                            Bitte denken Sie daran, private Inhalte zu schließen und ggf. (System-)Benachrichtigungen auszuschalten.
+                            <Checkbox
+                                checked={canContinueOnScreenSetupChange}
+                                label="Übertragung automatisch fortsetzen, wenn sich der Bildschirmmodus ändert"
+                                onChange={this._handleCanContinueOnScreenSetupChangeToggle}
+                            />
+                            <br/>
+                            <br/>
+                            <i>Bitte denken Sie daran, private Inhalte zu schließen und ggf. (System-)Benachrichtigungen auszuschalten.</i>
                         </Container>
                     </Modal.Content>
                     <Modal.Actions>
