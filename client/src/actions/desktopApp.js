@@ -1,5 +1,4 @@
 import * as desktopAppActionTypes from '../actiontypes/desktopApp';
-import * as ipcActions from '../ipc/actions';
 
 
 /**
@@ -56,7 +55,7 @@ export function initDesktopApp() {
 export function resizeWindow(width, height) {
     return {
         type: desktopAppActionTypes.RESIZE_WINDOW,
-        ipcCall: (ipc) => ipcActions.resizeWindow(ipc, width, height),
+        ipcCall: (ipc) => ipc.sendMessage('resizeWindow', { width, height }),
     };
 }
 
@@ -69,7 +68,7 @@ export function resizeWindow(width, height) {
 export function restoreLastWindowSize() {
     return {
         type: desktopAppActionTypes.RESTORE_LAST_WINDOW_SIZE,
-        ipcCall: (ipc) => ipcActions.restoreLastWindowSize(ipc),
+        ipcCall: (ipc) => ipc.sendMessage('restoreLastWindowSize'),
     };
 }
 
@@ -97,7 +96,7 @@ export function setPresentationmodeActive(active) {
 export function setWindowAlwaysOnTop(alwaysOnTop) {
     return {
         type: desktopAppActionTypes.SET_WINDOW_ALWAYS_ON_TOP,
-        ipcCall: (ipc) => ipcActions.setWindowAlwaysOnTop(ipc, alwaysOnTop),
+        ipcCall: (ipc) => ipc.sendMessage('setWindowAlwaysOnTop', alwaysOnTop),
         alwaysOnTop,
     };
 }
