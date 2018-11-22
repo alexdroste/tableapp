@@ -241,14 +241,16 @@ class EntriesView extends React.Component {
                             </Responsive>
                     }
                 />
-                <Responsive
-                    maxWidth={800}
-                >
-                    <FloatingActionButton
-                        icon="add"
-                        onClick={this._handleFloatingActionButtonClick}
-                    />
-                </Responsive>
+                {!isPresentationmodeActive &&
+                    <Responsive
+                        maxWidth={800}
+                    >
+                        <FloatingActionButton
+                            icon="add"
+                            onClick={this._handleFloatingActionButtonClick}
+                        />
+                    </Responsive>
+                }
                 {!isPresentationmodeActive &&
                     <UserPostForm
                         ref={this._userPostFormRef}
