@@ -11,7 +11,7 @@ const InnerImage = styled.img`
 
 
 const Thumb = styled(Image)`
-    cursor: pointer;
+    ${props => props['data-isclickable'] && 'cursor: pointer;'}
     ${props => !props['data-hasinnerimage'] && (props['data-ishuge'] ? `
         width: 258px; /* 256px + 2px border */
         height: 258px; 
@@ -62,7 +62,7 @@ export class Thumbnail extends React.Component {
             isHuge: PropTypes.bool,
             isSelectable: PropTypes.bool,
             isSelected: PropTypes.bool,
-            onClick: PropTypes.func.isRequired,
+            onClick: PropTypes.func,
             src: PropTypes.string,
         };
     };
@@ -77,14 +77,22 @@ export class Thumbnail extends React.Component {
     };
 
 
+    _handleThumbClick = (e) => {
+        if (this.props.onClick)
+            this.props.onClick(e);
+    };
+
+
     render() {
-        const { alt, hasDashedBorder, icon, isHuge, isSelectable, isSelected, onClick, src } = this.props;
+        const { alt, hasDashedBorder, icon, isHuge, isSelectable, isSelected, src } = this.props;
+        const isClickable = !!this.props.onClick;
 
         const width = isHuge ? 256 : 80;
 
         return (
             <Thumb
-                onClick={onClick}
+                onClick={this._handleThumbClick}
+                data-isclickable={isClickable}
                 data-ishuge={isHuge}
                 data-hasinnerimage={!!src}
                 data-hasdashedborder={hasDashedBorder}
