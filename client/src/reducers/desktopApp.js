@@ -8,11 +8,14 @@ import * as desktopAppActionTypes from '../actiontypes/desktopApp';
  * @typedef {object} DesktopAppState
  * @property {boolean} [app=false] indicates if client runs inside electron context (enables desktop-App features)
  * @property {boolean} [broadcastActive=false] indicates if screenshot broadcasting is active
- * @property {boolean} [windowAlwaysOnTop=false] indicates if app is in presentation-mode / window is always on top of other windows
+ * @property {string} [lastBroadcastedImage=null] base64 image-data of last broadcasted image
+ * @property {boolean} [presentationmodeActive=false] indicates if client is in presentation-mode
+ * @property {boolean} [windowAlwaysOnTop=false] indicates if app-window is always on top of other windows
  */
 const initialState = {
     app: false,
     broadcastActive: false,
+    lastBroadcastedImage: null,
     presentationmodeActive: false,
     windowAlwaysOnTop: false,
 };
@@ -34,6 +37,16 @@ const broadcastActive = (state = initialState.broadcastActive, action) => {
             return false;
         case desktopAppActionTypes.SET_BROADCAST_ACTIVE:
             return action.active;
+        default:
+            return state;
+    }
+};
+
+
+const lastBroadcastedImage = (state = initialState.lastBroadcastedImage, action) => {
+    switch (action.type) {
+        case desktopAppActionTypes.BROADCAST_NEW_IMAGE_REQUEST:
+            return action.imageData;
         default:
             return state;
     }
@@ -69,12 +82,22 @@ const windowAlwaysOnTop = (state = initialState.windowAlwaysOnTop, action) => {
 export const desktopApp = combineReducers({
     app,
     broadcastActive,
+    lastBroadcastedImage,
     presentationmodeActive,
     windowAlwaysOnTop,
 });
 
 
 // selectors
+/**
+ * Selector to retrieve last broadcasted image from desktopApp-state.
+ * @function
+ * @param {DesktopAppState} state desktopApp-state
+ * @returns {string} base64 image-data
+ */
+export const getLastBroadcastedImage = (state) =>
+    state.lastBroadcastedImage;
+
 
 /**
  * Selector to select state if screenshot broadcasting is active from desktopApp-state.

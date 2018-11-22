@@ -29,6 +29,7 @@ export function broadcastNewImage(imageData) {
                 desktopAppActionTypes.BROADCAST_NEW_IMAGE_FAILURE],
             call: (api) => api.request('desktopApp/broadcastNewImage', { imageData })
         },
+        imageData
     });
 }
 
