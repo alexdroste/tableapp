@@ -11,17 +11,31 @@ const ipc = electron.ipcMain;
  */
 module.exports = (browserWindow) => {
 
-    let lastBounds = null;
+    let isMiniControlViewActive = false;
+    let normalViewBounds = null;
+    let miniControlViewBounds = null;
 
-    ipc.on('resizeWindow', (event, { width, height }) => {
-        lastBounds = browserWindow.getBounds();
-        browserWindow.setSize(width, height);
+    ipc.on('setMiniControlViewActive', (event, active) => {
+        if (active === isMiniControlViewActive)
+            return; // no change => do nothing
+        isMiniControlViewActive = active;
+        
+        if (active) { // init mini-control-view
+            normalViewBounds = browserWindow.getBounds();
+            if (miniControlViewBounds)
+                browserWindow.setSize(miniControlViewBounds.width, miniControlViewBounds.height);
+            else
+                browserWindow.setSize(140, 160);
+        } else { // return to normal/full - view
+            miniControlViewBounds = browserWindow.getBounds();
+            browserWindow.setSize(normalViewBounds.width, normalViewBounds.height);
+        }
     });
 
 
-    ipc.on('restoreLastWindowSize', (event, data) => {
-        browserWindow.setSize(lastBounds.width, lastBounds.height);
-    });
+    // ipc.on('restoreLastWindowSize', (event, data) => {
+    //     browserWindow.setSize(lastBounds.width, lastBounds.height);
+    // });
 
 
     ipc.on('setWindowAlwaysOnTop', (event, alwaysOnTop) => {

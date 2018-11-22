@@ -19,6 +19,7 @@ import { EventSettingsView } from './EventSettingsView';
 import { ScreenBroadcastHelper } from './ScreenBroadcastHelper';
 import { getActiveEventUserPermissionLevel } from '../reducers/events';
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
+import { LastScreenshotThumbnail } from './LastScreenshotThumbnail';
 
 
 /**
@@ -74,6 +75,8 @@ class ActiveEventView extends React.Component {
 
     render() {
         const { isDesktopApp, userCanManageActiveEvent } = this.props;
+        const isMiniControlRoute = this.props.location.pathname === "/minicontrol";
+
         return (
             <div>
                 <Switch>
@@ -98,6 +101,11 @@ class ActiveEventView extends React.Component {
                 </Switch>
                 {isDesktopApp && 
                     <ScreenBroadcastHelper/>
+                }
+                {isDesktopApp && !isMiniControlRoute &&
+                    <LastScreenshotThumbnail 
+                        asOverlay={true}
+                    />
                 }
             </div>
         );

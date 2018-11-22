@@ -6,11 +6,12 @@ import { bindActionCreators } from 'redux';
 import * as desktopAppActions from '../actions/desktopApp';
 import { Button, Label } from 'semantic-ui-react';
 import { getEntryDict } from '../reducers/entries';
+import { LastScreenshotThumbnail } from './LastScreenshotThumbnail';
 
 
 const Wrapper = styled.div`
     position: fixed;
-    top: 0;
+    top: 22px; // TODO remove workaround for TitleBar
     right: 0;
     bottom: 0;
     left: 0;
@@ -69,13 +70,13 @@ class MiniControlView extends React.Component {
 
 
     componentDidMount() {
-        this.props.desktopAppActions.resizeWindow(140, 130);
+        this.props.desktopAppActions.setMiniControlViewActive(true);
         this.props.desktopAppActions.setWindowAlwaysOnTop(true);
     }
 
 
     componentWillUnmount() {
-        this.props.desktopAppActions.restoreLastWindowSize();
+        this.props.desktopAppActions.setMiniControlViewActive(false);
     }
 
 
@@ -102,6 +103,8 @@ class MiniControlView extends React.Component {
                     content="Vergrößern"
                     icon="expand arrows alternate"
                 />
+                <br/>
+                <LastScreenshotThumbnail/>
             </Wrapper>
         );
     }

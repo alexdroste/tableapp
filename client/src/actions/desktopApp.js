@@ -46,31 +46,30 @@ export function initDesktopApp() {
 
 
 /**
- * Creates action for resizing the app-window.
+ * Creates action for going to/exiting the mini-control-view (controls window size/position).
  * @function
- * @param {number} width width in px
- * @param {number} height height in px
+ * @param {boolean} active indicates if mini-control-view should be active
  * @returns {object} action
  */
-export function resizeWindow(width, height) {
+export function setMiniControlViewActive(active) {
     return {
         type: desktopAppActionTypes.RESIZE_WINDOW,
-        ipcCall: (ipc) => ipc.sendMessage('resizeWindow', { width, height }),
+        ipcCall: (ipc) => ipc.sendMessage('setMiniControlViewActive', active),
     };
 }
 
 
-/**
- * Creates action for resizing the app-window to the last saved size.
- * @function
- * @returns {object} action
- */
-export function restoreLastWindowSize() {
-    return {
-        type: desktopAppActionTypes.RESTORE_LAST_WINDOW_SIZE,
-        ipcCall: (ipc) => ipc.sendMessage('restoreLastWindowSize'),
-    };
-}
+// /**
+//  * Creates action for resizing the app-window to the last saved size.
+//  * @function
+//  * @returns {object} action
+//  */
+// export function restoreLastWindowSize() {
+//     return {
+//         type: desktopAppActionTypes.RESTORE_LAST_WINDOW_SIZE,
+//         ipcCall: (ipc) => ipc.sendMessage('restoreLastWindowSize'),
+//     };
+// }
 
 
 /**
