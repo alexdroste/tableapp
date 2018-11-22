@@ -28,6 +28,8 @@ function createWindow() {
     mainWindow = new BrowserWindow({ 
         width: 900, 
         height: 680,
+        minWidth: 550, // TODO put default in an external file
+        minHeight: 350,
         frame: false,
         transparent: false,
         webPreferences: {

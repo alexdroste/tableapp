@@ -22,42 +22,50 @@ module.exports = (browserWindow) => {
         isMiniControlViewActive = active;
 
         let curBounds = browserWindow.getBounds();
-        let curScreen = screen.getDisplayNearestPoint({x: curBounds.x, y: curBounds.y});
         let nextBounds = null;
+        const curScreen = screen.getDisplayNearestPoint({x: curBounds.x, y: curBounds.y});
+        let newMinimumSize = null;
         
         if (active) { // init mini-control-view
+            newMinimumSize = { width: 140, height: 160 };
             normalViewBounds = curBounds;
             if (miniControlViewBounds)
                 nextBounds = miniControlViewBounds;
             else
                 nextBounds = { x: curBounds.x, y: curBounds.y, width: 140, height: 160 };
         } else { // return to normal/full - view
+            newMinimumSize = { width: 550, height: 350 }; // TODO put default in an external file
             miniControlViewBounds = curBounds;
             nextBounds = normalViewBounds;
         }
 
-        let nextScreen = screen.getDisplayNearestPoint({x: nextBounds.x, y: nextBounds.y});
-        if (curScreen.id === nextScreen.id)
-            browserWindow.setBounds(nextBounds);
-        else
-            browserWindow.setSize(nextBounds.width, nextBounds.height);
+        const nextScreen = screen.getDisplayNearestPoint({x: nextBounds.x, y: nextBounds.y});
+        // check if nextScreen is curScreen
+        // ignore x/y values if nextScreen differs from curScreen
+        if (curScreen.id !== nextScreen.id) {
+            nextBounds.x = curBounds.x;
+            nextBounds.y = curBounds.y;
+        }
 
-        curBounds = browserWindow.getBounds();
-        let newX = curBounds.x;
-        let newY = curBounds.y;
         // ensure window is in screens bounds
-        if (curBounds.x < curScreen.bounds.x) // left
-            newX = curScreen.bounds.x;
-        if (curBounds.y < curScreen.bounds.y) // top
-            newY = curScreen.bounds.y;
-        if (curBounds.x + curBounds.width > curScreen.bounds.x + curScreen.bounds.width) // right
-            newX = curScreen.bounds.x + curScreen.bounds.width - curBounds.width;
-        if (curBounds.y + curBounds.height > curScreen.bounds.y + curScreen.bounds.height) // bottom
-            newY = curScreen.bounds.y + curScreen.bounds.height - curBounds.height;
+        // left + top check should have priority before right + bottom
+        if (nextBounds.x + nextBounds.width > curScreen.bounds.x + curScreen.bounds.width) // right
+            nextBounds.x = curScreen.bounds.x + curScreen.bounds.width - nextBounds.width;
+        if (nextBounds.y + nextBounds.height > curScreen.bounds.y + curScreen.bounds.height) // bottom
+            nextBounds.y = curScreen.bounds.y + curScreen.bounds.height - nextBounds.height;
+        if (nextBounds.x < curScreen.bounds.x) // left
+            nextBounds.x = curScreen.bounds.x;
+        if (nextBounds.y < curScreen.bounds.y) // top
+            nextBounds.y = curScreen.bounds.y;
 
-        browserWindow.setPosition(newX, newY);
+        // ensure window fits screen size
+        if (nextBounds.width > curScreen.width)
+            nextBounds.width = curScreen.width;
+        if (nextBounds.height > curScreen.height)
+            nextBounds.height = curScreen.height;
 
-        // TODO check window fits screen size
+        browserWindow.setMinimumSize(newMinimumSize.width, newMinimumSize.height);
+        browserWindow.setBounds(nextBounds);
     });
 
 
