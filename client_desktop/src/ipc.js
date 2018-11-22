@@ -10,6 +10,7 @@ const ipc = electron.ipcMain;
  * @param {BrowserWindow} browserWindow 
  */
 module.exports = (browserWindow) => {
+    const screen = electron.screen; // https://github.com/electron/electron/issues/5897
 
     let isMiniControlViewActive = false;
     let normalViewBounds = null;
@@ -19,17 +20,44 @@ module.exports = (browserWindow) => {
         if (active === isMiniControlViewActive)
             return; // no change => do nothing
         isMiniControlViewActive = active;
+
+        let curBounds = browserWindow.getBounds();
+        let curScreen = screen.getDisplayNearestPoint({x: curBounds.x, y: curBounds.y});
+        let nextBounds = null;
         
         if (active) { // init mini-control-view
-            normalViewBounds = browserWindow.getBounds();
+            normalViewBounds = curBounds;
             if (miniControlViewBounds)
-                browserWindow.setSize(miniControlViewBounds.width, miniControlViewBounds.height);
+                nextBounds = miniControlViewBounds;
             else
-                browserWindow.setSize(140, 160);
+                nextBounds = { x: curBounds.x, y: curBounds.y, width: 140, height: 160 };
         } else { // return to normal/full - view
-            miniControlViewBounds = browserWindow.getBounds();
-            browserWindow.setSize(normalViewBounds.width, normalViewBounds.height);
+            miniControlViewBounds = curBounds;
+            nextBounds = normalViewBounds;
         }
+
+        let nextScreen = screen.getDisplayNearestPoint({x: nextBounds.x, y: nextBounds.y});
+        if (curScreen.id === nextScreen.id)
+            browserWindow.setBounds(nextBounds);
+        else
+            browserWindow.setSize(nextBounds.width, nextBounds.height);
+
+        curBounds = browserWindow.getBounds();
+        let newX = curBounds.x;
+        let newY = curBounds.y;
+        // ensure window is in screens bounds
+        if (curBounds.x < curScreen.bounds.x) // left
+            newX = curScreen.bounds.x;
+        if (curBounds.y < curScreen.bounds.y) // top
+            newY = curScreen.bounds.y;
+        if (curBounds.x + curBounds.width > curScreen.bounds.x + curScreen.bounds.width) // right
+            newX = curScreen.bounds.x + curScreen.bounds.width - curBounds.width;
+        if (curBounds.y + curBounds.height > curScreen.bounds.y + curScreen.bounds.height) // bottom
+            newY = curScreen.bounds.y + curScreen.bounds.height - curBounds.height;
+
+        browserWindow.setPosition(newX, newY);
+
+        // TODO check window fits screen size
     });
 
 

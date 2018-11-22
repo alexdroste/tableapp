@@ -46,9 +46,8 @@
 - [ ] save all screenshots, link them in db
 - [ ] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
   - [ ] maybe? log read event for entry/comment in post comment view
-- [ ] desktop-client: window-move & check for screen border on restore
-  - https://electronjs.org/docs/api/screen
-  - https://github.com/electron/electron/blob/master/docs/api/browser-window.md 
+- [ ] desktop-client: easier window-move
+- [x] desktop-client: check for screen border on restore
 - [x] sign-out
 
 
