@@ -12,7 +12,6 @@ const CustomComment = styled(Comment)`
         margin: 1.25em 0 1.25em 1px;
         padding: 0 0 0 1em;
         box-shadow: -2px 0px 0px 0px rgba(0,0,0,.1);
-        ${props => props['data-toplevel'] && "margin-bottom: 2.5em;"}
     }
 
     ${props => props['data-toplevel'] && `
@@ -22,6 +21,7 @@ const CustomComment = styled(Comment)`
             border-radius: .28571429rem;
             padding-top: 1em;
             padding-bottom: 1px;
+            padding-right: 1em;
         }
     `}
 `;
