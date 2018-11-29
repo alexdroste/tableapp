@@ -235,7 +235,7 @@ class NavBar extends React.Component {
                             secondary
                         >
                             <Menu.Item
-                                content="Verkleinerte Ansicht"
+                                content="Verkleinerte Ansicht (F8)"
                                 icon="compress"
                                 onClick={this._handleActivateMiniControlView}
                             />

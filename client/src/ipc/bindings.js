@@ -17,8 +17,14 @@ export const setupListeners = (ipc, dispatch) => {
     //     dispatch(desktopAppActions.broadcastNewImage(data));
     // };
 
+    const _handleToggleMiniControlView = () => {
+        dispatch(desktopAppActions.toggleMiniControlView());
+    };
+
 
     // ipc.on('broadcastCancelled', _handleBroadcastCancelled);
 
     // ipc.on('newBroadcastImage', _handleNewBroadcastImage);
+
+    ipc.on('toggleMiniControlView', _handleToggleMiniControlView);
 };

@@ -6,10 +6,12 @@ const url = require('url');
 const isDev = require('electron-is-dev');
 const setupIpc = require('./ipc');
 const serve = require('electron-serve');
+const setupGlobalShortcut = require('./globalShortcut');
 
 
 let loadUrl;
 let ipc;
+let globalShortcut;
 let mainWindow;
 
 app.commandLine.appendSwitch("ignore-certificate-errors");
@@ -39,6 +41,7 @@ function createWindow() {
     });
     mainWindow.setMenu(null);
     ipc = setupIpc(mainWindow);
+    globalShortcut = setupGlobalShortcut(mainWindow);
 
     if (isDev)
         mainWindow.loadURL('https://localhost:3000/');

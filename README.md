@@ -47,7 +47,7 @@
 - [ ] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
   - [ ] maybe? log read event for entry/comment in post comment view
 - [ ] desktop-client: easier window-move
-- [ ] desktop-client: toggle mini control with global shortcut
+- [x] desktop-client: toggle mini control with global shortcut
 - [ ] desktop-client: remember table position on extend->mirror->extend change (per monitor save)
 - [ ] desktop-client: show thumb in minicontrolview if monitor-setup changes
 - [x] desktop-client: check for screen border on restore

@@ -1,4 +1,5 @@
 import * as desktopAppActionTypes from '../actiontypes/desktopApp';
+import { isMiniControlViewActive, isPresentationmodeActive } from '../reducers/desktopApp';
 
 
 /**
@@ -47,15 +48,20 @@ export function initDesktopApp() {
 
 /**
  * Creates action for going to/exiting the mini-control-view (controls window size/position).
+ * Only dispatches is presentation-mode is active.
  * @function
  * @param {boolean} active indicates if mini-control-view should be active
  * @returns {object} action
  */
 export function setMiniControlViewActive(active) {
-    return {
-        type: desktopAppActionTypes.SET_MINI_CONTROL_VIEW_ACTIVE,
-        ipcCall: (ipc) => ipc.sendMessage('setMiniControlViewActive', active),
-        active,
+    return (dispatch, getState) => {
+        if (!isPresentationmodeActive(getState().desktopApp))
+            return;
+        dispatch({
+            type: desktopAppActionTypes.SET_MINI_CONTROL_VIEW_ACTIVE,
+            ipcCall: (ipc) => ipc.sendMessage('setMiniControlViewActive', active),
+            active,
+        });
     };
 }
 
@@ -112,5 +118,17 @@ export function setBroadcastActive(active) {
     return {
         type: desktopAppActionTypes.SET_BROADCAST_ACTIVE,
         active,
+    };
+}
+
+
+/**
+ * Creates action for toggling mini-control-view active state.
+ * @function
+ * @returns {object} action
+ */
+export function toggleMiniControlView() {
+    return (dispatch, getState) => {
+        dispatch(setMiniControlViewActive(!isMiniControlViewActive(getState().desktopApp)));
     };
 }
