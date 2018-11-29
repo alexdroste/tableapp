@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as desktopAppActions from '../actions/desktopApp';
-import { Button, Label } from 'semantic-ui-react';
+import { Button, Icon, Label } from 'semantic-ui-react';
 import { getEntryDict } from '../reducers/entries';
+import { isBroadcastActive } from '../reducers/desktopApp';
 import { LastScreenshotThumbnail } from './LastScreenshotThumbnail';
 
 
@@ -86,6 +87,7 @@ class MiniControlView extends React.Component {
 
 
     render() {
+        const { isBroadcastActive } = this.props;
         const { newEntriesCount } = this.state;
 
         return (
@@ -104,7 +106,12 @@ class MiniControlView extends React.Component {
                     icon="expand arrows alternate"
                 />
                 <br/>
-                <LastScreenshotThumbnail/>
+                {isBroadcastActive &&
+                    <Label>
+                        <Icon name='record' color='red' /> Übertragung läuft
+                    </Label>
+                }
+                {/* <LastScreenshotThumbnail/> */}
             </Wrapper>
         );
     }
@@ -114,6 +121,7 @@ class MiniControlView extends React.Component {
 const mapStateToProps = (state, props) => {
     return {
         entryDict: getEntryDict(state.entries),
+        isBroadcastActive: isBroadcastActive(state.desktopApp),
     }
 };
 

@@ -27,13 +27,15 @@ module.exports = (browserWindow) => {
         let newMinimumSize = null;
         
         if (active) { // init mini-control-view
-            newMinimumSize = { width: 140, height: 160 };
+            browserWindow.setOpacity(.85);
+            newMinimumSize = { width: 140, height: 140 };
             normalViewBounds = curBounds;
             if (miniControlViewBounds)
                 nextBounds = miniControlViewBounds;
             else
-                nextBounds = { x: curBounds.x, y: curBounds.y, width: 140, height: 160 };
+                nextBounds = { x: curBounds.x, y: curBounds.y, width: 140, height: 140 };
         } else { // return to normal/full - view
+            browserWindow.setOpacity(1);
             newMinimumSize = { width: 550, height: 350 }; // TODO put default in an external file
             miniControlViewBounds = curBounds;
             nextBounds = normalViewBounds;
@@ -67,11 +69,6 @@ module.exports = (browserWindow) => {
         browserWindow.setMinimumSize(newMinimumSize.width, newMinimumSize.height);
         browserWindow.setBounds(nextBounds);
     });
-
-
-    // ipc.on('restoreLastWindowSize', (event, data) => {
-    //     browserWindow.setSize(lastBounds.width, lastBounds.height);
-    // });
 
 
     ipc.on('setWindowAlwaysOnTop', (event, alwaysOnTop) => {
