@@ -9,6 +9,7 @@ import * as desktopAppActionTypes from '../actiontypes/desktopApp';
  * @property {boolean} [app=false] indicates if client runs inside electron context (enables desktop-App features)
  * @property {boolean} [broadcastActive=false] indicates if screenshot broadcasting is active
  * @property {string} [lastBroadcastedImage=null] base64 image-data of last broadcasted image
+ * @property {boolean} [miniControlViewActive=false] indicates if mini-control-view is active
  * @property {boolean} [presentationmodeActive=false] indicates if client is in presentation-mode
  * @property {boolean} [windowAlwaysOnTop=false] indicates if app-window is always on top of other windows
  */
@@ -16,6 +17,7 @@ const initialState = {
     app: false,
     broadcastActive: false,
     lastBroadcastedImage: null,
+    miniControlViewActive: false,
     presentationmodeActive: false,
     windowAlwaysOnTop: false,
 };
@@ -53,6 +55,16 @@ const lastBroadcastedImage = (state = initialState.lastBroadcastedImage, action)
 };
 
 
+const miniControlViewActive = (state = initialState.miniControlViewActive, action) => {
+    switch (action.type) {
+        case desktopAppActionTypes.SET_MINI_CONTROL_VIEW_ACTIVE:
+            return action.active;
+        default:
+            return state;
+    }
+};
+
+
 const presentationmodeActive = (state = initialState.presentationmodeActive, action) => {
     switch (action.type) {
         case desktopAppActionTypes.SET_PRESENTATION_MODE_ACTIVE:
@@ -83,6 +95,7 @@ export const desktopApp = combineReducers({
     app,
     broadcastActive,
     lastBroadcastedImage,
+    miniControlViewActive,
     presentationmodeActive,
     windowAlwaysOnTop,
 });
@@ -117,6 +130,16 @@ export const isBroadcastActive = (state) =>
  */
 export const isDesktopApp = (state) =>
     state.app;
+
+
+/**
+ * Selector to select state if mini-control-view is active from desktopApp-state.
+ * @function
+ * @param {DesktopAppState} state desktopApp-state
+ * @returns {boolean} indicates if mini-control-view is active
+ */
+export const isMiniControlViewActive = (state) =>
+    state.miniControlViewActive;
 
 
 /**

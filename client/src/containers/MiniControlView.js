@@ -71,18 +71,12 @@ class MiniControlView extends React.Component {
 
 
     componentDidMount() {
-        this.props.desktopAppActions.setMiniControlViewActive(true);
         this.props.desktopAppActions.setWindowAlwaysOnTop(true);
     }
 
 
-    componentWillUnmount() {
-        this.props.desktopAppActions.setMiniControlViewActive(false);
-    }
-
-
     _handleWrapperClick = (e) => {
-        this.context.router.history.goBack();
+        this.props.desktopAppActions.setMiniControlViewActive(false);
     };
 
 

@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import * as desktopAppActions from '../actions/desktopApp';
 import { connect } from 'react-redux';
 import { ScreenCapturer } from '../ScreenCapturer';
-import { isBroadcastActive } from '../reducers/desktopApp';
+import { isBroadcastActive, isMiniControlViewActive } from '../reducers/desktopApp';
 import { ScreenSelectModal } from '../components/ScreenSelectModal';
 
 
@@ -158,7 +158,9 @@ class ScreenBroadcastHelper extends React.Component {
             isOpen: this.props.isBroadcastActive,
             selectedScreenIdx: null 
         });
-        // todo check if /minicontrol => if, restore to full view (goBack)
+        // restore full view on unselect
+        if (this.props.isMiniControlViewActive)
+            this.props.desktopAppActions.setMiniControlViewActive(false);
     };
 
 
@@ -189,6 +191,7 @@ class ScreenBroadcastHelper extends React.Component {
 const mapStateToProps = (state, props) => {
     return {
         isBroadcastActive: isBroadcastActive(state.desktopApp),
+        isMiniControlViewActive: isMiniControlViewActive(state.desktopApp),
     }
 };
 

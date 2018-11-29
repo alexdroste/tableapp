@@ -18,7 +18,7 @@
     - https://github.com/bvaughn/react-virtualized/issues/1226
   - [x] fix TimeStamp.js:42 language
   - [x] fix presentationmode add entry button still there
-  - [ ] fix restore full view if screen unselects in miniview
+  - [x] fix restore full view if screen unselects in miniview
   - [ ] desktop-client: fix TitleBar in viewport => render to Frame?
   - [ ] fix TransitionablePortal close bug somehow (see known-bugs inside docs)
     - implement own component (or Modal with Animation)
@@ -47,6 +47,9 @@
 - [ ] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
   - [ ] maybe? log read event for entry/comment in post comment view
 - [ ] desktop-client: easier window-move
+- [ ] desktop-client: toggle mini control with global shortcut
+- [ ] desktop-client: remember table position on extend->mirror->extend change (per monitor save)
+- [ ] desktop-client: show thumb in minicontrolview if monitor-setup changes
 - [x] desktop-client: check for screen border on restore
 - [x] sign-out
 

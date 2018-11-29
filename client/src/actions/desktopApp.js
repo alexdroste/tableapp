@@ -53,8 +53,9 @@ export function initDesktopApp() {
  */
 export function setMiniControlViewActive(active) {
     return {
-        type: desktopAppActionTypes.RESIZE_WINDOW,
+        type: desktopAppActionTypes.SET_MINI_CONTROL_VIEW_ACTIVE,
         ipcCall: (ipc) => ipc.sendMessage('setMiniControlViewActive', active),
+        active,
     };
 }
 

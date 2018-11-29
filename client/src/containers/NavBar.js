@@ -137,6 +137,11 @@ class NavBar extends React.Component {
     }
 
 
+    _handleActivateMiniControlView = (e) => {
+        this.props.desktopAppActions.setMiniControlViewActive(true);
+    };
+
+
     _handleCloseQRCodeClick = (e) => {
         this.setState({
             isActiveEventQrCodeModalOpen: false,
@@ -230,10 +235,9 @@ class NavBar extends React.Component {
                             secondary
                         >
                             <Menu.Item
-                                as={NavLink}
                                 content="Verkleinerte Ansicht"
                                 icon="compress"
-                                to="/minicontrol"
+                                onClick={this._handleActivateMiniControlView}
                             />
                             <Menu.Item>
                                 <BroadcastScreenButton

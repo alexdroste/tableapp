@@ -13,7 +13,7 @@ import { NotFoundView } from '../components/NotFoundView';
 import { SwitchEventView } from './SwitchEventView';
 import { JoinEventView } from './JoinEventView';
 import { DynamicRowsCache } from '../DynamicRowsCache';
-import { isDesktopApp } from '../reducers/desktopApp';
+import { isMiniControlViewActive, isDesktopApp } from '../reducers/desktopApp';
 import { MiniControlView } from './MiniControlView';
 import { EventSettingsView } from './EventSettingsView';
 import { ScreenBroadcastHelper } from './ScreenBroadcastHelper';
@@ -74,35 +74,35 @@ class ActiveEventView extends React.Component {
 
 
     render() {
-        const { isDesktopApp, userCanManageActiveEvent } = this.props;
-        const isMiniControlRoute = this.props.location.pathname === "/minicontrol";
+        const { isDesktopApp, isMiniControlViewActive, userCanManageActiveEvent } = this.props;
 
         return (
             <div>
-                <Switch>
-                    <Route exact path="/" render={() => (
-                        <Redirect to="/entries"/>
-                    )}/>
-                    <Route path="/entries/:entryId/:commentId/new" component={UserPostView}/>,
-                    <Route path="/entries/:entryId" component={CommentsView}/>,
-                    <Route path="/entries" render={() => <EntriesView dynamicRowsCache={this._entriesViewDynamicRowsCache} />}/>,
-                    <Route path="/polls" component={PollsView}/>,
-                    <Route path="/settings" component={SettingsView}/>
-                    {userCanManageActiveEvent &&
-                        <Route path="/eventsettings" component={EventSettingsView}/>
-                    }
-                    <Route path='/join/:eventId' component={JoinEventView}/>
-                    <Route path='/join' component={JoinEventView}/>
-                    <Route path='/switchevent' component={SwitchEventView}/>
-                    {isDesktopApp &&
-                        <Route path='/minicontrol' component={MiniControlView}/>
-                    }
-                    <Route path="*" component={NotFoundView} status={404}/>
-                </Switch>
+                { isDesktopApp && isMiniControlViewActive ? (
+                    <MiniControlView/>
+                ) : (
+                    <Switch>
+                        <Route exact path="/" render={() => (
+                            <Redirect to="/entries"/>
+                        )}/>
+                        <Route path="/entries/:entryId/:commentId/new" component={UserPostView}/>,
+                        <Route path="/entries/:entryId" component={CommentsView}/>,
+                        <Route path="/entries" render={() => <EntriesView dynamicRowsCache={this._entriesViewDynamicRowsCache} />}/>,
+                        <Route path="/polls" component={PollsView}/>,
+                        <Route path="/settings" component={SettingsView}/>
+                        {userCanManageActiveEvent &&
+                            <Route path="/eventsettings" component={EventSettingsView}/>
+                        }
+                        <Route path='/join/:eventId' component={JoinEventView}/>
+                        <Route path='/join' component={JoinEventView}/>
+                        <Route path='/switchevent' component={SwitchEventView}/>
+                        <Route path="*" component={NotFoundView} status={404}/>
+                    </Switch>
+                )}
                 {isDesktopApp && 
                     <ScreenBroadcastHelper/>
                 }
-                {isDesktopApp && !isMiniControlRoute &&
+                {isDesktopApp && !isMiniControlViewActive &&
                     <LastScreenshotThumbnail 
                         asOverlay={true}
                     />
@@ -116,6 +116,7 @@ class ActiveEventView extends React.Component {
 const mapStateToProps = (state, props) => {
     return {
         isDesktopApp: isDesktopApp(state.desktopApp),
+        isMiniControlViewActive: isMiniControlViewActive(state.desktopApp),
         userCanManageActiveEvent: getActiveEventUserPermissionLevel(state.events) >= PermissionLevelEnum.ADMINISTRATOR,
     }
 };

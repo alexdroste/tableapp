@@ -19,7 +19,7 @@ import { ActiveEventView } from './ActiveEventView';
 import { AcceptTosView } from './AcceptTosView';
 import { LegalInfosPage } from '../components/LegalInfosPage';
 import { TitleBar } from '../components/TitleBar';
-import { isDesktopApp } from '../reducers/desktopApp';
+import { isDesktopApp, isMiniControlViewActive } from '../reducers/desktopApp';
 
 
 const ContentWrapper = styled.div`
@@ -137,8 +137,8 @@ class App extends React.Component {
 
 
     render() {
-        const { isDesktopApp } = this.props;
-        const renderLegalInfosLink = this.props.location.pathname !== "/minicontrol";
+        const { isDesktopApp, isMiniControlViewActive } = this.props;
+        const renderLegalInfosLink = !isMiniControlViewActive;
 
         return (
             <ContentWrapper id="contentWrapper">
@@ -168,6 +168,7 @@ const mapStateToProps = (state, props) => {
         userHasAcceptedTos: hasAcceptedTos(state.user),
         isActiveEventSet: !!getActiveEventId(state.events),
         isDesktopApp: isDesktopApp(state.desktopApp),
+        isMiniControlViewActive: isMiniControlViewActive(state.desktopApp),
         isSwitchActiveEventPending: isSwitchActiveEventPending(state.events),
         userLoggedIn: getLoginState(state.user) === LoginStateEnum.LOGGED_IN,
     }

@@ -13,9 +13,11 @@ export const BROADCAST_NEW_IMAGE_FAILURE = 'desktopApp/BROADCAST_NEW_IMAGE_FAILU
 export const INIT_DESKTOP_APP = 'desktopApp/INIT_DESKTOP_APP';
 
 /** desktopApp actiontype: resize of app-window */
-export const RESIZE_WINDOW = 'desktopApp/RESIZE_WINDOW';
+// export const RESIZE_WINDOW = 'desktopApp/RESIZE_WINDOW';
 /** desktopApp actiontype: restore of last saved app-window size */
-export const RESTORE_LAST_WINDOW_SIZE = 'desktopApp/RESTORE_LAST_WINDOW_SIZE';
+// export const RESTORE_LAST_WINDOW_SIZE = 'desktopApp/RESTORE_LAST_WINDOW_SIZE';
+/** desktopApp actiontype: changes mini-control-active state */
+export const SET_MINI_CONTROL_VIEW_ACTIVE = 'desktopApp/SET_MINI_CONTROL_VIEW_ACTIVE';
 /** desktopApp actiontype: changes presentationmode-active state */
 export const SET_PRESENTATION_MODE_ACTIVE = 'desktopApp/SET_PRESENTATION_MODE_ACTIVE';
 /** desktopApp actiontype: changes always-on-top state of window */
