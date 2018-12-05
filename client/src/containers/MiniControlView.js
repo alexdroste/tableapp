@@ -102,7 +102,7 @@ class MiniControlView extends React.Component {
                 <br/>
                 {isBroadcastActive &&
                     <Label>
-                        <Icon name='record' color='red' /> Übertragung läuft
+                        <Icon name='record' color='red' /> Übertragung
                     </Label>
                 }
                 {/* <LastScreenshotThumbnail/> */}
