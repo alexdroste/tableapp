@@ -19,6 +19,8 @@
   - [x] fix TimeStamp.js:42 language
   - [x] fix presentationmode add entry button still there
   - [x] fix restore full view if screen unselects in miniview
+  - [ ] fix restore mini-view after api connection loss? (keep inner-state of screenbroadcasthelper)
+  - [x] fix timestamp not updating due to view reuse in virtualized list
   - [ ] desktop-client: fix TitleBar in viewport => render to Frame?
   - [ ] fix TransitionablePortal close bug somehow (see known-bugs inside docs)
     - implement own component (or Modal with Animation)
@@ -56,6 +58,7 @@
 
 ### normal priority
 
+- [ ] login with kürzel
 - [ ] optimize desktop-client zoom (track cmd + +/-, add overlay)
 - [ ] popups on entry send: "add screenshot"/""
 - [ ] choose proper text-font
@@ -80,6 +83,7 @@
 - [ ] max character limit for comments/entries
 - [ ] collapse entry content in feed if its too long => add button to "expand" / "collapse" long content
 - [ ] make more than the last 3 screenshots available for use / preview other screenshots in zoomed view
+- [ ] switch attached images in full screen with arrows & arrow-keys
 - [ ] implement or remove archive option for events
 - [ ] post entry: show minimum/maximum characters
 - [ ] rate-limits (e.g. you can only post x new entries in x secs)

@@ -52,6 +52,15 @@ export class TimeStamp extends React.PureComponent {
     }
 
 
+    static getDerivedStateFromProps(props, state) {
+        const oldText = state.text;
+        const newText = TimeStamp.getTimeText(props.timestamp);
+        if (oldText === newText)
+            return null;
+        return { text: newText };
+    }
+
+
     componentDidMount() {
         this.intervalId = setInterval(
             () => this.updateText(),
