@@ -20,6 +20,7 @@ import { AcceptTosView } from './AcceptTosView';
 import { LegalInfosPage } from '../components/LegalInfosPage';
 import { TitleBar } from '../components/TitleBar';
 import { isDesktopApp, isMiniControlViewActive } from '../reducers/desktopApp';
+import { WebFrameScaler } from '../WebFrameScaler';
 
 
 const ContentWrapper = styled.div`
@@ -76,6 +77,8 @@ class App extends React.Component {
      */
     UNSAFE_componentWillMount() {
         if (window.electron) { // if window.electron is set => desktop app
+            const wfs = new WebFrameScaler();
+            wfs.setZoomLevel(1.0); // reset zoom on start
             this.props.desktopAppActions.initDesktopApp();
             this.props.history.replace('/');
         }
