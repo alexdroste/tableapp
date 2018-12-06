@@ -1,20 +1,18 @@
 const electron = require('electron');
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
 const setupIpc = require('./ipc');
 const serve = require('electron-serve');
 const setupGlobalShortcut = require('./globalShortcut');
+const WindowManager = require('./WindowManager');
+const defaults = require('./defaults');
 
 
 let loadUrl;
-let ipc;
-let globalShortcut;
 let mainWindow;
 
-app.commandLine.appendSwitch("ignore-certificate-errors");
+electron.app.commandLine.appendSwitch("ignore-certificate-errors");
 
 if (!isDev)
     loadUrl = serve({directory: 'app'});
@@ -27,21 +25,31 @@ if (!isDev)
  * @function
  */
 function createWindow() {
-    mainWindow = new BrowserWindow({ 
-        width: 900, 
-        height: 680,
-        minWidth: 550, // TODO put default in an external file
-        minHeight: 350,
+    const { width, height, minWidth, minHeight } = defaults.windowSize.normalView;
+    mainWindow = new electron.BrowserWindow({ 
+        width, 
+        height,
+        minWidth,
+        minHeight,
+        minimizable: false,
+        maximizable: false,
         frame: false,
         transparent: false,
+        // titleBarStyle: 'hidden',
         webPreferences: {
             nodeIntegration: false,
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
         }
     });
+    // mainWindow.setBounds2 = mainWindow.setBounds;
+    // mainWindow.setBounds = (args) => {
+    //     console.dir(args);
+    //     mainWindow.setBounds2(args);
+    // };
     mainWindow.setMenu(null);
-    ipc = setupIpc(mainWindow);
-    globalShortcut = setupGlobalShortcut(mainWindow);
+    const windowManager = new WindowManager(mainWindow);
+    setupIpc(mainWindow, windowManager);
+    setupGlobalShortcut(mainWindow);
 
     if (isDev)
         mainWindow.loadURL('https://localhost:3000/');
@@ -55,18 +63,18 @@ function createWindow() {
 }
 
 
-app.on('ready', createWindow);
+electron.app.on('ready', createWindow);
 
 
-app.on('window-all-closed', () => {
-    app.quit();
+electron.app.on('window-all-closed', () => {
+    electron.app.quit();
     // if (process.platform !== 'darwin') {
     //     app.quit();
     // }
 });
 
 
-app.on('activate', () => {
+electron.app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
     }

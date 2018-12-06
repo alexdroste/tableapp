@@ -50,7 +50,7 @@
   - [ ] maybe? log read event for entry/comment in post comment view
 - [ ] desktop-client: easier window-move
 - [x] desktop-client: toggle mini control with global shortcut
-- [ ] desktop-client: remember table position on extend->mirror->extend change (per monitor save)
+- [x] desktop-client: remember table position on extend->mirror->extend change (per monitor save)
 - [ ] desktop-client: show thumb in minicontrolview if monitor-setup changes
 - [x] desktop-client: check for screen border on restore
 - [x] sign-out
@@ -60,6 +60,7 @@
 
 - [ ] login with kürzel
 - [ ] optimize desktop-client zoom (track cmd + +/-, add overlay)
+- [ ] desktop-client: manage zoom by WindowManager and save zoom-level per setup/hashed screen
 - [ ] popups on entry send: "add screenshot"/""
 - [ ] choose proper text-font
 - [ ] redesign posting design
