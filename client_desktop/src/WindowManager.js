@@ -23,10 +23,10 @@ class WindowManager {
 
     static getDisplayForBounds(bounds) {
         // use midpoint
-        return electron.screen.getDisplayNearestPoint({
-            x: bounds.x + bounds.width / 2,
-            y: bounds.y + bounds.height / 2,
-        })
+        const x = bounds.x + parseInt(bounds.width / 2);
+        const y = bounds.y + parseInt(bounds.height / 2);
+        // x, y should be ints #windows-bug
+        return electron.screen.getDisplayNearestPoint({ x, y });
     }
 
 
@@ -153,8 +153,9 @@ class WindowManager {
         // check if nextScreen is curScreen, if it differs
         // use current position and scale (bounds-)rect at midpoint
         if (curScreen.id !== nextScreen.id) {
-            const moveDiffX = (nextBounds.width - curBounds.width) / 2;
-            const moveDiffY = (nextBounds.height - curBounds.height) / 2;
+            // x, y should be ints #windows-bug
+            const moveDiffX = parseInt((nextBounds.width - curBounds.width) / 2);
+            const moveDiffY = parseInt((nextBounds.height - curBounds.height) / 2);
             nextBounds.x = curBounds.x - moveDiffX;
             nextBounds.y = curBounds.y - moveDiffY;
         }
