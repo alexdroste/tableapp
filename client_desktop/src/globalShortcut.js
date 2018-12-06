@@ -1,4 +1,4 @@
-const { globalShortcut } = require('electron')
+const electron = require('electron')
 
 
 /**
@@ -8,11 +8,11 @@ const { globalShortcut } = require('electron')
  * @param {BrowserWindow} browserWindow 
  */
 module.exports = (browserWindow) => {
-    globalShortcut.register('Alt+S', () => {
+    electron.globalShortcut.register('Alt+S', () => {
         browserWindow.webContents.send('toggleMiniControlView');
     });
 
-    globalShortcut.register('F8', () => {
+    electron.globalShortcut.register('F8', () => {
         browserWindow.webContents.send('toggleMiniControlView');
     });
 };
