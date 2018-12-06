@@ -21,6 +21,7 @@ import { LegalInfosPage } from '../components/LegalInfosPage';
 import { TitleBar } from '../components/TitleBar';
 import { isDesktopApp, isMiniControlViewActive } from '../reducers/desktopApp';
 import { WebFrameScaler } from '../WebFrameScaler';
+import { ScreenBroadcastHelper } from './ScreenBroadcastHelper';
 
 
 const ContentWrapper = styled.div`
@@ -158,6 +159,9 @@ class App extends React.Component {
                             Impressum / Datenschutz / Nutzungsbedingungen
                         </Link>
                     </CenteredP>
+                }
+                {isDesktopApp && 
+                    <ScreenBroadcastHelper/>
                 }
             </ContentWrapper>
         );

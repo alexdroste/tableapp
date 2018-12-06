@@ -16,7 +16,6 @@ import { DynamicRowsCache } from '../DynamicRowsCache';
 import { isMiniControlViewActive, isDesktopApp } from '../reducers/desktopApp';
 import { MiniControlView } from './MiniControlView';
 import { EventSettingsView } from './EventSettingsView';
-import { ScreenBroadcastHelper } from './ScreenBroadcastHelper';
 import { getActiveEventUserPermissionLevel } from '../reducers/events';
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
 import { LastScreenshotThumbnail } from './LastScreenshotThumbnail';
@@ -99,9 +98,6 @@ class ActiveEventView extends React.Component {
                         <Route path="*" component={NotFoundView} status={404}/>
                     </Switch>
                 )}
-                {isDesktopApp && 
-                    <ScreenBroadcastHelper/>
-                }
                 {isDesktopApp && !isMiniControlViewActive &&
                     <LastScreenshotThumbnail 
                         asOverlay={true}

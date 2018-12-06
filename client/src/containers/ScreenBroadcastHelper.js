@@ -153,6 +153,8 @@ class ScreenBroadcastHelper extends React.Component {
 
 
     _unselectScreen = () => {
+        if (!this.state.selectedScreenIdx)
+            return; // you can't unselect if nothing was selected
         this.setState({ 
             isBroadcasting: false,
             isOpen: this.props.isBroadcastActive,

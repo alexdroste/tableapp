@@ -19,7 +19,7 @@
   - [x] fix TimeStamp.js:42 language
   - [x] fix presentationmode add entry button still there
   - [x] fix restore full view if screen unselects in miniview
-  - [ ] fix restore mini-view after api connection loss? (keep inner-state of screenbroadcasthelper)
+  - [x] fix restore mini-view after api connection loss? (keep inner-state of screenbroadcasthelper)
   - [x] fix timestamp not updating due to view reuse in virtualized list
   - [ ] desktop-client: fix TitleBar in viewport => render to Frame?
   - [ ] fix TransitionablePortal close bug somehow (see known-bugs inside docs)
