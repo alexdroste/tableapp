@@ -7,7 +7,7 @@ const utils = require('../utils');
 
 
 // dirty bit
-const firstSplitDate = new Date('2018-12-10T00:00:00.000Z');
+const firstSplitDate = new Date('2018-12-16T00:00:00.000Z');
 const validForMonths = 3;
 const maxUnbalance = 5; // max 5 person more in one group is ok
 
