@@ -1,4 +1,5 @@
 const electron = require('electron')
+const log = require('./log');
 
 
 /**
@@ -14,5 +15,9 @@ module.exports = (browserWindow) => {
 
     electron.globalShortcut.register('F8', () => {
         browserWindow.webContents.send('toggleMiniControlView');
+    });
+
+    electron.globalShortcut.register('F6', () => {
+        log.info('MARK - set by user pressing F6');
     });
 };

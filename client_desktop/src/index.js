@@ -7,6 +7,7 @@ const serve = require('electron-serve');
 const setupGlobalShortcut = require('./globalShortcut');
 const WindowManager = require('./WindowManager');
 const defaults = require('./defaults');
+const log = require('./log');
 
 
 let loadUrl;
@@ -60,6 +61,8 @@ function createWindow() {
 
     if (isDev)
         mainWindow.webContents.openDevTools({mode: 'detach'});
+
+    log.info("App startet");
 }
 
 
@@ -67,6 +70,7 @@ electron.app.on('ready', createWindow);
 
 
 electron.app.on('window-all-closed', () => {
+    log.info("App closed");
     electron.app.quit();
     // if (process.platform !== 'darwin') {
     //     app.quit();

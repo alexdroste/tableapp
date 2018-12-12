@@ -1,9 +1,19 @@
 const electron = require('electron');
 const defaults = require('./defaults');
 const debounce = require('lodash.debounce');
+const log = require('./log');
 
 
 class WindowManager {
+    logDebug(method) {
+        const bounds = this.browserWindow.getBounds();
+        log.debug(`${method.padEnd(40)}\t
+            ${JSON.stringify(WindowManager.getDisplayForBounds(bounds).id).padEnd(30)}\t
+            ${JSON.stringify(bounds).padEnd(200)}\t
+            ${JSON.stringify(this.isMiniControlViewActive).padEnd(5)}\t
+            ${JSON.stringify(this.boundsByScreenSetup)}`);
+    }
+
     constructor(browserWindow) {
         this.browserWindow = browserWindow;
         this.boundsByScreenSetup = {};
@@ -18,6 +28,7 @@ class WindowManager {
         electron.screen.on("display-removed", () => this.restorePosition());
 
         this.updateBounds();
+        log.debug(`WM SCREENS ${JSON.stringify(electron.screen.getAllDisplays())}`);
     }
 
 
@@ -40,6 +51,7 @@ class WindowManager {
 
 
     ensureWindowIsInScreenBounds() {
+        this.logDebug('WM::ensureWindowIsInScreenBounds start');
         const win = this.browserWindow.getBounds();
         const screen = WindowManager.getDisplayForBounds(win).bounds;
         // left + top check should have priority before right + bottom
@@ -59,13 +71,17 @@ class WindowManager {
             win.height = screen.height;
 
         this.browserWindow.setBounds(win);
+        this.logDebug('WM::ensureWindowIsInScreenBounds end');
     }
 
 
     restorePosition() {
+        log.debug(`WM SCREENS ${JSON.stringify(electron.screen.getAllDisplays())}`);
+        this.logDebug('WM::restorePosition start');
         const screenHash = WindowManager.getScreenSetupHash();
         const boundsSS = this.boundsByScreenSetup[screenHash];
-        if (!boundsSS) return;
+        if (!boundsSS) 
+            return this.updateBounds();
         const view = this.isMiniControlViewActive ? 'miniControlView' : 'normalView';
         const bounds = boundsSS[view];
         if (bounds) {
@@ -87,10 +103,12 @@ class WindowManager {
             }
             this.browserWindow.setSize(width, height);
         }
+        this.logDebug('WM::restorePosition end');
     }
 
 
     setAlwaysOnTop(alwaysOnTop) {
+        this.logDebug('WM::setAlwaysOnTop start');
         if (alwaysOnTop) {
             if (electron.app.dock) // macOS
                 electron.app.dock.hide();
@@ -104,10 +122,12 @@ class WindowManager {
             this.browserWindow.setVisibleOnAllWorkspaces(false);
             this.browserWindow.setFullScreenable(true);
         }
+        this.logDebug('WM::setAlwaysOnTop end');
     }
 
 
     setMiniControlViewActive(active) {
+        this.logDebug('WM::setMiniControlViewActive start');
         if (active === this.isMiniControlViewActive)
             return; // no change => do nothing
         this.isMiniControlViewActive = active;
@@ -162,12 +182,14 @@ class WindowManager {
 
         this.browserWindow.setMinimumSize(newMinimumSize.width, newMinimumSize.height);
         this.browserWindow.setBounds(nextBounds);
+        this.logDebug('WM::setMiniControlViewActive end');
 
         //this.ensureWindowIsInScreenBounds(); // called anyway by updateBounds() after move/resize event
     }
 
 
     updateBounds() {
+        this.logDebug('WM::updateBounds start');
         const screenHash = WindowManager.getScreenSetupHash();
         const curBounds = this.browserWindow.getBounds();
         if (!this.boundsByScreenSetup[screenHash])
@@ -177,6 +199,7 @@ class WindowManager {
         else
             this.boundsByScreenSetup[screenHash].normalView = curBounds;
         this.ensureWindowIsInScreenBounds();
+        this.logDebug('WM::updateBounds end');
     }
 }
 
