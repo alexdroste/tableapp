@@ -9,6 +9,7 @@ const WindowManager = require('./WindowManager');
 const defaults = require('./defaults');
 const log = require('./log');
 
+log.info("App started");
 
 let loadUrl;
 let mainWindow;
@@ -61,8 +62,6 @@ function createWindow() {
 
     if (isDev)
         mainWindow.webContents.openDevTools({mode: 'detach'});
-
-    log.info("App startet");
 }
 
 
