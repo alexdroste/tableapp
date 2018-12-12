@@ -34,6 +34,7 @@ import { CheckboxList } from '../components/CheckboxList';
  * @param {string} [props.replyCommentId] comment id to reply to ('0' => root entry)
  * @param {string} [props.replyContent] content of comment to reply to (injected by redux if replyCommentId + replyEntryId are set)
  * @param {string} [props.replyEntryId] entry id to reply to
+ * @param {string[]} [props.replyImageIds] attached imageIds of comment to reply to
  * @param {bool} [props.replyIsDeleted] indicates if entry or comment to reply to is deleted
  * @param {number} [props.replyTimeStamp] timestamp of comment to reply to (injected by redux if replyCommentId + replyEntryId are set)
  * @param {string[]} [props.screenshotIds] ids of event-screenshots (injected by redux if isComment == false)
@@ -51,6 +52,7 @@ class UserPostForm extends React.Component {
             replyCommentId: PropTypes.string,
             replyContent: PropTypes.string,
             replyEntryId: PropTypes.string,
+            replyImageIds: PropTypes.array,
             replyIsDeleted: PropTypes.bool,
             replyTimeStamp: PropTypes.number,
             screenshotIds: PropTypes.array,
@@ -392,7 +394,7 @@ class UserPostForm extends React.Component {
             );
         }
 
-        const {isComment, replyAuthorId, replyContent, replyTimeStamp, userId} = this.props; // extra-code for prompts
+        const {isComment, replyAuthorId, replyContent, replyImageIds, replyTimeStamp, userId} = this.props; // extra-code for prompts
         const {promptListData, imageIds, inputImageModalOpen, postAnonymously, selectedImageIds, // extra-code for prompts
             sendDisabled, submitted} = this.state;
         const DimmerMainText = isComment ?
@@ -433,6 +435,7 @@ class UserPostForm extends React.Component {
                                 content={replyContent}
                                 timestamp={replyTimeStamp}
                             />
+                            <Thumbnails imageIds={replyImageIds}/>
                         </Card.Description>,
                         <Divider/>,
                     ]}
@@ -521,6 +524,7 @@ const mapStateToProps = (state, props) => {
         isComment: !!isComment,
         replyAuthorId: replyData ? replyData.authorId : null,
         replyContent: replyData ? replyData.content : null,
+        replyImageIds: replyData ? replyData.imageIds : null,
         replyIsDeleted: replyData ? replyData.isDeleted : null,
         replyTimeStamp: replyData ? replyData.timestamp : null,
         screenshotIds: isComment ? null : getScreenshotIds(state.eventScreenshots),

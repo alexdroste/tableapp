@@ -13,15 +13,18 @@
   - [x] remove tos link from minicontrol
   - [x] screen broadcast won't stop
   - [x] windows-app: zoom does not work
-  - [x] entries-view: scroll restore broken (React 16.4 breaks scrollToPosition)
+  - [ ] entries-view: scroll restore broken on React 16.4+ (breaks scrollToPosition)
     - https://github.com/bvaughn/react-virtualized/issues/1179
     - https://github.com/bvaughn/react-virtualized/issues/1226
+    - https://github.com/bvaughn/react-window
   - [x] fix TimeStamp.js:42 language
   - [x] fix presentationmode add entry button still there
   - [x] fix restore full view if screen unselects in miniview
   - [x] fix restore mini-view after api connection loss? (keep inner-state of screenbroadcasthelper)
   - [x] fix timestamp not updating due to view reuse in virtualized list
   - [ ] desktop-client: fix TitleBar in viewport => render to Frame?
+  - [ ] fix screenshot-viewer, picture to large => user must scroll
+  - [x] thumbnails for entry/comment in post-comment-view are not shown 
   - [ ] fix TransitionablePortal close bug somehow (see known-bugs inside docs)
     - implement own component (or Modal with Animation)
     - remove dual-trigger onClose workaround for TransitionablePortal/Modal combo 
@@ -74,6 +77,7 @@
 - [x] client: no longer split api-actions and actions
 - [ ] maybe? client: [REQUEST, SUCCESS, FAILED] generate => { type: CHANGE_VOTE, apiRequestState: REQUEST}
 - [ ] document api messages (client->backend, backend->client & data) & activities
+- [ ] document client-desktop usage (modes, shortcuts, ...)
 - [ ] split full-name into tuple (title, first name, last name)
 - [ ] moderation options: edit entry
 - [ ] moderation options: edit comment
@@ -101,9 +105,10 @@
 
 ### low priority
 
+- [ ] edit feature for images (pen/marker)
 - [ ] update icons/favicons
 - [ ] electron app icon & title
-- [ ] screencapture module for linux / desktop-app for linux
+- [ ] desktop-app for linux
 - [ ] polls / quizzes
 - [ ] integrate with tuc course catalog
 - [ ] comment-section: add person-tracking for anonymous comments (@1, @2, ...)
