@@ -22,8 +22,9 @@
   - [x] fix restore full view if screen unselects in miniview
   - [x] fix restore mini-view after api connection loss? (keep inner-state of screenbroadcasthelper)
   - [x] fix timestamp not updating due to view reuse in virtualized list
+  - [ ] fix minicontrolview counter not decrementing on entry deletion
   - [ ] desktop-client: fix TitleBar in viewport => render to Frame?
-  - [ ] fix screenshot-viewer, picture to large => user must scroll
+  - [ ] fix screenshot-viewer, picture too large => user must scroll
   - [x] thumbnails for entry/comment in post-comment-view are not shown 
   - [ ] fix TransitionablePortal close bug somehow (see known-bugs inside docs)
     - implement own component (or Modal with Animation)
@@ -38,7 +39,7 @@
 - [x] track entries read
 - [ ] track comments read
 - [x] hide "new entry"-dialogue in presentation-mode
-- [ ] mongodb scripts for stats
+- [ ] mongodb scripts for stats (3h)
 - [x] desktop-client: continue streaming on monitor change
 - [ ] restructure TitleBar & NavBar rendering => also set height as paddingTop of contentWrapper to fix jumping of page switch
 - [x] usability: button "comment" comments-view
@@ -56,24 +57,25 @@
 - [x] desktop-client: remember table position on extend->mirror->extend change (per monitor save)
 - [ ] desktop-client: show thumb in minicontrolview if monitor-setup changes
 - [x] desktop-client: check for screen border on restore
+- [ ] desktop-client: improve screen selection
 - [x] sign-out
 
 
 ### normal priority
 
-- [ ] login with kürzel
+- [ ] presentation-mode view
+- [x] login with kürzel (30min)
 - [ ] optimize desktop-client zoom (track cmd + +/-, add overlay)
 - [ ] desktop-client: manage zoom by WindowManager and save zoom-level per setup/hashed screen
-- [ ] popups on entry send: "add screenshot"/""
-- [ ] choose proper text-font
+- [ ] popups on entry send: "add screenshot"/"" (=> mockups) (!)
 - [ ] redesign posting design
   - [ ] "new entry"-dialogue in EntriesView should be minimized and open on click (like FB)
   - [ ] input bar at bottom of viewport
 - [ ] windows: desktop-client prebuild script
 - [ ] desktop-client: option to mark entry as unread
-- [ ] option to add tag to entry -> "discussed in lecture"
+- [ ] option to add tag to entry -> "discussed in lecture" (!)
 - [ ] backend: permission-check for events
-- [ ] notifications (in-app/email)
+- [ ] notifications (in-app/email) (!)
 - [x] client: no longer split api-actions and actions
 - [ ] maybe? client: [REQUEST, SUCCESS, FAILED] generate => { type: CHANGE_VOTE, apiRequestState: REQUEST}
 - [ ] document api messages (client->backend, backend->client & data) & activities
@@ -86,6 +88,7 @@
 - [ ] improve (really bad atm) container/presentational component split (https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
 - [ ] add documentation for components/containers
 - [ ] max character limit for comments/entries
+- [ ] edit feature for images (pen/marker)
 - [ ] collapse entry content in feed if its too long => add button to "expand" / "collapse" long content
 - [ ] make more than the last 3 screenshots available for use / preview other screenshots in zoomed view
 - [ ] switch attached images in full screen with arrows & arrow-keys
@@ -105,7 +108,7 @@
 
 ### low priority
 
-- [ ] edit feature for images (pen/marker)
+- [ ] choose proper text-font
 - [ ] update icons/favicons
 - [ ] electron app icon & title
 - [ ] desktop-app for linux

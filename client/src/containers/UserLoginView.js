@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import * as utils from '../utils';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as userActions from '../actions/user';
@@ -45,7 +46,7 @@ class UserLoginView extends React.Component {
         super(props);
 
         this.state = {
-            email: '',
+            auth: '',
             password: '',
         };
     }
@@ -59,9 +60,9 @@ class UserLoginView extends React.Component {
     }
 
 
-    handleEmailChange = (e, data) => {
+    handleAuthChange = (e, data) => {
         this.setState({
-            email: data.value
+            auth: data.value
         });
     };
 
@@ -74,13 +75,21 @@ class UserLoginView extends React.Component {
 
 
     handleSubmit = (e) => {
-        this.props.userActions.login(this.state.email, this.state.password);
+        let nAuth = this.state.auth;
+        // allow login with uid by attaching @tu-clausthal.de if left
+        if (!utils.isTextAnEmailAddress(nAuth)) {
+            nAuth += '@tu-clausthal.de';
+            this.setState({ 
+                auth: nAuth 
+            });
+        }
+        this.props.userActions.login(nAuth, this.state.password);
     };
 
 
     render() {
         const {loginState, sessionToken} = this.props;
-        const {email, password} = this.state;
+        const {auth, password} = this.state;
 
         const isLoginPending = loginState === LoginStateEnum.PENDING;
         const hasLoginFailed = loginState === LoginStateEnum.FAILED;
@@ -116,12 +125,12 @@ class UserLoginView extends React.Component {
                         <Form.Field 
                             error={hasLoginFailed}
                         >
-                            <label>Email</label>
+                            <label>Email (oder RZ-Kürzel)</label>
                             <Input 
-                                placeholder='@tu-clausthal.de' 
-                                type='email'
-                                value={email}
-                                onChange={this.handleEmailChange}
+                                placeholder='TU-Login' 
+                                type='text'
+                                value={auth}
+                                onChange={this.handleAuthChange}
                             />
                         </Form.Field>
                         <Form.Field 

@@ -76,6 +76,18 @@ export function generateUUID() { // Public Domain/MIT
 
 
 /**
+ * Simple check if a short text is an email by checking for @ symbol.
+ * @param {string} text text input to check
+ * @returns {boolean} true if text is an email
+ */
+export function isTextAnEmailAddress(text) 
+{
+    var re = /\S+@\S+/;
+    return re.test(text);
+}
+
+
+/**
  * Removes nulled properties from an object.
  * @function
  * @param {object} obj 
