@@ -62,7 +62,8 @@ class MiniControlView extends React.Component {
 
     static getDerivedStateFromProps(props, state) {
         const newEntriesCount = Object.keys(props.entryDict).reduce((acc, cur) => {
-            if (props.entryDict[cur].timestamp >= state.startTrackingTimestamp)
+            if (props.entryDict[cur].timestamp >= state.startTrackingTimestamp
+                && !props.entryDict[cur].isDeleted)
                 return acc + 1;
             return acc;
         }, 0);

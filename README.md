@@ -22,7 +22,7 @@
   - [x] fix restore full view if screen unselects in miniview
   - [x] fix restore mini-view after api connection loss? (keep inner-state of screenbroadcasthelper)
   - [x] fix timestamp not updating due to view reuse in virtualized list
-  - [ ] fix minicontrolview counter not decrementing on entry deletion
+  - [x] fix minicontrolview counter not decrementing on entry deletion
   - [ ] desktop-client: fix TitleBar in viewport => render to Frame?
   - [ ] fix screenshot-viewer, picture too large => user must scroll
   - [x] thumbnails for entry/comment in post-comment-view are not shown 
