@@ -37,6 +37,18 @@ Creates action for changing user vote for entry.
 | entryId | <code>string</code> | entryId |
 | vote | <code>number</code> | number representing vote (>0: upvote, 0: no vote, <0: downvote) |
 
+<a id="deleteentry"></a>
+
+## deleteEntry(entryId) ⇒ <code>object</code>
+Creates action for deleting an entry.
+
+**Kind**: global function  
+**Returns**: <code>object</code> - action  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| entryId | <code>string</code> | entryId |
+
 <a id="loadmoreentries"></a>
 
 ## loadMoreEntries() ⇒ <code>object</code>
@@ -44,9 +56,22 @@ Creates action for loading more entries (into feed).
 
 **Kind**: global function  
 **Returns**: <code>object</code> - action  
+<a id="readentry"></a>
+
+## readEntry(entryId, isScrollOver) ⇒ <code>object</code>
+Creates an action for marking/logging an entry as read by user.
+
+**Kind**: global function  
+**Returns**: <code>object</code> - action  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| entryId | <code>string</code> | id of entry |
+| isScrollOver | <code>boolean</code> | true if read-event was triggered while scrolling over entry, false otherwise (focus, click) |
+
 <a id="postentry"></a>
 
-## postEntry(isAnonymous, content, imageIds) ⇒ <code>object</code>
+## postEntry(isAnonymous, content, imageIds, extraQuestion) ⇒ <code>object</code>
 Creates action for posting a new entry.
 
 **Kind**: global function  
@@ -57,6 +82,7 @@ Creates action for posting a new entry.
 | isAnonymous | <code>boolean</code> | true if posting is anonymous, otherwise false |
 | content | <code>string</code> | content of comment |
 | imageIds | <code>Array.&lt;string&gt;</code> | array of images (by id) to attach |
+| extraQuestion | <code>Array.&lt;string&gt;</code> | array of question to append (prompts) |
 
 <a id="subscribeentries"></a>
 

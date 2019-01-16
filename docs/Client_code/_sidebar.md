@@ -30,19 +30,11 @@
 * api
   * [ApiConnection](Client_code/api/ApiConnection)
   * [ApiConnectionStateEnum](Client_code/api/ApiConnectionStateEnum)
-* api/actions
-  * [comments](Client_code/api/actions/comments)
-  * [desktopApp](Client_code/api/actions/desktopApp)
-  * [entries](Client_code/api/actions/entries)
-  * [events](Client_code/api/actions/events)
-  * [images](Client_code/api/actions/images)
-  * [user](Client_code/api/actions/user)
 * api/redux
   * [bindings](Client_code/api/redux/bindings)
   * [middleware](Client_code/api/redux/middleware)
 * ipc
   * [IpcHandler](Client_code/ipc/IpcHandler)
-  * [actions](Client_code/ipc/actions)
   * [bindings](Client_code/ipc/bindings)
   * [middleware](Client_code/ipc/middleware)
 * reducers

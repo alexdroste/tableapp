@@ -7,6 +7,9 @@ Configuration values.
 
 * [config](#config)
     * [.loglevel](#config46loglevel) : <code>string</code>
+    * [.ssl](#config46ssl)
+        * [.certPath](#config46ssl46certpath) : <code>string</code>
+        * [.keyPath](#config46ssl46keypath) : <code>string</code>
     * [.ldap](#config46ldap)
         * [.url](#config46ldap46url) : <code>string</code>
         * [.dn](#config46ldap46dn) : <code>string</code>
@@ -33,6 +36,31 @@ Valid values: 'debug', 'info', 'warn', 'error'.
 Defaults to 'debug'.
 
 **Kind**: static property of [<code>config</code>](#config)  
+<a id="config46ssl"></a>
+
+### config.ssl
+SSL config values.
+
+**Kind**: static property of [<code>config</code>](#config)  
+
+* [.ssl](#config46ssl)
+    * [.certPath](#config46ssl46certpath) : <code>string</code>
+    * [.keyPath](#config46ssl46keypath) : <code>string</code>
+
+<a id="config46ssl46certpath"></a>
+
+#### ssl.certPath : <code>string</code>
+Path to ssl-certificate.
+Requires overwrite.
+
+**Kind**: static property of [<code>ssl</code>](#config46ssl)  
+<a id="config46ssl46keypath"></a>
+
+#### ssl.keyPath : <code>string</code>
+Path to ssl-certificates private key.
+Requires overwrite.
+
+**Kind**: static property of [<code>ssl</code>](#config46ssl)  
 <a id="config46ldap"></a>
 
 ### config.ldap

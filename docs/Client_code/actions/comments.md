@@ -1,7 +1,7 @@
 <a id="changevote"></a>
 
 ## changeVote(entryId, commentId, vote) ⇒ <code>object</code>
-Creates action for changing a users vote on an entry.
+Creates action for changing a users vote on a comment.
 
 **Kind**: global function  
 **Returns**: <code>object</code> - action  
@@ -11,6 +11,19 @@ Creates action for changing a users vote on an entry.
 | entryId | <code>string</code> | entryId |
 | commentId | <code>string</code> | commentId |
 | vote | <code>number</code> | number representing vote (>0: upvote, 0: no vote, <0: downvote) |
+
+<a id="deletecomment"></a>
+
+## deleteComment(entryId, commentId) ⇒ <code>object</code>
+Creates action for deleting a comment.
+
+**Kind**: global function  
+**Returns**: <code>object</code> - action  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| entryId | <code>string</code> | entryId |
+| commentId | <code>string</code> | commentId |
 
 <a id="postcomment"></a>
 

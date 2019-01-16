@@ -28,16 +28,16 @@ desktopApp actiontype: broadcast of new image
 desktopApp actiontype: initialize of desktop-app features/environment
 
 **Kind**: global constant  
-<a id="resize95window"></a>
+<a id="set95mini95control95view95active"></a>
 
-## RESIZE_WINDOW
-desktopApp actiontype: resize of app-window
+## SET_MINI_CONTROL_VIEW_ACTIVE
+desktopApp actiontype: changes mini-control-active state
 
 **Kind**: global constant  
-<a id="restore95last95window95size"></a>
+<a id="set95presentation95mode95active"></a>
 
-## RESTORE_LAST_WINDOW_SIZE
-desktopApp actiontype: restore of last saved app-window size
+## SET_PRESENTATION_MODE_ACTIVE
+desktopApp actiontype: changes presentationmode-active state
 
 **Kind**: global constant  
 <a id="set95window95always95on95top"></a>

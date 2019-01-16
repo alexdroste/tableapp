@@ -73,6 +73,18 @@ Selector to select sessionToken from user-state.
 | --- | --- | --- |
 | state | [<code>UserState</code>](#userstate) | user-state |
 
+<a id="hasacceptedtos"></a>
+
+## hasAcceptedTos(state) ⇒ <code>boolean</code>
+Selector to retrieve state whether user accepted terms of service from user-state.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - indicates if user has accepted terms of service  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| state | [<code>UserState</code>](#userstate) | user-state |
+
 <a id="userstate"></a>
 
 ## UserState : <code>object</code>
@@ -84,6 +96,7 @@ Default values are the initial state.
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
+| [hasAcceptedTos] | <code>boolean</code> | <code>false</code> | indicates if logged in user has accepted terms of service |
 | [id] | <code>string</code> &#124; <code>null</code> | <code>null</code> | logged in users id |
 | [loginState] | [<code>LoginStateEnum</code>](#loginstateenum) | <code>LoginStateEnum.LOGGED_OUT</code> | indicates login-state |
 | [name] | <code>string</code> &#124; <code>null</code> | <code>null</code> | logged in users name |

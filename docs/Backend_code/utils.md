@@ -1,7 +1,7 @@
 <a id="createerror"></a>
 
-## createError(msg, [code]) ⇒ <code>Error</code>
-Creates a new Error object with a custom code attribute
+## createError(msg, [statusCode]) ⇒ <code>Error</code>
+Creates a new Error object with a custom statusCode attribute
 
 **Kind**: global function  
 **Returns**: <code>Error</code> - error object  
@@ -9,7 +9,7 @@ Creates a new Error object with a custom code attribute
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | msg | <code>string</code> |  | error-message |
-| [code] | <code>number</code> &#124; <code>string</code> | <code>500</code> | code (status-code) property, defaults to internal server error (500) |
+| [statusCode] | <code>number</code> &#124; <code>string</code> | <code>500</code> | code (status-code) property, defaults to internal server error (500) |
 
 <a id="createsessiontoken"></a>
 

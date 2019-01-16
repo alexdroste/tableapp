@@ -52,6 +52,42 @@ entries actiontype: change users vote for entry
 entries actiontype: change users vote for entry
 
 **Kind**: global constant  
+<a id="delete95entry95request"></a>
+
+## DELETE_ENTRY_REQUEST
+entries actiontype: delete entry
+
+**Kind**: global constant  
+<a id="delete95entry95success"></a>
+
+## DELETE_ENTRY_SUCCESS
+entries actiontype: delete entry
+
+**Kind**: global constant  
+<a id="delete95entry95failure"></a>
+
+## DELETE_ENTRY_FAILURE
+entries actiontype: delete entry
+
+**Kind**: global constant  
+<a id="read95entry95request"></a>
+
+## READ_ENTRY_REQUEST
+entries actiontype: mark/log entry as read by user
+
+**Kind**: global constant  
+<a id="read95entry95success"></a>
+
+## READ_ENTRY_SUCCESS
+entries actiontype: mark/log entry as read by user
+
+**Kind**: global constant  
+<a id="read95entry95failure"></a>
+
+## READ_ENTRY_FAILURE
+entries actiontype: mark/log entry as read by user
+
+**Kind**: global constant  
 <a id="load95more95entries95request"></a>
 
 ## LOAD_MORE_ENTRIES_REQUEST

@@ -1,14 +1,22 @@
 "use strict";
 
 require('./console');
+const broker = require('./broker');
 const config = require('./config');
 const fs = require('fs');
 const path = require('path');
-const MongoClient = require('mongodb').MongoClient;
-const LDAPConnection = require('./LDAPConnection');
-const ClientBroker = require('./ClientBroker');
-const configureController = require('./controller/index');
+const db = require('./db'); 
 const utils = require('./utils');
+
+
+if (utils.isAppInDevelopmentMode())
+    console.warn('launching in development/debug mode');
+
+
+db.connect().catch(reason => {
+    console.error(reason);
+    process.exit();
+});
 
 
 const httpsServer = require('https').createServer({
@@ -17,20 +25,8 @@ const httpsServer = require('https').createServer({
 });
 const io = require('socket.io')(httpsServer);
 
-
-if (utils.isAppInDevelopmentMode())
-    console.warn('launching in development/debug mode');
-
-
-MongoClient.connect(config.db.url).then(client => {
-    console.info('mongodb connected');
-    const db = client.db(config.db.name);
-    const controller = configureController(db);
-    const broker = new ClientBroker(io, controller);
-}, reason => {
-    console.error(reason);
-    process.exit();
-});
+// setup connection handler of (client-)broker
+io.on('connection', (socket) => broker.handleConnection(socket));
 
 
 httpsServer.listen(4898, () => {

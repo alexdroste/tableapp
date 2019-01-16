@@ -62,6 +62,8 @@ A comment object.
 | authorId | <code>string</code> &#124; <code>null</code> | user-id of author, null if comment was posted anonymously |
 | content | <code>string</code> | text-content of comment |
 | imageIds | <code>Array.&lt;string&gt;</code> | list of (image-)ids of attached images |
+| isDeleted | <code>boolean</code> | indicates if comment is deleted |
+| isOwn | <code>boolean</code> | indicates if user owns comment |
 | parentId | <code>string</code> &#124; <code>null</code> | (comment-)id of parent comment (id of comment this comment is subordinate), null if comment is a top-level comment |
 | score | <code>number</code> | score of the comment |
 | timestamp | <code>number</code> | unix-timestamp in ms indicating submission date |

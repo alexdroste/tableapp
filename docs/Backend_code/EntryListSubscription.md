@@ -188,6 +188,7 @@ Represents a search filter.
 | Name | Type | Description |
 | --- | --- | --- |
 | bookmarkForUser | <code>string</code> &#124; <code>undefined</code> | id of user, only include entries if bookmarked by this user |
+| excludeDeletedEntries | <code>boolean</code> | indicates whether deleted entries should be ignored |
 | excludedEntryIds | <code>Array.&lt;ObjectID&gt;</code> | entries to exclude |
 | maxScore | <code>number</code> | maximum score to include |
 | maxTimestamp | <code>number</code> | maximum (entry-)timestamp to include |

@@ -38,6 +38,18 @@ Generates a RFC4122 v4 compliant UUID
 **Kind**: global function  
 **Returns**: <code>string</code> - uuid v4  
 **See**: https://stackoverflow.com/a/8809472  
+<a id="istextanemailaddress"></a>
+
+## isTextAnEmailAddress(text) ⇒ <code>boolean</code>
+Simple check if a short text is an email by checking for @ symbol.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - true if text is an email  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| text | <code>string</code> | text input to check |
+
 <a id="removenulledpropertiesfromobject"></a>
 
 ## removeNulledPropertiesFromObject(obj)

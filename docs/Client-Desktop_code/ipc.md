@@ -1,11 +1,12 @@
 <a id="setupipc"></a>
 
-## setupIpc(browserWindow)
+## setupIpc(browserWindow, windowManager)
 Setup ipc module for specified browserWindow.
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| browserWindow | <code>BrowserWindow</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| browserWindow | <code>BrowserWindow</code> |  |
+| windowManager | <code>WindowManager</code> | WindowManager for given browserWindow |
 

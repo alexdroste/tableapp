@@ -4,6 +4,15 @@ const ObjectID = require('mongodb').ObjectID;
 const EntryListTypeEnum = require('./EntryListTypeEnum');
 const EntryListSubscription = require('./EntryListSubscription');
 const PermissionLevelEnum = require('./PermissionLevelEnum');
+const activityLogController = require('./controller/activityLog');
+const commentsController = require('./controller/comments');
+const entriesController = require('./controller/entries');
+const eventsController = require('./controller/events');
+const eventScreenshotsController = require('./controller/eventScreenshots');
+const imagesController = require('./controller/images');
+const promptGroupController = require('./controller/promptGroup');
+const userController = require('./controller/user');
+const broker = require('./broker');
 const utils = require('./utils');
 var statusCodes = require('http-status-codes');
 
@@ -18,10 +27,8 @@ class Client {
     /**
      * Creates a Client instance.
      * @param {SocketIoConnection} socket socket connection to client
-     * @param {Controller} controller controller object containing initialized controllers
-     * @param {ClientBroker} broker reference to parent ClientBroker instance
      */
-    constructor(socket, controller, broker) {
+    constructor(socket) {
         // public properties
         /**
          * Timestamp of connect-event.
@@ -51,18 +58,6 @@ class Client {
          * @type {SocketIoConnection}
          */
         this._socket = socket;
-        /**
-         * Controller object containing initialized controllers.
-         * @private
-         * @type {Controller}
-         */
-        this._controller = controller;
-        /**
-         * Reference to parent ClientBroker instance that manages this instance.
-         * @private
-         * @type {ClientBroker}
-         */
-        this._broker = broker;
 
         // init/reset client-state
         this._init();
@@ -268,7 +263,7 @@ class Client {
     async _handleDisconnect() {
         await this._trackAndSaveUserSessionInfos();
         this._socket = null;
-        this._broker.unregisterClient(this);
+        broker.unregisterClient(this);
     }
 
 
@@ -277,7 +272,7 @@ class Client {
             console.error('calling log activity without userId being set is forbidden', activity, data);
             return;
         }
-        await this._controller.activityLog.logActivity(activity, this.userId, this.activeEventId, data);
+        await activityLogController.logActivity(activity, this.userId, this.activeEventId, data);
     }
 
 
@@ -296,7 +291,7 @@ class Client {
         this.sessionToken = loginData.sessionToken;
         this.userId = loginData.id;
         this._logActivity('user/beginSession', { ip: this.ip, userAgent: this.userAgent });
-        this.emitUpdateEventDict(await this._controller.events.getEventDict(this.userId));
+        this.emitUpdateEventDict(await eventsController.getEventDict(this.userId));
         if (this.activeEventId)
             await this._switchActiveEvent(this.activeEventId);
     }
@@ -313,7 +308,7 @@ class Client {
         if (!this.userId)
             return;
         const logoutTimestamp = Date.now();
-        await this._controller.user.saveSessionInfos(this.userId, 
+        await userController.saveSessionInfos(this.userId, 
             this.loginTimestamp, logoutTimestamp, this.sessionToken, this.ip, this.userAgent);
         const sessionDurationSec = Math.round((logoutTimestamp - this.loginTimestamp) / 1000);
         this._logActivity('user/endSession', { sessionDurationSec });
@@ -337,7 +332,7 @@ class Client {
     async _handleChangeVoteForComment({ commentId, entryId, vote }) {
         commentId = new ObjectID(commentId);
         entryId = new ObjectID(entryId);
-        await this._controller.comments.changeUserVote(this.activeEventId, 
+        await commentsController.changeUserVote(this.activeEventId, 
             entryId, commentId, this.userId, vote);
         this._logActivity('comments/changeVote', { commentId, entryId, vote });
     }
@@ -357,7 +352,7 @@ class Client {
         // TODO ensure sufficient permissions
         commentId = new ObjectID(commentId);
         entryId = new ObjectID(entryId);
-        await this._controller.comments.deleteComment(this.activeEventId, entryId, commentId);
+        await commentsController.deleteComment(this.activeEventId, entryId, commentId);
         this._logActivity('comments/deleteComment', { commentId, entryId });
     }
 
@@ -378,7 +373,7 @@ class Client {
     async _handlePostComment({ content, entryId, imageDataArr, isAnonymous, parentId }) {
         entryId = new ObjectID(entryId);
         parentId = parentId ? new ObjectID(parentId) : null;
-        const commentId = await this._controller.comments.postComment(
+        const commentId = await commentsController.postComment(
             this.activeEventId, entryId, parentId, this.userId, 
             isAnonymous, content, imageDataArr);
         this._logActivity('comments/postComment', { commentId, entryId, parentId });
@@ -414,7 +409,7 @@ class Client {
      */
     async _handleSubscribeCommentsForEntry({ entryId }) {
         entryId = new ObjectID(entryId);
-        const commentDict = await this._controller.comments.getComments(
+        const commentDict = await commentsController.getComments(
             this.activeEventId, entryId, this.userId);
         this.commentsSubscribedForEntryId = entryId;
         this._logActivity('comments/viewCommentList', { entryId });
@@ -447,7 +442,7 @@ class Client {
      * @returns {Promise} 
      */
     async _handleBroadcastNewImage({ imageData }) {
-        await this._controller.eventScreenshots.addImageForEvent(this.activeEventId, imageData);
+        await eventScreenshotsController.addImageForEvent(this.activeEventId, imageData);
         this._logActivity('desktopApp/broadcastNewImage');
     }
 
@@ -467,7 +462,7 @@ class Client {
      */
     async _handleChangeBookmark({ entryId, bookmark }) {
         entryId = new ObjectID(entryId);
-        await this._controller.entries.changeUserBookmark(
+        await entriesController.changeUserBookmark(
             this.activeEventId, entryId, this.userId, bookmark);
         this._logActivity('entries/changeBookmark', { entryId, bookmark });
     }
@@ -485,7 +480,7 @@ class Client {
      */
     async _handleChangeFollow({ entryId, follow }) {
         entryId = new ObjectID(entryId);
-        await this._controller.entries.changeUserFollow(
+        await entriesController.changeUserFollow(
             this.activeEventId, entryId, this.userId, follow);
         this._logActivity('entries/changeFollow', { entryId, follow });
     }
@@ -503,7 +498,7 @@ class Client {
      */
     async _handleChangeVote({ entryId, vote }) {
         entryId = new ObjectID(entryId);
-        await this._controller.entries.changeUserVote(
+        await entriesController.changeUserVote(
             this.activeEventId, entryId, this.userId, vote);
         this._logActivity('entries/changeVote', { entryId, vote });
     }
@@ -521,7 +516,7 @@ class Client {
     async _handleDeleteEntry({ entryId }) {
         // TODO ensure sufficient permissions
         entryId = new ObjectID(entryId);
-        await this._controller.entries.deleteEntry(this.activeEventId, entryId);
+        await entriesController.deleteEntry(this.activeEventId, entryId);
         this._logActivity('entries/deleteEntry', { entryId });
     }
 
@@ -547,7 +542,7 @@ class Client {
             throw utils.createError('there must be a subscription to an entrylist', statusCodes.FAILED_DEPENDENCY);
         
         const res = await this.entriesSubscription.listSubscription.getMoreEntries();
-        const entryDict = await this._controller.entries
+        const entryDict = await entriesController
             .getEntries(this.activeEventId, this.userId, res.addedEntryIds);
         return { 
             entryDict, 
@@ -570,7 +565,7 @@ class Client {
      * @returns {Promise} 
      */
     async _handlePostEntry({ content, extraQuestions, imageDataArr, isAnonymous }) { // extra-code for prompts
-        const entryId = await this._controller.entries.postEntry(
+        const entryId = await entriesController.postEntry(
             this.activeEventId, this.userId, isAnonymous, content, imageDataArr, extraQuestions);
         this._logActivity('entries/postEntry', { entryId });
     }
@@ -607,7 +602,7 @@ class Client {
             if (this.entriesSubscription.subscribedIds.findIndex((cur) => cur.equals(id)) === -1)
                 this.entriesSubscription.subscribedIds.push(id);
         });
-        return await this._controller.entries
+        return await entriesController
             .getEntries(this.activeEventId, this.userId, entryIds);
     }
 
@@ -625,7 +620,7 @@ class Client {
         if (!Object.values(EntryListTypeEnum).includes(listType))
             throw utils.createError('listType not defined', statusCodes.BAD_REQUEST);
         this.entriesSubscription.listSubscription = new EntryListSubscription(
-            this._controller.entries, listType, this.activeEventId, 
+            entriesController, listType, this.activeEventId, 
             this.userId, onlyBookmarked);
         this._logActivity('entries/viewEntryList', { listType, onlyBookmarked });
     }
@@ -670,7 +665,7 @@ class Client {
      */
     async _handleSubscribeFullEventDict() {
         this.subscribedFullEventDict = true;        
-        const fullDict = await this._controller.events.getEventDict(this.userId, true);
+        const fullDict = await eventsController.getEventDict(this.userId, true);
         this.emitUpdateEventDict(fullDict);
     }
 
@@ -696,7 +691,7 @@ class Client {
      */
     async _handleJoinEvent({ eventId }) {
         eventId = new ObjectID(eventId);
-        await this._controller.events.changeUserPermissionLevelForEvent(
+        await eventsController.changeUserPermissionLevelForEvent(
             eventId, this.userId, PermissionLevelEnum.USER);
         this._logActivity('events/joinEvent', { eventId });
     }
@@ -713,7 +708,7 @@ class Client {
      */
     async _handleLeaveEvent({ eventId }) {
         eventId = new ObjectID(eventId);
-        await this._controller.events.changeUserPermissionLevelForEvent(
+        await eventsController.changeUserPermissionLevelForEvent(
             eventId, this.userId, PermissionLevelEnum.NOT_A_USER);
         this._logActivity('events/leaveEvent', { eventId });
         if (this.activeEventId.equals(eventId))
@@ -753,26 +748,26 @@ class Client {
         };
         this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
         this.activeEventId = newEventId;
-        await this._controller.user.saveLastActiveEventId(this.userId, this.activeEventId);
+        await userController.saveLastActiveEventId(this.userId, this.activeEventId);
         if (!this.activeEventId)
             return;
         
         // TODO cancel if newEventId does not exist
 
-        this.emitUpdatePromptGroup(await this._controller.promptGroup.getGroup(this.userId, this.activeEventId)); // extra-code for prompts
+        this.emitUpdatePromptGroup(await promptGroupController.getGroup(this.userId, this.activeEventId)); // extra-code for prompts
 
-        const event = (await this._controller.events.getEventDict(
+        const event = (await eventsController.getEventDict(
             this.userId, true, [newEventId]))[newEventId];
         this.permissionLevel = event.permissionLevel;
         
         const withPermissionLevelAndEmail = this.permissionLevel >= PermissionLevelEnum.ADMINISTRATOR;
-        this.emitUpdateUserDict(await this._controller.events.getUserDict(
+        this.emitUpdateUserDict(await eventsController.getUserDict(
             this.activeEventId, true, withPermissionLevelAndEmail));
 
-        this.emitUpdateRoleList(await this._controller.events.getRoleList(this.activeEventId));
+        this.emitUpdateRoleList(await eventsController.getRoleList(this.activeEventId));
 
         this.emitUpdateEventScreenshotIds(
-            await this._controller.eventScreenshots.getScreenshotIdsForEvent(this.activeEventId));
+            await eventScreenshotsController.getScreenshotIdsForEvent(this.activeEventId));
     }
 
 
@@ -791,7 +786,7 @@ class Client {
      */
     async _handleLoadImages({ imageIds, onlyThumbnails }) {
         imageIds = imageIds.map((id) => new ObjectID(id));
-        return await this._controller.images.getImages(imageIds, onlyThumbnails);
+        return await imagesController.getImages(imageIds, onlyThumbnails);
     }
 
 
@@ -806,7 +801,7 @@ class Client {
      * @returns {Promise}
      */
     async _handleAcceptTos() {
-        await this._controller.user.acceptTos(this.userId);
+        await userController.acceptTos(this.userId);
         this._logActivity('user/acceptTos');
     }
 
@@ -822,7 +817,7 @@ class Client {
      */
     async _handleContinueSession({ sessionToken }) {
         try {
-            const loginData = await this._controller.user.continueSession(sessionToken);
+            const loginData = await userController.continueSession(sessionToken);
             await this._setupAfterAuthentication(loginData);
             return loginData;
         } catch (err) {
@@ -844,7 +839,7 @@ class Client {
      */
     async _handleLogin({ email, password }) {
         try {
-            const loginData = await this._controller.user.login(email, password);
+            const loginData = await userController.login(email, password);
             await this._setupAfterAuthentication(loginData);
             return loginData;
         } catch (err) {
@@ -960,7 +955,7 @@ class Client {
      * @returns {Promise} indicates success
      */
     async updateComment(entryId, commentId) {
-        const commentDict = await this._controller.comments
+        const commentDict = await commentsController
             .getComments(this.activeEventId, entryId, this.userId, [commentId]);
         this.emitUpdateCommentDict(commentDict);
     }
@@ -1000,7 +995,7 @@ class Client {
             .findIndex((cur) => cur.equals(entryInfo._id)) === -1)
             return; 
 
-        const entryDict = await this._controller.entries
+        const entryDict = await entriesController
             .getEntries(this.activeEventId, this.userId, [entryInfo._id]);
         // TODO only send idList if changed
         this.emitUpdateEntries(entryDict, idList);
@@ -1063,7 +1058,7 @@ class Client {
      * @returns {Promise} indicates success
      */
     async updateEventDict(eventIds) {
-        const dictUpdate = await this._controller.events
+        const dictUpdate = await eventsController
             .getEventDict(this.userId, true, eventIds);
         this.emitUpdateEventDict(dictUpdate);
     }

@@ -24,26 +24,31 @@ Creates action for initializing the desktop-app features/environment.
 
 **Kind**: global function  
 **Returns**: <code>object</code> - action  
-<a id="resizewindow"></a>
+<a id="setminicontrolviewactive"></a>
 
-## resizeWindow(width, height) ⇒ <code>object</code>
-Creates action for resizing the app-window.
+## setMiniControlViewActive(active) ⇒ <code>object</code>
+Creates action for going to/exiting the mini-control-view (controls window size/position).
+Only dispatches is presentation-mode is active.
 
 **Kind**: global function  
 **Returns**: <code>object</code> - action  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| width | <code>number</code> | width in px |
-| height | <code>number</code> | height in px |
+| active | <code>boolean</code> | indicates if mini-control-view should be active |
 
-<a id="restorelastwindowsize"></a>
+<a id="setpresentationmodeactive"></a>
 
-## restoreLastWindowSize() ⇒ <code>object</code>
-Creates action for resizing the app-window to the last saved size.
+## setPresentationmodeActive(active) ⇒ <code>object</code>
+Creates action for setting presentationmode-active state.
 
 **Kind**: global function  
 **Returns**: <code>object</code> - action  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| active | <code>boolean</code> | indicates if presentationmode should be activated |
+
 <a id="setwindowalwaysontop"></a>
 
 ## setWindowAlwaysOnTop(alwaysOnTop) ⇒ <code>object</code>
@@ -68,3 +73,10 @@ Creates action for setting broadcast state.
 | --- | --- | --- |
 | active | <code>boolean</code> | indicates if broadcasting should be activated |
 
+<a id="toggleminicontrolview"></a>
+
+## toggleMiniControlView() ⇒ <code>object</code>
+Creates action for toggling mini-control-view active state.
+
+**Kind**: global function  
+**Returns**: <code>object</code> - action  

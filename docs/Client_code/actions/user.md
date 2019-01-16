@@ -1,3 +1,10 @@
+<a id="accepttos"></a>
+
+## acceptTos() ⇒ <code>object</code>
+Creates action for accepting terms of service.
+
+**Kind**: global function  
+**Returns**: <code>object</code> - action  
 <a id="continuesession"></a>
 
 ## continueSession(sessionToken) ⇒ <code>object</code>

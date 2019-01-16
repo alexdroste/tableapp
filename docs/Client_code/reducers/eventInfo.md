@@ -141,6 +141,7 @@ Default values are the initial state.
 
 | Name | Type | Default |
 | --- | --- | --- |
+| [promptGroup] | <code>number</code> | <code>0</code> | 
 | [roleList] | [<code>RoleList</code>](#rolelist) | <code>[]</code> | 
 | [userDict] | [<code>UserDict</code>](#userdict) | <code>{}</code> | 
 

@@ -1,3 +1,21 @@
+<a id="accept95tos95request"></a>
+
+## ACCEPT_TOS_REQUEST
+user actiontype: accept tos
+
+**Kind**: global constant  
+<a id="accept95tos95success"></a>
+
+## ACCEPT_TOS_SUCCESS
+user actiontype: accept tos
+
+**Kind**: global constant  
+<a id="accept95tos95failure"></a>
+
+## ACCEPT_TOS_FAILURE
+user actiontype: accept tos
+
+**Kind**: global constant  
 <a id="continue95session95request"></a>
 
 ## CONTINUE_SESSION_REQUEST

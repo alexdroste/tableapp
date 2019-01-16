@@ -120,13 +120,15 @@ An entry object.
 | Name | Type | Description |
 | --- | --- | --- |
 | authorId | <code>string</code> &#124; <code>null</code> | user-id of author, null if entry was posted anonymously |
-| bookmark | <code>boolean</code> | indicates if user bookmarked entry |
 | commentAttendingUserIds | <code>Array.&lt;string&gt;</code> | list of user-ids that attend discussion (comment-section) |
 | commentCount | <code>number</code> | count of comments |
-| content | <code>string</code> | text-content of entry |
-| follow | <code>boolean</code> | indicates if user is following entry-updates |
+| content | <code>string</code> &#124; <code>null</code> | text-content of entry |
 | imageIds | <code>Array.&lt;string&gt;</code> | list of (image-)ids of attached images |
-| liveAnswered | <code>boolean</code> | indicates if entry was discussed in live situation |
+| isBookmarked | <code>boolean</code> | indicates if user bookmarked entry |
+| isDeleted | <code>boolean</code> | indicates if entry is deleted |
+| isFollowing | <code>boolean</code> | indicates if user is following entry-updates |
+| isLiveAnswered | <code>boolean</code> | indicates if entry was discussed in live situation |
+| isOwn | <code>boolean</code> | indicates if user owns entry |
 | score | <code>number</code> | score of the entry |
 | timestamp | <code>number</code> | unix-timestamp in ms indicating submission date |
 | vote | <code>number</code> | indicates user vote: 0 user did not vote, +1 user upvoted, -1 user downvoted entry |

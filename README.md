@@ -10,6 +10,7 @@
 ### high priority
 
 - [x] fixes:
+  - [ ] fix 'after-logout.png'
   - [x] remove tos link from minicontrol
   - [x] screen broadcast won't stop
   - [x] windows-app: zoom does not work

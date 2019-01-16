@@ -16,6 +16,24 @@ comments actiontype: change a users vote
 comments actiontype: change a users vote
 
 **Kind**: global constant  
+<a id="delete95comment95request"></a>
+
+## DELETE_COMMENT_REQUEST
+comments actiontype: delete a comment
+
+**Kind**: global constant  
+<a id="delete95comment95success"></a>
+
+## DELETE_COMMENT_SUCCESS
+comments actiontype: delete a comment
+
+**Kind**: global constant  
+<a id="delete95comment95failure"></a>
+
+## DELETE_COMMENT_FAILURE
+comments actiontype: delete a comment
+
+**Kind**: global constant  
 <a id="post95comment95request"></a>
 
 ## POST_COMMENT_REQUEST

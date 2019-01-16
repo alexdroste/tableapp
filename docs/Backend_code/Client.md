@@ -6,75 +6,81 @@ Class representing a single client connection.
 **Kind**: global class  
 
 * [Client](#client)
-    * [new Client(socket, controller, broker)](#new95client95new)
+    * [new Client(socket)](#new95client95new)
     * _instance_
         * [.connectTimestamp](#client43connecttimestamp) : <code>number</code>
         * [.id](#client43id) : <code>number</code>
         * [.ip](#client43ip) : <code>string</code>
         * [.userAgent](#client43useragent) : <code>string</code>
         * [._socket](#client4395socket) : <code>SocketIoConnection</code> ℗
-        * [._controller](#client4395controller) : <code>Controller</code> ℗
-        * [._broker](#client4395broker) : <code>ClientBroker</code> ℗
         * [.activeEventId](#client43activeeventid) : <code>ObjectID</code> &#124; <code>null</code>
         * [.commentsSubscribedForEntryId](#client43commentssubscribedforentryid) : <code>ObjectID</code> &#124; <code>null</code>
         * [.entriesSubscription](#client43entriessubscription)
             * [.listSubscription](#client43entriessubscription46listsubscription) : <code>EntryListSubscription</code> &#124; <code>null</code>
             * [.subscribedIds](#client43entriessubscription46subscribedids) : <code>Array.&lt;ObjectID&gt;</code>
+        * [.hasAcceptedTos](#client43hasacceptedtos) : <code>boolean</code>
+        * [.loginTimestamp](#client43logintimestamp) : <code>number</code> &#124; <code>null</code>
         * [.permissionLevel](#client43permissionlevel) : <code>PermissionLevelEnum</code>
+        * [.sessionToken](#client43sessiontoken) : <code>string</code> &#124; <code>null</code>
         * [.subscribedFullEventDict](#client43subscribedfulleventdict) : <code>boolean</code>
         * [.userId](#client43userid) : <code>string</code> &#124; <code>null</code>
         * [._init()](#client4395init) ℗
         * [._handleDisconnect()](#client4395handledisconnect) ℗
         * [._setupAfterAuthentication(loginData)](#client4395setupafterauthentication) ⇒ <code>Promise</code> ℗
-        * [._handleChangeVoteForComment(data, cb)](#client4395handlechangevoteforcomment) ⇒ <code>Promise</code> ℗
-        * [._handlePostComment(data, cb)](#client4395handlepostcomment) ⇒ <code>Promise</code> ℗
-        * [._handleSubscribeCommentsForEntry(data, cb)](#client4395handlesubscribecommentsforentry) ⇒ <code>Promise</code> ℗
-        * [._handleUnsubscribeCommentsForEntry(data, cb)](#client4395handleunsubscribecommentsforentry) ⇒ <code>Promise</code> ℗
-        * [._handleBroadcastNewImage(data, cb)](#client4395handlebroadcastnewimage) ⇒ <code>Promise</code> ℗
-        * [._handleChangeBookmark(data, cb)](#client4395handlechangebookmark) ⇒ <code>Promise</code> ℗
-        * [._handleChangeFollow(data, cb)](#client4395handlechangefollow) ⇒ <code>Promise</code> ℗
-        * [._handleChangeVote(data, cb)](#client4395handlechangevote) ⇒ <code>Promise</code> ℗
-        * [._handleLoadMoreEntries(data, cb)](#client4395handleloadmoreentries) ⇒ <code>Promise</code> ℗
-        * [._handlePostEntry(data, cb)](#client4395handlepostentry) ⇒ <code>Promise</code> ℗
-        * [._handleSubscribeEntries(data, cb)](#client4395handlesubscribeentries) ⇒ <code>Promise</code> ℗
-        * [._handleSubscribeEntryList(data, cb)](#client4395handlesubscribeentrylist) ℗
-        * [._handleUnsubscribeEntries(data, cb)](#client4395handleunsubscribeentries) ℗
-        * [._handleUnsubscribeEntryList(data, cb)](#client4395handleunsubscribeentrylist) ℗
-        * [._handleSubscribeFullEventDict(data, cb)](#client4395handlesubscribefulleventdict) ⇒ <code>Promise</code> ℗
-        * [._handleUnsubscribeFullEventDict(data, cb)](#client4395handleunsubscribefulleventdict) ℗
-        * [._handleJoinEvent(data, cb)](#client4395handlejoinevent) ⇒ <code>Promise</code> ℗
-        * [._handleLeaveEvent(data, cb)](#client4395handleleaveevent) ⇒ <code>Promise</code> ℗
-        * [._handleSwitchActiveEvent(data, cb)](#client4395handleswitchactiveevent) ⇒ <code>Promise</code> ℗
+        * [._trackAndSaveUserSessionInfos()](#client4395trackandsaveusersessioninfos) ⇒ <code>Promise</code> ℗
+        * [._handleChangeVoteForComment(data)](#client4395handlechangevoteforcomment) ⇒ <code>Promise</code> ℗
+        * [._handleDeleteComment(data)](#client4395handledeletecomment) ⇒ <code>Promise</code> ℗
+        * [._handlePostComment(data)](#client4395handlepostcomment) ⇒ <code>Promise</code> ℗
+        * [._handleReadComment(data)](#client4395handlereadcomment) ⇒ <code>Promise</code> ℗
+        * [._handleSubscribeCommentsForEntry(data)](#client4395handlesubscribecommentsforentry) ⇒ <code>Promise.&lt;CommentsController~CommentDict&gt;</code> ℗
+        * [._handleUnsubscribeCommentsForEntry()](#client4395handleunsubscribecommentsforentry) ⇒ <code>Promise</code> ℗
+        * [._handleBroadcastNewImage(data)](#client4395handlebroadcastnewimage) ⇒ <code>Promise</code> ℗
+        * [._handleChangeBookmark(data)](#client4395handlechangebookmark) ⇒ <code>Promise</code> ℗
+        * [._handleChangeFollow(data)](#client4395handlechangefollow) ⇒ <code>Promise</code> ℗
+        * [._handleChangeVote(data)](#client4395handlechangevote) ⇒ <code>Promise</code> ℗
+        * [._handleDeleteEntry(data)](#client4395handledeleteentry) ⇒ <code>Promise</code> ℗
+        * [._handleLoadMoreEntries()](#client4395handleloadmoreentries) ⇒ [<code>Promise.&lt;LoadMoreEntriesResult&gt;</code>](#client4646loadmoreentriesresult) ℗
+        * [._handlePostEntry(data)](#client4395handlepostentry) ⇒ <code>Promise</code> ℗
+        * [._handleReadEntry(data)](#client4395handlereadentry) ⇒ <code>Promise</code> ℗
+        * [._handleSubscribeEntries(data)](#client4395handlesubscribeentries) ⇒ <code>Promise.&lt;EntriesController~EntryDict&gt;</code> ℗
+        * [._handleSubscribeEntryList(data)](#client4395handlesubscribeentrylist) ℗
+        * [._handleUnsubscribeEntries(data)](#client4395handleunsubscribeentries) ℗
+        * [._handleUnsubscribeEntryList()](#client4395handleunsubscribeentrylist) ℗
+        * [._handleSubscribeFullEventDict()](#client4395handlesubscribefulleventdict) ⇒ <code>Promise</code> ℗
+        * [._handleUnsubscribeFullEventDict()](#client4395handleunsubscribefulleventdict) ℗
+        * [._handleJoinEvent(data)](#client4395handlejoinevent) ⇒ <code>Promise</code> ℗
+        * [._handleLeaveEvent(data)](#client4395handleleaveevent) ⇒ <code>Promise</code> ℗
+        * [._handleSwitchActiveEvent(data)](#client4395handleswitchactiveevent) ⇒ <code>Promise</code> ℗
         * [._switchActiveEvent(newEventId)](#client4395switchactiveevent) ⇒ <code>Promise</code> ℗
-        * [._handleLoadImages(data, cb)](#client4395handleloadimages) ⇒ <code>Promise</code> ℗
-        * [._handleContinueSession(data, cb)](#client4395handlecontinuesession) ⇒ <code>Promise</code> ℗
-        * [._handleLogin(data, cb)](#client4395handlelogin) ⇒ <code>Promise</code> ℗
-        * [._handleLogout(data, cb)](#client4395handlelogout) ℗
-        * [.on(event, requiresAuthentication, requiresActiveEvent, handler)](#client43on)
+        * [._handleLoadImages(data)](#client4395handleloadimages) ⇒ <code>Promise.&lt;ImagesController~GetImagesResult&gt;</code> ℗
+        * [._handleAcceptTos()](#client4395handleaccepttos) ⇒ <code>Promise</code> ℗
+        * [._handleContinueSession(data)](#client4395handlecontinuesession) ⇒ <code>Promise.&lt;UserController~LoginData&gt;</code> ℗
+        * [._handleLogin(data)](#client4395handlelogin) ⇒ <code>Promise.&lt;UserController~LoginData&gt;</code> ℗
+        * [._handleLogout()](#client4395handlelogout) ℗
+        * [.on(event, handler, [options])](#client43on)
         * [.emitUpdateCommentDict(commentDict)](#client43emitupdatecommentdict)
         * [.updateComment(entryId, commentId)](#client43updatecomment) ⇒ <code>Promise</code>
         * [.emitUpdateEntries(entryDict, [idList])](#client43emitupdateentries)
         * [.updateEntry(entryInfo)](#client43updateentry) ⇒ <code>Promise</code>
+        * [.emitUpdatePromptGroup(group)](#client43emitupdatepromptgroup)
         * [.emitUpdateRoleList(roleList)](#client43emitupdaterolelist)
         * [.emitUpdateUserDict(userDict)](#client43emitupdateuserdict)
         * [.emitUpdateEventDict(eventDict)](#client43emitupdateeventdict)
         * [.updateEventDict(eventIds)](#client43updateeventdict) ⇒ <code>Promise</code>
         * [.emitUpdateEventScreenshotIds(imageIds)](#client43emitupdateeventscreenshotids)
     * _inner_
-        * [~messageAcknowledgementCallback](#client4646messageacknowledgementcallback) : <code>function</code>
+        * [~LoadMoreEntriesResult](#client4646loadmoreentriesresult) : <code>object</code>
         * [~eventHandler](#client4646eventhandler) : <code>function</code>
 
 <a id="new95client95new"></a>
 
-### new Client(socket, controller, broker)
+### new Client(socket)
 Creates a Client instance.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | socket | <code>SocketIoConnection</code> | socket connection to client |
-| controller | <code>Controller</code> | controller object containing initialized controllers |
-| broker | <code>ClientBroker</code> | reference to parent ClientBroker instance |
 
 <a id="client43connecttimestamp"></a>
 
@@ -104,20 +110,6 @@ User-Agent of connected client.
 
 ### client._socket : <code>SocketIoConnection</code> ℗
 Open socket connection to client.
-
-**Kind**: instance property of [<code>Client</code>](#client)  
-**Access**: private  
-<a id="client4395controller"></a>
-
-### client._controller : <code>Controller</code> ℗
-Controller object containing initialized controllers.
-
-**Kind**: instance property of [<code>Client</code>](#client)  
-**Access**: private  
-<a id="client4395broker"></a>
-
-### client._broker : <code>ClientBroker</code> ℗
-Reference to parent ClientBroker instance that manages this instance.
 
 **Kind**: instance property of [<code>Client</code>](#client)  
 **Access**: private  
@@ -158,11 +150,29 @@ Null indicates that no list subscription is active.
 List of subscribed entryIds.
 
 **Kind**: static property of [<code>entriesSubscription</code>](#client43entriessubscription)  
+<a id="client43hasacceptedtos"></a>
+
+### client.hasAcceptedTos : <code>boolean</code>
+Indicates if auth-user has accepted the terms of service.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
+<a id="client43logintimestamp"></a>
+
+### client.loginTimestamp : <code>number</code> &#124; <code>null</code>
+Timestamp of login / continue session.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
 <a id="client43permissionlevel"></a>
 
 ### client.permissionLevel : <code>PermissionLevelEnum</code>
 Permissionlevel of user for active event. 
 Defaults to NOT_A_USER.
+
+**Kind**: instance property of [<code>Client</code>](#client)  
+<a id="client43sessiontoken"></a>
+
+### client.sessionToken : <code>string</code> &#124; <code>null</code>
+Currently used sessionToken (by authenticated user).
 
 **Kind**: instance property of [<code>Client</code>](#client)  
 <a id="client43subscribedfulleventdict"></a>
@@ -204,9 +214,16 @@ Initializes instance-state by users login-data.
 | --- | --- | --- |
 | loginData | <code>UserController~LoginData</code> | loginData object |
 
+<a id="client4395trackandsaveusersessioninfos"></a>
+
+### client._trackAndSaveUserSessionInfos() ⇒ <code>Promise</code> ℗
+Saves session-infos for user.
+
+**Kind**: instance method of [<code>Client</code>](#client)  
+**Access**: private  
 <a id="client4395handlechangevoteforcomment"></a>
 
-### client._handleChangeVoteForComment(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleChangeVoteForComment(data) ⇒ <code>Promise</code> ℗
 Eventhandler for vote change on comment.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -215,14 +232,27 @@ Eventhandler for vote change on comment.
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>object</code> |  |
-| data.entryId | <code>string</code> | entryId (as string) |
 | data.commentId | <code>string</code> | commentId (as string) |
+| data.entryId | <code>string</code> | entryId (as string) |
 | data.vote | <code>number</code> | number representing vote (>0: upvote, 0: no vote, <0: downvote) |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
+
+<a id="client4395handledeletecomment"></a>
+
+### client._handleDeleteComment(data) ⇒ <code>Promise</code> ℗
+Eventhandler for comment deletion.
+
+**Kind**: instance method of [<code>Client</code>](#client)  
+**Access**: private  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>object</code> |  |
+| data.commentId | <code>string</code> | commentId (as string) |
+| data.entryId | <code>string</code> | entryId (as string) |
 
 <a id="client4395handlepostcomment"></a>
 
-### client._handlePostComment(data, cb) ⇒ <code>Promise</code> ℗
+### client._handlePostComment(data) ⇒ <code>Promise</code> ℗
 Eventhandler for new comment posted.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -236,12 +266,11 @@ Eventhandler for new comment posted.
 | data.imageDataArr | <code>Array.&lt;string&gt;</code> | array of attached images (base64 encoded) |
 | data.isAnonymous | <code>boolean</code> | true if posting is anonymous, otherwise false |
 | data.parentId | <code>string</code> &#124; <code>null</code> | id of parent-comment (as string). null for toplevel |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
-<a id="client4395handlesubscribecommentsforentry"></a>
+<a id="client4395handlereadcomment"></a>
 
-### client._handleSubscribeCommentsForEntry(data, cb) ⇒ <code>Promise</code> ℗
-Eventhandler for comment subscription request (for entry).
+### client._handleReadComment(data) ⇒ <code>Promise</code> ℗
+Eventhandler for comment was read by user.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
 **Access**: private  
@@ -249,25 +278,34 @@ Eventhandler for comment subscription request (for entry).
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>object</code> |  |
-| data.entryId | <code>string</code> | entryId (as string) |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
+| data.commentId | <code>string</code> | commentId (as string) |
+| data.entryId | <code>string</code> | id of entry (as string) |
+| data.isScrollOver | <code>boolean</code> | true if read-event was triggered while scrolling over comment, false otherwise (focus, click) |
 
-<a id="client4395handleunsubscribecommentsforentry"></a>
+<a id="client4395handlesubscribecommentsforentry"></a>
 
-### client._handleUnsubscribeCommentsForEntry(data, cb) ⇒ <code>Promise</code> ℗
-Eventhandler for comment unsubscription request.
+### client._handleSubscribeCommentsForEntry(data) ⇒ <code>Promise.&lt;CommentsController~CommentDict&gt;</code> ℗
+Eventhandler for comment subscription request (for entry).
 
 **Kind**: instance method of [<code>Client</code>](#client)  
+**Returns**: <code>Promise.&lt;CommentsController~CommentDict&gt;</code> - returns dict of comments  
 **Access**: private  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>object</code> | empty object |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
+| data | <code>object</code> |  |
+| data.entryId | <code>string</code> | entryId (as string) |
 
+<a id="client4395handleunsubscribecommentsforentry"></a>
+
+### client._handleUnsubscribeCommentsForEntry() ⇒ <code>Promise</code> ℗
+Eventhandler for comment unsubscription request.
+
+**Kind**: instance method of [<code>Client</code>](#client)  
+**Access**: private  
 <a id="client4395handlebroadcastnewimage"></a>
 
-### client._handleBroadcastNewImage(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleBroadcastNewImage(data) ⇒ <code>Promise</code> ℗
 Eventhandler for image/screenshot broadcast.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -275,12 +313,12 @@ Eventhandler for image/screenshot broadcast.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>string</code> | base64 image-data of full image |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
+| data | <code>object</code> |  |
+| data.imageData | <code>string</code> | base64 image-data of full image |
 
 <a id="client4395handlechangebookmark"></a>
 
-### client._handleChangeBookmark(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleChangeBookmark(data) ⇒ <code>Promise</code> ℗
 Eventhandler for bookmark changed (for entry).
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -288,14 +326,13 @@ Eventhandler for bookmark changed (for entry).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>string</code> |  |
+| data | <code>object</code> |  |
 | data.entryId | <code>string</code> | id of entry (as string) |
 | data.bookmark | <code>boolean</code> | true sets bookmark, false unsets |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395handlechangefollow"></a>
 
-### client._handleChangeFollow(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleChangeFollow(data) ⇒ <code>Promise</code> ℗
 Eventhandler for follow-state changed (for entry).
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -303,14 +340,13 @@ Eventhandler for follow-state changed (for entry).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>string</code> |  |
+| data | <code>object</code> |  |
 | data.entryId | <code>string</code> | id of entry (as string) |
 | data.follow | <code>boolean</code> | true sets follow, false unsets |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395handlechangevote"></a>
 
-### client._handleChangeVote(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleChangeVote(data) ⇒ <code>Promise</code> ℗
 Eventhandler for vote change on entry.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -321,24 +357,31 @@ Eventhandler for vote change on entry.
 | data | <code>object</code> |  |
 | data.entryId | <code>string</code> | entryId (as string) |
 | data.vote | <code>number</code> | number representing vote (>0: upvote, 0: no vote, <0: downvote) |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
-<a id="client4395handleloadmoreentries"></a>
+<a id="client4395handledeleteentry"></a>
 
-### client._handleLoadMoreEntries(data, cb) ⇒ <code>Promise</code> ℗
-Eventhandler for load more entries request (depends on active list subscription).
+### client._handleDeleteEntry(data) ⇒ <code>Promise</code> ℗
+Eventhandler for entry deletion.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
 **Access**: private  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>object</code> | empty object |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
+| data | <code>object</code> |  |
+| data.entryId | <code>string</code> | entryId (as string) |
 
+<a id="client4395handleloadmoreentries"></a>
+
+### client._handleLoadMoreEntries() ⇒ <code>Promise.&lt;LoadMoreEntriesResult&gt;</code> ℗
+Eventhandler for load more entries request (depends on active list subscription).
+
+**Kind**: instance method of [<code>Client</code>](#client)  
+**Returns**: [<code>Promise.&lt;LoadMoreEntriesResult&gt;</code>](#client4646loadmoreentriesresult) - returns more entries  
+**Access**: private  
 <a id="client4395handlepostentry"></a>
 
-### client._handlePostEntry(data, cb) ⇒ <code>Promise</code> ℗
+### client._handlePostEntry(data) ⇒ <code>Promise</code> ℗
 Eventhandler for new entry posted.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -348,14 +391,14 @@ Eventhandler for new entry posted.
 | --- | --- | --- |
 | data | <code>object</code> |  |
 | data.content | <code>string</code> | content of comment |
+| data.extraQuestions | <code>Array.&lt;string&gt;</code> | array of extra questions to attach (prompts) |
 | data.imageDataArr | <code>Array.&lt;string&gt;</code> | array of attached images (base64 encoded) |
 | data.isAnonymous | <code>boolean</code> | true if posting is anonymous, otherwise false |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
-<a id="client4395handlesubscribeentries"></a>
+<a id="client4395handlereadentry"></a>
 
-### client._handleSubscribeEntries(data, cb) ⇒ <code>Promise</code> ℗
-Eventhandler for subscribe to entries request (by ids).
+### client._handleReadEntry(data) ⇒ <code>Promise</code> ℗
+Eventhandler for entry was read by user.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
 **Access**: private  
@@ -363,12 +406,26 @@ Eventhandler for subscribe to entries request (by ids).
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>object</code> |  |
+| data.entryId | <code>string</code> | id of entry (as string) |
+| data.isScrollOver | <code>boolean</code> | true if read-event was triggered while scrolling over entry, false otherwise (focus, click) |
+
+<a id="client4395handlesubscribeentries"></a>
+
+### client._handleSubscribeEntries(data) ⇒ <code>Promise.&lt;EntriesController~EntryDict&gt;</code> ℗
+Eventhandler for subscribe to entries request (by ids).
+
+**Kind**: instance method of [<code>Client</code>](#client)  
+**Returns**: <code>Promise.&lt;EntriesController~EntryDict&gt;</code> - resolves to dictionary of entries (that were subscribed)  
+**Access**: private  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>object</code> |  |
 | data.entryIds | <code>Array.&lt;string&gt;</code> | array of entryIds (as strings) |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395handlesubscribeentrylist"></a>
 
-### client._handleSubscribeEntryList(data, cb) ℗
+### client._handleSubscribeEntryList(data) ℗
 Eventhandler for subscribe to entry-list request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -379,11 +436,10 @@ Eventhandler for subscribe to entry-list request.
 | data | <code>object</code> |  |
 | data.listType | <code>EntryListTypeEnum</code> | list type |
 | data.onlyBookmarked | <code>boolean</code> | indicates if only bookmarked entries should be included in subscription |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395handleunsubscribeentries"></a>
 
-### client._handleUnsubscribeEntries(data, cb) ℗
+### client._handleUnsubscribeEntries(data) ℗
 Eventhandler for unsubscribe from (previously subscribed) entries request (by ids).
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -393,50 +449,31 @@ Eventhandler for unsubscribe from (previously subscribed) entries request (by id
 | --- | --- | --- |
 | data | <code>object</code> |  |
 | data.entryIds | <code>Array.&lt;string&gt;</code> | array of entryIds (as strings) |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395handleunsubscribeentrylist"></a>
 
-### client._handleUnsubscribeEntryList(data, cb) ℗
+### client._handleUnsubscribeEntryList() ℗
 Eventhandler for unsubscribe from (previously subscribed) entry-list request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
 **Access**: private  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | <code>object</code> | empty object |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
-
 <a id="client4395handlesubscribefulleventdict"></a>
 
-### client._handleSubscribeFullEventDict(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleSubscribeFullEventDict() ⇒ <code>Promise</code> ℗
 Eventhandler for subscribe to full EventDict request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
 **Access**: private  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | <code>object</code> | empty object |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
-
 <a id="client4395handleunsubscribefulleventdict"></a>
 
-### client._handleUnsubscribeFullEventDict(data, cb) ℗
+### client._handleUnsubscribeFullEventDict() ℗
 Eventhandler for unsubscribe from full EventDict request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
 **Access**: private  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | <code>object</code> | empty object |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
-
 <a id="client4395handlejoinevent"></a>
 
-### client._handleJoinEvent(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleJoinEvent(data) ⇒ <code>Promise</code> ℗
 Eventhandler for join-event request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -446,11 +483,10 @@ Eventhandler for join-event request.
 | --- | --- | --- |
 | data | <code>object</code> |  |
 | data.eventId | <code>string</code> | eventId (as string) |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395handleleaveevent"></a>
 
-### client._handleLeaveEvent(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleLeaveEvent(data) ⇒ <code>Promise</code> ℗
 Eventhandler for leave-event request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -460,11 +496,10 @@ Eventhandler for leave-event request.
 | --- | --- | --- |
 | data | <code>object</code> |  |
 | data.eventId | <code>string</code> | eventId (as string) |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395handleswitchactiveevent"></a>
 
-### client._handleSwitchActiveEvent(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleSwitchActiveEvent(data) ⇒ <code>Promise</code> ℗
 Eventhandler for switch-active-event request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
@@ -474,7 +509,6 @@ Eventhandler for switch-active-event request.
 | --- | --- | --- |
 | data | <code>object</code> |  |
 | data.eventId | <code>string</code> | eventId (as string) |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395switchactiveevent"></a>
 
@@ -495,10 +529,11 @@ Performs switch of active event. Initializes corresponding client context.
 
 <a id="client4395handleloadimages"></a>
 
-### client._handleLoadImages(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleLoadImages(data) ⇒ <code>Promise.&lt;ImagesController~GetImagesResult&gt;</code> ℗
 Eventhandler for load images request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
+**Returns**: <code>Promise.&lt;ImagesController~GetImagesResult&gt;</code> - resolves to an object containing an imageDict and thumbnailDict property, if onlyThumbnails is set imageDict will be an empty object  
 **Access**: private  
 
 | Param | Type | Description |
@@ -506,28 +541,35 @@ Eventhandler for load images request.
 | data | <code>object</code> |  |
 | data.imageIds | <code>Array.&lt;string&gt;</code> | array of ids of images (as string) to retrieve |
 | data.onlyThumbnails | <code>boolean</code> | indicates if only the thumbnails should be queried |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
+<a id="client4395handleaccepttos"></a>
+
+### client._handleAcceptTos() ⇒ <code>Promise</code> ℗
+Eventhandler for accept terms of service request.
+
+**Kind**: instance method of [<code>Client</code>](#client)  
+**Access**: private  
 <a id="client4395handlecontinuesession"></a>
 
-### client._handleContinueSession(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleContinueSession(data) ⇒ <code>Promise.&lt;UserController~LoginData&gt;</code> ℗
 Eventhandler for continue session request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
+**Returns**: <code>Promise.&lt;UserController~LoginData&gt;</code> - returns loginData  
 **Access**: private  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>object</code> |  |
 | data.sessionToken | <code>string</code> | sessionToken |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395handlelogin"></a>
 
-### client._handleLogin(data, cb) ⇒ <code>Promise</code> ℗
+### client._handleLogin(data) ⇒ <code>Promise.&lt;UserController~LoginData&gt;</code> ℗
 Eventhandler for login request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
+**Returns**: <code>Promise.&lt;UserController~LoginData&gt;</code> - returns loginData  
 **Access**: private  
 
 | Param | Type | Description |
@@ -535,34 +577,29 @@ Eventhandler for login request.
 | data | <code>object</code> |  |
 | data.email | <code>string</code> | email of user |
 | data.password | <code>string</code> | password of user |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
 <a id="client4395handlelogout"></a>
 
-### client._handleLogout(data, cb) ℗
+### client._handleLogout() ℗
 Eventhandler for logout request.
 
 **Kind**: instance method of [<code>Client</code>](#client)  
 **Access**: private  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | <code>object</code> | empty object |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
-
 <a id="client43on"></a>
 
-### client.on(event, requiresAuthentication, requiresActiveEvent, handler)
+### client.on(event, handler, [options])
 Registers an event-handler. Calls event handler with current context (this).
 
 **Kind**: instance method of [<code>Client</code>](#client)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>string</code> | event-identifier |
-| requiresAuthentication | <code>boolean</code> | true if event-handler requries authentication |
-| requiresActiveEvent | <code>boolean</code> | true if event-handler requires an event to be active |
-| handler | [<code>eventHandler</code>](#client4646eventhandler) | event-handler |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| event | <code>string</code> |  | event-identifier |
+| handler | [<code>eventHandler</code>](#client4646eventhandler) |  | event-handler |
+| [options] | <code>object</code> |  | additional options |
+| [options.requiresActiveEvent] | <code>boolean</code> | <code>false</code> | true if event-handler requires an event to be active |
+| [options.requiresAuthentication] | <code>boolean</code> | <code>false</code> | true if event-handler requries authentication |
+| [options.requiredPermissionLevel] | <code>PermissionLevelEnum</code> | <code>PermissionLevelEnum.NOT_A_USER</code> | required permission level |
 
 <a id="client43emitupdatecommentdict"></a>
 
@@ -613,6 +650,17 @@ updates list subscription and sends entry-update to client if neccessary.
 | Param | Type | Description |
 | --- | --- | --- |
 | entryInfo | <code>EntriesController~EntryInfo</code> | EntryInfo of entry to update |
+
+<a id="client43emitupdatepromptgroup"></a>
+
+### client.emitUpdatePromptGroup(group)
+Sends users prompt group to client.
+
+**Kind**: instance method of [<code>Client</code>](#client)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| group | <code>number</code> | prompt-group |
 
 <a id="client43emitupdaterolelist"></a>
 
@@ -672,27 +720,30 @@ to the client.
 | --- | --- | --- |
 | imageIds | <code>Array.&lt;ObjectID&gt;</code> | array of imageIds for screenshots of active event |
 
-<a id="client4646messageacknowledgementcallback"></a>
+<a id="client4646loadmoreentriesresult"></a>
 
-### Client~messageAcknowledgementCallback : <code>function</code>
-Socket message callback function.
+### Client~LoadMoreEntriesResult : <code>object</code>
+Result of _handleLoadMoreEntries call.
 
 **Kind**: inner typedef of [<code>Client</code>](#client)  
+**Properties**
 
-| Param | Type | Description |
+| Name | Type | Description |
 | --- | --- | --- |
-| error | <code>\*</code> | error object, message / null or undefined for "no error" |
-| result | <code>\*</code> | data to send back to client |
+| entryDict | <code>EntriesController~EntryDict</code> | dict containing next entries |
+| hasMoreEntriesToLoad | <code>boolean</code> | indicates if more entries can be loaded |
+| idList | <code>Array.&lt;ObjectID&gt;</code> | array of entry-ids (see EntryListSubscription.getIdList()) |
 
 <a id="client4646eventhandler"></a>
 
 ### Client~eventHandler : <code>function</code>
 Handler for client-event.
+Can be async.
+Response data must be returned.
 
 **Kind**: inner typedef of [<code>Client</code>](#client)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>object</code> | event-data |
-| cb | [<code>messageAcknowledgementCallback</code>](#client4646messageacknowledgementcallback) | data-handled callback |
 
