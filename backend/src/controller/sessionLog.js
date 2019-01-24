@@ -30,19 +30,16 @@ async function saveSessionInfo(userId, fromTimestamp, toTimestamp, sessionToken,
     if (!userId || !fromTimestamp || !toTimestamp || !sessionToken)
         throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
     
-    const res = await db().collection('sessionlog')
-        .insertOne({
-            from: fromTimestamp,
-            ip,
-            sessionToken,
-            to: toTimestamp,
-            userAgent,
-            userId,
-        });
+    const res = await db().collection('sessionlog').insertOne({
+        from: fromTimestamp,
+        ip,
+        sessionToken,
+        to: toTimestamp,
+        userAgent,
+        userId,
+    });
         
-    if (res.result.ok !== 1)
+    if (res.result.ok !== 1 || res.result.n < 1)
         throw utils.createError('error saving user session info', statusCodes.INTERNAL_SERVER_ERROR);
-    if (res.result.n < 1)
-        throw utils.createError('userId not found', statusCodes.NOT_FOUND);
 }
 exports.saveSessionInfo = saveSessionInfo;
