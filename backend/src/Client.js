@@ -11,6 +11,7 @@ const eventsController = require('./controller/events');
 const eventScreenshotsController = require('./controller/eventScreenshots');
 const imagesController = require('./controller/images');
 const promptGroupController = require('./controller/promptGroup');
+const sessionLogController = require('./controller/sessionLog');
 const userController = require('./controller/user');
 const broker = require('./broker');
 const utils = require('./utils');
@@ -308,7 +309,7 @@ class Client {
         if (!this.userId)
             return;
         const logoutTimestamp = Date.now();
-        await userController.saveSessionInfos(this.userId, 
+        await sessionLogController.saveSessionInfo(this.userId, 
             this.loginTimestamp, logoutTimestamp, this.sessionToken, this.ip, this.userAgent);
         const sessionDurationSec = Math.round((logoutTimestamp - this.loginTimestamp) / 1000);
         this._logActivity('user/endSession', { sessionDurationSec });

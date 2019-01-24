@@ -128,6 +128,19 @@ A single document has the following properties:
 | toDate   | `Date`     | valid-to              |
 | userId   | `string`   | id of user            |
 
+## sessionlog
+
+A single document is a single log entry and has the following properties:
+
+| Property     | Type     | Description                                 |
+| ------------ | -------- | ------------------------------------------- |
+| from         | `number` | timestamp of session begin (auth)           |
+| ip           | `string` | IP-Address                                  |
+| sessionToken | `string` | used sessionToken                           |
+| to           | `number` | timestamp of sesson end (logout/disconnect) |
+| userAgent    | `string` | user-agent of browser                       |
+| userId       | `string` | id of user                                  |
+
 ## users
 
 A single document has the following properties:
@@ -137,15 +150,3 @@ A single document has the following properties:
 | _id               | `string`             | id of user                                       |
 | hasAcceptedTos    | `boolean`            | indicates if users accepted the terms of service |
 | lastActiveEventId | `ObjectID`           | id of last active event                          |
-| sessionInfos      | `Array<SessionInfo>` | thumbnail of image as base64 encoded             |
-
-A **SessionInfo** object has the following properties:
-
-| Property     | Type     | Description                                 |
-| ------------ | -------- | ------------------------------------------- |
-| from         | `number` | timestamp of session begin (auth)           |
-| ip           | `string` | IP-Address                                  |
-| sessionToken | `string` | used sessionToken                           |
-| to           | `number` | timestamp of sesson end (logout/disconnect) |
-| userAgent    | `string` | user-agent of browser                       |
-

@@ -10,6 +10,7 @@
 ### high priority
 
 - [x] fixes:
+  - [x] write sessionInfos as single documents in another collection (very important!) => continous use WILL break app in future
   - [ ] fix 'after-logout.png'
   - [x] remove tos link from minicontrol
   - [x] screen broadcast won't stop

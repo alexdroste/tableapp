@@ -5,7 +5,7 @@ const utils = require('../utils');
 
 
 /**
- * Controller for analytics.
+ * Controller for user activity analytics.
  * @module activityLogController
  */
 
