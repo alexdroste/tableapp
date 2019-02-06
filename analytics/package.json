@@ -1,0 +1,13 @@
+{
+  "name": "tableapp-analytics",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Alexander Droste",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "mongodb": "^3.1.13"
+  }
+}
