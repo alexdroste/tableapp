@@ -2,7 +2,7 @@
 let custom = {};
 try { custom = require('./config.custom.js') } 
 catch (e) { console.error('Custom configuration is missing!'); }
-const {ssl, ldap, db, sessionToken, eventScreenshots, ...rest} = custom;
+const {ssl, ldap, db, mail, sessionToken, eventScreenshots, ...rest} = custom;
 
 
 /**
@@ -100,6 +100,24 @@ const config = {
          */
         url: 'mongodb://localhost:27017',
         ...db // overwrite with custom config values
+    },
+    /**
+     * Mail config values.
+     */
+    mail: {
+        /**
+         * Hostname of mail-server to connect to (via smtp).
+         * Defaults to 'localhost'.
+         * @type {string}
+         */
+        host: 'localhost',
+        /**
+         * Mail-address to send mails from.
+         * Requires overwrite.
+         * @type {string}
+         */
+        from: 'table@example.com',
+        ...mail // overwrite with custom config values
     },
     /**
      * Config values for session tokens.
