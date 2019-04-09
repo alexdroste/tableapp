@@ -141,7 +141,7 @@ export function readEntry(entryId, isScrollOver) {
  * @param {Array<string>} extraQuestion array of question to append (prompts)
  * @returns {object} action
  */
-export function postEntry(isAnonymous, content, imageIds, extraQuestions) { // extra-code for prompts
+export function postEntry(isAnonymous, content, imageIds) {
     return (dispatch, getState) => {
         const imageDataArr = imageIds.map((id) => getImage(getState().images, id));
         dispatch({
@@ -151,7 +151,7 @@ export function postEntry(isAnonymous, content, imageIds, extraQuestions) { // e
                 types: [entriesActionTypes.POST_ENTRY_REQUEST,
                     entriesActionTypes.POST_ENTRY_SUCCESS,
                     entriesActionTypes.POST_ENTRY_FAILURE],
-                call: (api) => api.request('entries/postEntry', { content, extraQuestions, imageDataArr, isAnonymous })
+                call: (api) => api.request('entries/postEntry', { content, imageDataArr, isAnonymous })
             }
         });
     }

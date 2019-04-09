@@ -10,7 +10,6 @@ const entriesController = require('./controller/entries');
 const eventsController = require('./controller/events');
 const eventScreenshotsController = require('./controller/eventScreenshots');
 const imagesController = require('./controller/images');
-const promptGroupController = require('./controller/promptGroup');
 const sessionLogController = require('./controller/sessionLog');
 const userController = require('./controller/user');
 const broker = require('./broker');
@@ -560,14 +559,13 @@ class Client {
      * @function
      * @param {object} data 
      * @param {string} data.content content of comment
-     * @param {Array<string>} data.extraQuestions array of extra questions to attach (prompts)
      * @param {Array<string>} data.imageDataArr array of attached images (base64 encoded)
      * @param {boolean} data.isAnonymous true if posting is anonymous, otherwise false
      * @returns {Promise} 
      */
-    async _handlePostEntry({ content, extraQuestions, imageDataArr, isAnonymous }) { // extra-code for prompts
+    async _handlePostEntry({ content, imageDataArr, isAnonymous }) {
         const entryId = await entriesController.postEntry(
-            this.activeEventId, this.userId, isAnonymous, content, imageDataArr, extraQuestions);
+            this.activeEventId, this.userId, isAnonymous, content, imageDataArr);
         this._logActivity('entries/postEntry', { entryId });
     }
 
@@ -765,7 +763,6 @@ class Client {
             return;
 
         await this.updateEventDict([this.activeEventId]);
-        this.emitUpdatePromptGroup(await promptGroupController.getGroup(this.userId, this.activeEventId)); // extra-code for prompts
 
         const event = (await eventsController.getEventDict(
             this.userId, true, [newEventId]))[newEventId];
@@ -1016,16 +1013,6 @@ class Client {
     //#endregion entries
 
     //#region eventInfo
-    /**
-     * Sends users prompt group to client.
-     * @function
-     * @param {number} group prompt-group
-     */
-    emitUpdatePromptGroup(group) { // extra-code for prompts
-        this._socket.emit('eventInfo/updatePromptGroup', group);
-    }
-
-
     /**
      * Sends a specified RoleList to client.
      * @function

@@ -17,7 +17,7 @@
 - [ ] desktop-app: improve screen selection
 - [ ] survey integration
   - [ ] track if user successfully filled survey
-- [ ] prompt-groups
+- [x] remove prompt-groups
 - [x] fixes:
   - [x] fix subscription missing, when directly opening new comment form (move subscribeEntryList action from EntriesView to wrapper), e.g. link <https://localhost:3000/552786262cec76ed95fd61d0/5ca6072fe85f2699640ad75f/0/new>
   - [x] write sessionInfos as single documents in another collection (very important!) => continous use WILL break app in future
