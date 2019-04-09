@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Header } from 'semantic-ui-react'; 
 import { NavBar } from './NavBar';
-import { getActiveEventUserPermissionLevel, getActiveEventId } from '../reducers/events';
+import { getActiveEventUserPermissionLevel } from '../reducers/events';
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
-import { EventItem } from './EventItem';
+import { UserEventSettings } from './UserEventSettings';
+import { UserSettings } from './UserSettings';
 
 
 class SettingsView extends React.Component {
@@ -23,20 +24,35 @@ class SettingsView extends React.Component {
 
 
     render() {
-        const {activeEventId} = this.props;
+        const { eventId } = this.props.match.params;
+
+        /*
+        Zeige immer:
+        - Einstellungen zum user
+
+        Wenn /:eventId/settings
+        - Zeige aktuelle Veranstaltung
+        - Zeige Einstellungen zu aktueller Veranstalung
+
+        Wenn 'canManage'-Rechte, Zeige Button zur Veranstaltungsverwaltung
+
+
+        */
+
+
         return (
             <div>
                 <NavBar
                     hasGoBack
                     mainContent={"Einstellungen"}
                 />
-                <Header content="Einstellungen"/>
-                <EventItem 
-                    contentBefore={
-                        <Header content="Aktuelle Veranstaltung"/>
-                    }
-                    eventId={activeEventId}
-                />
+                {eventId && 
+                    <div>
+                        <UserEventSettings/>
+                        <br/>
+                    </div>
+                }
+                <UserSettings/>
             </div>
         );
     }
@@ -45,8 +61,6 @@ class SettingsView extends React.Component {
 
 const mapStateToProps = (state, props) => {
     return {
-        activeEventId: getActiveEventId(state.events),
-        userCanManageActiveEvent: getActiveEventUserPermissionLevel(state.events) >= PermissionLevelEnum.ADMINISTRATOR,
     }
 };
 

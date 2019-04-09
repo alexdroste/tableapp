@@ -37,7 +37,7 @@ var statusCodes = require('http-status-codes');
  * 
  * dict[key] = value:
  * * key := id of entry
- * * value := {@link Entry}
+ * * value := {@link Entry} | null => null if non-existent
  * @typedef {object} EntryDict
  */
 
@@ -347,6 +347,10 @@ async function getEntries(eventId, userId, entryIds) {
     });
 
     const entryDict = {};
+    // make sure that missing entryIds are null objects
+    entryIds.forEach(id => {
+        entryDict[id] = null;
+    });
     entriesArr.forEach((entry) => {
         // hide content & authorId if entry is deleted
         if (entry.isDeleted) {

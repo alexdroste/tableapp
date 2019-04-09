@@ -9,7 +9,17 @@
 
 ### high priority
 
+- [ ] notifications
+- [x] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
+  - [ ] maybe? log read event for entry/comment in post comment view
+- [ ] notification subscription verwaltung ui
+- [ ] email templates
+- [ ] desktop-app: improve screen selection
+- [ ] survey integration
+  - [ ] track if user successfully filled survey
+- [ ] prompt-groups
 - [x] fixes:
+  - [x] fix subscription missing, when directly opening new comment form (move subscribeEntryList action from EntriesView to wrapper), e.g. link <https://localhost:3000/552786262cec76ed95fd61d0/5ca6072fe85f2699640ad75f/0/new>
   - [x] write sessionInfos as single documents in another collection (very important!) => continous use WILL break app in future
   - [ ] fix 'after-logout.png'
   - [x] remove tos link from minicontrol
@@ -41,7 +51,7 @@
 - [x] track entries read
 - [ ] track comments read
 - [x] hide "new entry"-dialogue in presentation-mode
-- [ ] mongodb scripts for stats (3h)
+- [x] mongodb scripts for stats
 - [x] desktop-client: continue streaming on monitor change
 - [ ] restructure TitleBar & NavBar rendering => also set height as paddingTop of contentWrapper to fix jumping of page switch
 - [x] usability: button "comment" comments-view
@@ -52,14 +62,11 @@
 - [x] opt-in/opt-out
 - [ ] client-desktop: show last broadcasted pic
 - [ ] save all screenshots, link them in db
-- [ ] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
-  - [ ] maybe? log read event for entry/comment in post comment view
 - [ ] desktop-client: easier window-move
 - [x] desktop-client: toggle mini control with global shortcut
 - [x] desktop-client: remember table position on extend->mirror->extend change (per monitor save)
 - [ ] desktop-client: show thumb in minicontrolview if monitor-setup changes
 - [x] desktop-client: check for screen border on restore
-- [ ] desktop-client: improve screen selection
 - [x] sign-out
 
 
@@ -77,10 +84,15 @@
 - [ ] desktop-client: option to mark entry as unread
 - [ ] option to add tag to entry -> "discussed in lecture" (!)
 - [ ] backend: permission-check for events
-- [ ] notifications (in-app/email) (!)
+- [ ] add activities:
+  - [ ] clicked on email notification link
+  - [ ] clicked on in-app notification
+  - [ ] read in-app notification
+- [ ] Archive/close option for events
 - [x] client: no longer split api-actions and actions
 - [ ] maybe? client: [REQUEST, SUCCESS, FAILED] generate => { type: CHANGE_VOTE, apiRequestState: REQUEST}
-- [ ] document api messages (client->backend, backend->client & data) & activities
+- [ ] document api messages (client->backend, backend->client & data)
+- [ ] document activities
 - [ ] document client-desktop usage (modes, shortcuts, ...)
 - [ ] split full-name into tuple (title, first name, last name)
 - [ ] moderation options: edit entry
@@ -94,7 +106,6 @@
 - [ ] collapse entry content in feed if its too long => add button to "expand" / "collapse" long content
 - [ ] make more than the last 3 screenshots available for use / preview other screenshots in zoomed view
 - [ ] switch attached images in full screen with arrows & arrow-keys
-- [ ] implement or remove archive option for events
 - [ ] post entry: show minimum/maximum characters
 - [ ] rate-limits (e.g. you can only post x new entries in x secs)
 - [ ] ability to ban or temp-ban users
@@ -118,6 +129,7 @@
 - [ ] integrate with tuc course catalog
 - [ ] comment-section: add person-tracking for anonymous comments (@1, @2, ...)
 - [ ] pwa
+- [ ] respond to mail to post new answers
 
 
 ## documentation

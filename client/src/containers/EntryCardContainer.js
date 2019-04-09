@@ -27,6 +27,7 @@ class EntryCardContainer extends React.Component {
             entriesActions: PropTypes.object.isRequired,
             entry: PropTypes.object,
             entryId: PropTypes.string,
+            eventId: PropTypes.string,
         };
     };
 
@@ -63,13 +64,13 @@ class EntryCardContainer extends React.Component {
 
 
     _handleCommentClick = (e) => {
-        this.props.history.push('/entries/' + this.props.entryId);
-        this.props.history.push('/entries/' + this.props.entryId + '/0/new');
+        this.props.history.push(`/${this.props.eventId}/${this.props.entryId}`);
+        this.props.history.push(`/${this.props.eventId}/${this.props.entryId}/0/new`);
     };
 
 
     _handleContentClick = (e) => {
-        this.props.history.push('/entries/' + this.props.entryId);
+        this.props.history.push(`/${this.props.eventId}/${this.props.entryId}`);
     };
 
 

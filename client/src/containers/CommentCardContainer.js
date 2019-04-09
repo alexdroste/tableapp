@@ -34,6 +34,7 @@ class CommentCardContainer extends React.Component {
             commentsActions: PropTypes.object.isRequired,
             commentId: PropTypes.string.isRequired,
             entryId: PropTypes.string.isRequired,
+            eventId: PropTypes.string.isRequired,
             history: PropTypes.object.isRequired,
             isToplevel: PropTypes.bool,
         };
@@ -101,7 +102,7 @@ class CommentCardContainer extends React.Component {
 
 
     _handleReplyClick = (e) => {
-        this.props.history.push(`/entries/${this.props.entryId}/${this.props.commentId}/new`);
+        this.props.history.push(`/${this.props.eventId}/${this.props.entryId}/${this.props.commentId}/new`);
     };
 
 

@@ -39,6 +39,7 @@ const initialState = {
     activeEvent: {
         id: null,
         switchPending: false,
+        error: null,
     },
     initialDictUpdatePending: true,
     eventDict: {},
@@ -48,26 +49,23 @@ const initialState = {
 
 const activeEvent = (state = initialState.activeEvent, action) => {
     switch (action.type) {
-        case userActionTypes.CONTINUE_SESSION_SUCCESS:
-        case userActionTypes.LOGIN_SUCCESS:
-            return {
-                id: action.result.activeEventId,
-                switchPending: false,
-            };
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
             return {
                 id: null,
                 switchPending: true,
+                error: null,
             };
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_SUCCESS:
             return {
                 id: action.eventId,
                 switchPending: false,
+                error: null,
             };
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_FAILURE:
             return {
                 id: null,
                 switchPending: null,
+                error: action.error,
             };
         case eventsActionTypes.LEAVE_EVENT_REQUEST:
             if (action.eventId !== state.id)
@@ -172,6 +170,16 @@ export const isSwitchActiveEventPending = (state) =>
 
 
 /**
+ * Selector to get last error of swtich-active-event action from events-state.
+ * @function
+ * @param {EventsState} state events-state
+ * @returns {(Error|string|null)} last error
+ */
+export const getSwitchActiveEventError = (state) =>
+    state.activeEvent.error;
+
+
+/**
  * Selector to select active event id from events-state.
  * @function
  * @param {EventsState} state events-state
@@ -209,6 +217,17 @@ export const getActiveEventUserPermissionLevel = (state) =>
  */
 export const getEventDict = (state) => 
     utils.filterObject(state.eventDict, event => event.permissionLevel >= PermissionLevelEnum.USER);
+
+
+/**
+ * Selector to retrieve a name/title of a specific event from events-state.
+ * @function
+ * @param {EventsState} state events-state
+ * @param {string} eventId id of event
+ * @returns {(string|null)} name/title of event
+ */
+export const getEventName = (state, eventId) =>
+    state.eventDict[eventId] ? state.eventDict[eventId].name : null;
 
 
 /**

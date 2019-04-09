@@ -65,10 +65,10 @@ class SwitchEventView extends React.Component {
                 </Segment.Group>
                 <Button
                     as={Link}
-                    content="Veranstaltung beitreten"
+                    content='Alle Veranstaltungen durchsuchen'
                     fluid
-                    icon="add"
-                    to='/join'
+                    icon='search'
+                    to='/searchevents'
                 />
             </div>
         );

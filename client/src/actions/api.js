@@ -18,7 +18,7 @@ export function changeConnectionState(connectionState) {
             type: apiActionTypes.CONNECTION_STATE_CHANGED,
             connectionState
         });
-    }
+    };
 }
 
 

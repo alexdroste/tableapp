@@ -56,6 +56,7 @@ class CommentsView extends React.Component {
             match: PropTypes.shape({
                     params: PropTypes.shape({
                         entryId: PropTypes.string.isRequired,
+                        eventId: PropTypes.string.isRequired,
                     }).isRequired,
                 }).isRequired,
         };
@@ -71,21 +72,7 @@ class CommentsView extends React.Component {
      * @function
      */
     componentDidMount() {
-        const entryId = this.props.match.params.entryId;
-        this.props.entriesActions.subscribeEntries([entryId]);
-        this.props.commentsActions.subscribeCommentsForEntry(entryId);
-        // mark entry as read
-        this.props.entriesActions.readEntry(entryId, false);
-    }
-
-
-    /**
-     * Lifecycle that unsubscribes comments for entryId
-     * @function
-     */
-    componentWillUnmount() {
-        this.props.entriesActions.unsubscribeEntries([this.props.match.params.entryId]);
-        this.props.commentsActions.unsubscribeCommentsForEntry();
+        this.props.entriesActions.readEntry(this.props.match.params.entryId, false);
     }
 
 
@@ -96,7 +83,7 @@ class CommentsView extends React.Component {
      * @param {string} parentId id of parent comment
      */
     _renderComments(parentId) {
-        const {entryId} = this.props.match.params;
+        const { entryId, eventId } = this.props.match.params;
         const childrenIds = this.props.commentsView[parentId];
         if (!childrenIds)
             return;
@@ -107,6 +94,7 @@ class CommentsView extends React.Component {
                     key={id}
                     commentId={id}
                     entryId={entryId}
+                    eventId={eventId}
                     isToplevel={parentId === '0'}
                 >
                     {innerComments}
@@ -126,7 +114,7 @@ class CommentsView extends React.Component {
 
 
     render() {
-        const { entryId } = this.props.match.params;
+        const { entryId, eventId } = this.props.match.params;
         const { commentsView, isInitialLoadPending } = this.props;
 
         return (
@@ -142,11 +130,12 @@ class CommentsView extends React.Component {
                     <FloatingActionButton
                         as={Link}
                         icon="reply"
-                        to={`/entries/${entryId}/0/new`}
+                        to={`/${eventId}/${entryId}/0/new`}
                     />
                 </Responsive>
                 <EntryCardContainer 
                     entryId={entryId}
+                    eventId={eventId}
                 />
                 <Header>
                     Kommentare
@@ -176,7 +165,7 @@ class CommentsView extends React.Component {
                     content="Kommentieren"
                     fluid
                     icon="reply"
-                    to={`/entries/${entryId}/0/new`}
+                    to={`/${eventId}/${entryId}/0/new`}
                 />
             </div>
         );

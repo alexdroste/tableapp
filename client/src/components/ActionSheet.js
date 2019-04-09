@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Modal, List, TransitionablePortal } from 'semantic-ui-react';
+import { Button, Modal, List, TransitionablePortal, Divider } from 'semantic-ui-react';
 
 
 const ListIconPaddingFix = styled(List.Icon)`
@@ -56,20 +56,24 @@ export class ActionSheet extends React.PureComponent {
                                 size='large'
                             >
                                 {actions.map((action, idx) =>
-                                    <List.Item
-                                        key={idx}
-                                        onClick={action.onClick}
-                                    >
-                                        <ListIconPaddingFix
-                                            color={action.color}
-                                            name={action.icon}
-                                            verticalAlign='middle'
-                                        />
-                                        <List.Content
-                                            color={action.color}
-                                            header={action.name}
-                                        />
-                                    </List.Item>
+                                    action.isSeparator ? (
+                                        <Divider/>
+                                    ) : (
+                                        <List.Item
+                                            key={idx}
+                                            onClick={action.onClick}
+                                        >
+                                            <ListIconPaddingFix
+                                                color={action.color}
+                                                name={action.icon}
+                                                verticalAlign='middle'
+                                            />
+                                            <List.Content
+                                                color={action.color}
+                                                header={action.name}
+                                            />
+                                        </List.Item>
+                                    )
                                 )}
                             </List>
                         ) : (

@@ -1,4 +1,5 @@
 import * as eventsActionTypes from '../actiontypes/events';
+import { getActiveEventId } from '../reducers/events';
 
 
 /**
@@ -86,17 +87,21 @@ export function leaveEvent(eventId) {
  * @returns {object} action
  */
 export function switchActiveEvent(eventId) {
-    return ({
-        type: 'apiCall',
-        apiCall: {
-            key: 'switchActiveEvent',
-            types: [eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST, 
-                eventsActionTypes.SWITCH_ACTIVE_EVENT_SUCCESS, 
-                eventsActionTypes.SWITCH_ACTIVE_EVENT_FAILURE],
-            call: (api) => api.request('events/switchActiveEvent', { eventId })
-        },
-        eventId
-    });
+    return (dispatch, getState) => {
+        if (getActiveEventId(getState().events) === eventId)
+            return;
+        dispatch({
+            type: 'apiCall',
+            apiCall: {
+                key: 'switchActiveEvent',
+                types: [eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST, 
+                    eventsActionTypes.SWITCH_ACTIVE_EVENT_SUCCESS, 
+                    eventsActionTypes.SWITCH_ACTIVE_EVENT_FAILURE],
+                call: (api) => api.request('events/switchActiveEvent', { eventId })
+            },
+            eventId
+        });
+    };
 }
 
 

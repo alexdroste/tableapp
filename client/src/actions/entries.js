@@ -173,7 +173,8 @@ export function subscribeEntries(entryIds) {
                 entriesActionTypes.SUBSCRIBE_ENTRIES_SUCCESS,
                 entriesActionTypes.SUBSCRIBE_ENTRIES_FAILURE],
             call: (api) => api.request('entries/subscribeEntries', { entryIds })
-        }
+        },
+        entryIds
     };
 }
 
@@ -216,7 +217,7 @@ export function unsubscribeEntries(entryIds) {
                 entriesActionTypes.UNSUBSCRIBE_ENTRIES_SUCCESS,
                 entriesActionTypes.UNSUBSCRIBE_ENTRIES_FAILURE],
             call: (api) => api.request('entries/unsubscribeEntries', { entryIds })
-        }
+        },
     });
 }
 

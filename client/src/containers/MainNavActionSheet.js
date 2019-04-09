@@ -6,11 +6,13 @@ import { withRouter } from 'react-router-dom';
 import * as userActions from '../actions/user';
 import { ActiveEventQrCodeModal } from './ActiveEventQrCodeModal';
 import { ActionSheet } from '../components/ActionSheet';
+import { getActiveEventId } from '../reducers/events';
 
 
 class MainNavActionSheet extends React.Component {
     static get propTypes() {
         return {
+            activeEventId: PropTypes.string,
             history: PropTypes.object.isRequired,
             isOpen: PropTypes.bool.isRequired,
             onClose: PropTypes.func.isRequired,
@@ -37,10 +39,23 @@ class MainNavActionSheet extends React.Component {
                 onClick: this._handleSwitchEventClick,
             },
             {
-                name: 'QR-Code anzeigen',
+                name: 'QR-Code der Veranstaltung',
                 icon: 'qrcode',
                 onClick: this._handleShowQRCodeClick,
             },
+            // {
+            //     name: 'Veranstaltung verwalten',
+            //     icon: 'configure',
+                
+            // },
+            // {
+            //     name: 'Veranstaltung verlassen',
+            //     icon: 'close',
+                
+            // },
+            // {
+            //     isSeparator: true,
+            // },
             {
                 name: 'Einstellungen',
                 icon: 'setting',
@@ -63,7 +78,8 @@ class MainNavActionSheet extends React.Component {
 
 
     _handleSettingsClick = (e) => {
-        this.props.history.push('/settings');
+        const { activeEventId } = this.props;
+        this.props.history.push(activeEventId ? `/${activeEventId}/settings` : '/settings');
         this.props.onClose(e);
     }
 
@@ -111,7 +127,7 @@ class MainNavActionSheet extends React.Component {
 
 const mapStateToProps = (state, props) => {
     return {
-        // TODO
+        activeEventId: getActiveEventId(state.events),
     }
 };
 

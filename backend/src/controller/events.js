@@ -4,10 +4,10 @@ const broker = require('../broker');
 const config = require('../config');
 const db = require('../db').db;
 const LDAPConnection = require('../LDAPConnection');
-const PermissionLevelEnum = require('../PermissionLevelEnum');
-const utils = require('../utils');
 const ldapUtils = require('../ldapUtils');
-var statusCodes = require('http-status-codes');
+const PermissionLevelEnum = require('../PermissionLevelEnum');
+const statusCodes = require('http-status-codes');
+const utils = require('../utils');
 
 
 /**
@@ -232,7 +232,7 @@ async function getUserDict(eventId, withName = true, withPermissionLevelAndEmail
         if (eventsArr < 1)
             throw utils.createError('eventId not found', statusCodes.NOT_FOUND);
         
-        await ldap.open();                
+        await ldap.open();
         const users = eventsArr[0].users;
         const promises = Object.keys(users).map(async (userId) => {
             if (withName)
@@ -257,3 +257,26 @@ async function getUserDict(eventId, withName = true, withPermissionLevelAndEmail
     }
 }
 exports.getUserDict = getUserDict;
+
+
+/**
+ * Checks if eventId is valid and exists in db.
+ * @static
+ * @async
+ * @function
+ * @param {ObjectID} eventId id of event
+ * @returns {boolean} indicates if eventId is valid
+ */
+async function isEventIdValid(eventId) {
+    if (!eventId)
+        return false;
+    const eventsArr = await db().collection('events')
+        .find({ _id: eventId })
+        .project({ _id: 1 })
+        .toArray();
+
+    if (eventsArr < 1)
+        return false;
+    return true;
+}
+exports.isEventIdValid = isEventIdValid;

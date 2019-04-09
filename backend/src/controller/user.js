@@ -16,9 +16,9 @@ var statusCodes = require('http-status-codes');
 /**
  * Login data object.
  * @typedef {object} LoginData
- * @property {(ObjectID|null)} activeEventId id of active (or last active) event, null if no event is active
  * @property {boolean} hasAcceptedTos indicates if user accepted the terms of service
  * @property {string} id id of user
+ * @property {(ObjectID|null)} lastActiveEventId id of last active event, null if no event is active
  * @property {string} name name of user
  * @property {string} sessionToken sessionToken (jwt)
  */
@@ -68,9 +68,9 @@ async function _createLoginData(dn, sessionToken) {
             throw utils.createError('userId not found', statusCodes.NOT_FOUND);
 
         return {
-            activeEventId: userDoc.lastActiveEventId,
             hasAcceptedTos: userDoc.hasAcceptedTos,
             id,
+            lastActiveEventId: userDoc.lastActiveEventId,
             name,
             sessionToken
         };

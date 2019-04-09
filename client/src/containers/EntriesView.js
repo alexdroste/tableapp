@@ -122,7 +122,8 @@ class EntriesView extends React.Component {
         const sy = e.detail - offsetY;
         // TODO FIXME react-virtualized scrollToPosition breaks with React 16.4+
         window.requestAnimationFrame(() => {
-            this._listRef.scrollToPosition(sy);
+            if (this._listRef) // fixme don't know if this is a good idea
+                this._listRef.scrollToPosition(sy);
             window.requestAnimationFrame(() => {
                 window.scrollTo({ top: e.detail ? e.detail : 0, behavior: "instant" });
             });
@@ -198,6 +199,7 @@ class EntriesView extends React.Component {
 
 
     _rowRenderer = ({ index, key, style }) => {
+        const eventId = this.props.eventId;
         const entryId = this.props.idList[index];
         return (
             <DynamicRow
@@ -208,6 +210,7 @@ class EntriesView extends React.Component {
                 style={style}
             >
                 <EntryCardContainer
+                    eventId={eventId}
                     entryId={entryId}
                 />
             </DynamicRow>

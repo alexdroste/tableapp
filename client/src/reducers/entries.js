@@ -29,7 +29,7 @@ import * as utils from '../utils';
  * 
  * dict[key] = value:
  * * key := id of entry
- * * value := {@link Entry}
+ * * value := {@link Entry} | null => null if non-existent
  * @typedef {object} EntryDict
  */
 
@@ -52,7 +52,7 @@ export const EntryListTypeEnum = Object.freeze({
  * Shape of entries reducers state.
  * Default values are the initial state.
  * @typedef {object} EntriesState
- * @property {EntryDict} [entryDict={}] dictionary of entries
+ * @property {EntryDict} [entryDict={}] dictionary of entries (HINT: not queried id: undefined, non-existent id: null)
  * @property {Array<string>} [idList=[]] list of entry-ids ordered/filtered according to subscribed list type
  * @property {boolean} [listOnlyBookmarked=false] indicates if only bookmarked entries should be listed (filter for idList)
  * @property {boolean} [listSubcribed=false] indicates if list subscription is active
@@ -82,12 +82,19 @@ const entryDict = (state = initialState.entryDict, action) => {
                 updateDict = action.result;
             if (Object.keys(updateDict).length === 0)
                 return state;
-            const newDict = {
+            return {
                 ...state,
                 ...updateDict
             };
-            utils.removeNulledPropertiesFromObject(newDict);
-            return newDict;
+        case entriesActionTypes.SUBSCRIBE_ENTRIES_FAILURE:
+            const nulledEntries = action.entryIds.reduce((acc, cur) => {
+                acc[cur] = null;
+                return acc;
+            }, {});
+            return {
+                ...state,
+                ...nulledEntries
+            };
         // TODO clear obsolete entries on SUBSCRIBE_ENTRY_LIST_REQUEST / (& unsubscribe)
         // reset
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
@@ -233,10 +240,10 @@ export const entries = combineReducers({
  * @function
  * @param {EntriesState} state entries-state
  * @param {string} entryId id of entry
- * @returns {(Entry|null)} entry with specified id
+ * @returns {(Entry|null|undefined)} entry with specified id, undefined if not queried, null if non-existent
  */
 export const getEntry = (state, entryId) => 
-    state.entryDict[entryId] || null;
+    state.entryDict[entryId];
 
 
 /**

@@ -39,7 +39,7 @@ export class Confirm extends React.PureComponent {
             >
                 <Modal
                     open={true}
-                    size='mini'
+                    size='tiny'
                     onClose={onCancel}
                 >
                     {headerText &&

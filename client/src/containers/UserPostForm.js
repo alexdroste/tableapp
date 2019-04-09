@@ -517,7 +517,6 @@ const mapStateToProps = (state, props) => {
             : getComment(state.comments, props.replyCommentId);
 
     const isComment = props.replyCommentId && props.replyEntryId;
-    // TODO fix routing (wrap this component by outer component that subscribes to entry/comment)
     if (isComment && !replyData)
         alert("Fehler: Beitrag nicht gefunden (subscription missing)!");
     return {

@@ -1,97 +1,77 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Header, Segment, Button, List } from 'semantic-ui-react';
 import * as eventsActions from '../actions/events';
-import { Segment, Header } from 'semantic-ui-react';
-import { EventItem } from './EventItem';
+import { getActiveEventName, getActiveEventId } from '../reducers/events';
 import { NavBar } from './NavBar';
-import { SegmentLoader } from '../components/SegmentLoader';
-import { isInitialDictUpdatePending, getUnjoinedEventDict } from '../reducers/events';
+
+
+const ButtonGroupMargin = styled.div`
+    & {
+        margin-top: 1em;
+    }
+
+    &&& > button {
+        margin-top: .5em;
+    }
+`;
 
 
 class JoinEventView extends React.Component {
-    /**
-     * @property {object} unjoinedEventDict eventDict object (injected by redux)
-     */
     static get propTypes() {
-        return {
-            isInitialDictUpdatePending: PropTypes.bool.isRequired,
-            match: PropTypes.shape({
-                params: PropTypes.shape({
-                    eventId: PropTypes.string,
-                }).isRequired,
-            }).isRequired,
-            unjoinedEventDict: PropTypes.object.isRequired,
-        };
+        return {};
     };
 
     static get defaultProps() {
         return {};
     };
 
-    // static get contextTypes() {
-    //     return {
-    //         router: PropTypes.object.isRequired
-    //     };
-    // }
-
-
-    // constructor(props) {
-    //     super(props);
-
-    //     this.state = {
-    //     };
-    // }
-
-
-    componentDidMount() {
-        this.props.eventsActions.subscribeFullEventDict();
+    static get contextTypes() {
+        return {
+            router: PropTypes.object.isRequired
+        };
     }
 
 
-    componentWillUnmount() {
-        this.props.eventsActions.unsubscribeFullEventDict();
-    }
-
-
-    renderEventItems = () => {
-        const eventId = this.props.match.params.eventId;
-        const {unjoinedEventDict, isInitialDictUpdatePending} = this.props;
-
-        if (isInitialDictUpdatePending)
-            return <SegmentLoader/>;
-
-            
-        return Object.keys(unjoinedEventDict).sort((a, b) => {
-            return unjoinedEventDict[a].name > unjoinedEventDict[b].name // sort by name
-        }).map(key => {
-            return (
-                <EventItem
-                    key={key}
-                    defaultOpen={key === eventId}
-                    eventId={key}
-                />
-            );
-        });
+    _handleJoinClick = (e) => {
+        this.props.eventsActions.joinEvent(this.props.activeEventId);
     };
 
 
     render() {
+        const { activeEventName } = this.props;
+
         return (
             <div>
                 <NavBar
                     hasGoBack
-                    mainContent={"Veranstaltung beitreten"}
-                    hideNavigation
-                    hideSettings
                 />
-                <Header>
-                    Weitere Veranstaltungen
-                </Header>
-                <Segment.Group>
-                    {this.renderEventItems()}
-                </Segment.Group>
+                <Header content='Veranstaltung beitreten'/>
+                <Segment>
+                    <Header as='h3'>{activeEventName}</Header>
+                    <div>
+                        Um die Inhalte der Veranstaltung "{activeEventName}" anzuzeigen, musst du der Veranstaltung beitreten.
+                        Nach dem Beitritt ist es dir möglich:
+                        <List bulleted>
+                            <List.Item>Beitrage und Diskussion anzuzeigen</List.Item>
+                            <List.Item>Beiträge und Kommentare zu verfassen</List.Item>
+                            <List.Item>Auf Inhalte zu reagieren</List.Item>
+                            <List.Item>Benachrichtigungen über neue Inhalte zu erhalten</List.Item>
+                        </List>
+                    </div>
+                    <ButtonGroupMargin>
+                        <Button
+                            content='Veranstaltung beitreten'
+                            color='green'
+                            fluid
+                            icon='user'
+                            onClick={this._handleJoinClick}
+                        />
+                    </ButtonGroupMargin>
+                </Segment>
             </div>
         );
     }
@@ -100,15 +80,15 @@ class JoinEventView extends React.Component {
 
 const mapStateToProps = (state, props) => {
     return {
-        unjoinedEventDict: getUnjoinedEventDict(state.events),
-        isInitialDictUpdatePending: isInitialDictUpdatePending(state.events),
+        activeEventId: getActiveEventId(state.events),
+        activeEventName: getActiveEventName(state.events),
     }
 };
 
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        eventsActions: bindActionCreators(eventsActions, dispatch),        
+        eventsActions: bindActionCreators(eventsActions, dispatch),
     };
 }
 

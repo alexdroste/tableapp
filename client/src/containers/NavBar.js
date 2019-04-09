@@ -283,11 +283,11 @@ class NavBar extends React.Component {
                                     position="left"
                                 />
                             }
-                            {(!mainContent || isDesktop) &&
+                            {(!hasGoBack || isDesktop) &&
                                 <MenuItemTitle
                                     onClick={this._handleMainItemClick}
                                 >
-                                    {activeEventName}
+                                    {mainContent? mainContent : activeEventName}
                                     {'\u00A0' /* &nbsp; */}
                                     <Icon name="chevron down"/>
                                     {/* <Icon name="ellipsis horizontal"/> */}

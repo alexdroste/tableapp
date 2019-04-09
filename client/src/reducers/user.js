@@ -1,3 +1,4 @@
+import * as eventsActionTypes from '../actiontypes/events';
 import * as userActionTypes from '../actiontypes/user';
 
 
@@ -23,6 +24,7 @@ export const LoginStateEnum = Object.freeze({
  * @typedef {object} UserState
  * @property {boolean} [hasAcceptedTos=false] indicates if logged in user has accepted terms of service
  * @property {(string|null)} [id=null] logged in users id
+ * @property {(string|null)} [lastActiveEventId] id of last active event (on auth), null if no event was reported last active
  * @property {LoginStateEnum} [loginState=LoginStateEnum.LOGGED_OUT] indicates login-state
  * @property {(string|null)} [name=null] logged in users name
  * @property {(string|null)} [sessionToken=null] on login received sessionToken
@@ -30,6 +32,7 @@ export const LoginStateEnum = Object.freeze({
 const initialState = {
     hasAcceptedTos: false,
     id: null,
+    lastActiveEventId: null,
     loginState: LoginStateEnum.LOGGED_OUT,
     name: null,
     sessionToken: null,
@@ -64,6 +67,7 @@ export const user = (state = initialState, action) => {
                 ...state,
                 hasAcceptedTos: action.result.hasAcceptedTos,
                 id: action.result.id,
+                lastActiveEventId: action.result.lastActiveEventId,
                 loginState: LoginStateEnum.LOGGED_IN,
                 name: action.result.name,
                 sessionToken: action.result.sessionToken,
@@ -72,6 +76,13 @@ export const user = (state = initialState, action) => {
             return {
                 ...state,
                 hasAcceptedTos: true,
+            };
+        case eventsActionTypes.JOIN_EVENT_REQUEST:
+        case eventsActionTypes.LEAVE_EVENT_REQUEST:
+        case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
+            return {
+                ...state,
+                lastActiveEventId: null,
             };
         case userActionTypes.CONTINUE_SESSION_FAILURE:
         case userActionTypes.LOGOUT_SUCCESS:
@@ -83,6 +94,16 @@ export const user = (state = initialState, action) => {
 
 
 // selectors
+
+/**
+ * Selector to select last active eventId (on auth) from user-state.
+ * @function
+ * @param {UserState} state user-state
+ * @returns {(string|null)} last active eventId (on auth)
+ */
+export const getLastActiveEventId = (state) =>
+    state.lastActiveEventId;
+
 
 /**
  * Selector to select current login state from user-state.

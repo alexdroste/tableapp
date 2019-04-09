@@ -286,15 +286,15 @@ class Client {
      * @returns {Promise} 
      */
     async _setupAfterAuthentication(loginData) {
-        this.activeEventId = loginData.activeEventId;
+        // this.activeEventId = loginData.activeEventId;
         this.hasAcceptedTos = loginData.hasAcceptedTos;
         this.loginTimestamp = Date.now();
         this.sessionToken = loginData.sessionToken;
         this.userId = loginData.id;
         this._logActivity('user/beginSession', { ip: this.ip, userAgent: this.userAgent });
         this.emitUpdateEventDict(await eventsController.getEventDict(this.userId));
-        if (this.activeEventId)
-            await this._switchActiveEvent(this.activeEventId);
+        // if (this.activeEventId)
+        //     await this._switchActiveEvent(this.activeEventId);
     }
 
 
@@ -599,12 +599,14 @@ class Client {
      */
     async _handleSubscribeEntries({ entryIds }) {
         entryIds = entryIds.map((id) => new ObjectID(id));
+        const entryDict = await entriesController
+            .getEntries(this.activeEventId, this.userId, entryIds);
         entryIds.forEach((id) => {
-            if (this.entriesSubscription.subscribedIds.findIndex((cur) => cur.equals(id)) === -1)
+            if (entryDict[id] !== null // filter for non existent values
+                    && this.entriesSubscription.subscribedIds.findIndex((cur) => cur.equals(id)) === -1)
                 this.entriesSubscription.subscribedIds.push(id);
         });
-        return await entriesController
-            .getEntries(this.activeEventId, this.userId, entryIds);
+        return entryDict;
     }
 
 
@@ -711,6 +713,8 @@ class Client {
         eventId = new ObjectID(eventId);
         await eventsController.changeUserPermissionLevelForEvent(
             eventId, this.userId, PermissionLevelEnum.NOT_A_USER);
+        // TODO remove following state from all entries
+        // TODO remove bookmark state from all entries
         this._logActivity('events/leaveEvent', { eventId });
         if (this.activeEventId.equals(eventId))
             await this._switchActiveEvent(null);
@@ -727,6 +731,8 @@ class Client {
      * @returns {Promise}
      */
     async _handleSwitchActiveEvent({ eventId }) {
+        // todo check if input can be converted to ObjectID, if not throw better error
+        // also do this for the other message handlers
         await this._switchActiveEvent(new ObjectID(eventId));
     }
 
@@ -736,7 +742,7 @@ class Client {
      * @async
      * @private
      * @function
-     * @param {ObjectID} newEventId id of event to switch to
+     * @param {(ObjectID|null)} newEventId id of event to switch to
      * @returns {Promise} indicates success
      * @todo reorganize position of this function
      */
@@ -748,13 +754,17 @@ class Client {
             subscribedIds: [],
         };
         this.permissionLevel = PermissionLevelEnum.NOT_A_USER;
+
+        // newEventId = null is defined and expected behaviour
+        if (newEventId !== null && !await eventsController.isEventIdValid(newEventId))
+            throw utils.createError('eventId not found', statusCodes.NOT_FOUND);        
+
         this.activeEventId = newEventId;
         await userController.saveLastActiveEventId(this.userId, this.activeEventId);
         if (!this.activeEventId)
             return;
-        
-        // TODO cancel if newEventId does not exist
 
+        await this.updateEventDict([this.activeEventId]);
         this.emitUpdatePromptGroup(await promptGroupController.getGroup(this.userId, this.activeEventId)); // extra-code for prompts
 
         const event = (await eventsController.getEventDict(

@@ -9,7 +9,7 @@ export class NotFoundView extends React.Component {
         return (
             <div>
                 <span/>
-                <Header as='h1' textAlign="center">Verlaufen?!</Header>
+                <Header as='h1' textAlign="center">404 - Verlaufen?!</Header>
                 <Embed
                     active
                     placeholder='https://img.youtube.com/vi/SIaFtAKnqBU/hqdefault.jpg'

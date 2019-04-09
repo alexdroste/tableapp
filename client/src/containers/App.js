@@ -5,17 +5,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as desktopAppActions from '../actions/desktopApp';
 import { withRouter, Route, Switch, Redirect, Link } from 'react-router-dom';
-import { isSwitchActiveEventPending, getActiveEventId } from '../reducers/events'; 
 import { getConnectionState } from '../reducers/api';
-import { LoginStateEnum, getLoginState, hasAcceptedTos } from '../reducers/user';
+import { LoginStateEnum, getLoginState, hasAcceptedTos, getLastActiveEventId } from '../reducers/user';
 import { ApiConnectionStateEnum } from '../api/ApiConnectionStateEnum';
-import { Container, Dimmer, Loader } from 'semantic-ui-react';
-import { NotFoundView } from '../components/NotFoundView';
 import { UserLoginView } from './UserLoginView';
 import { ApiDisconnectedView } from '../components/ApiDisconnectedView';
-import { JoinEventView } from './JoinEventView';
+import { AllEventsView } from './AllEventsView';
 import { SwitchEventView } from './SwitchEventView';
-import { ActiveEventView } from './ActiveEventView';
+import { SettingsView } from './SettingsView';
+import { EventWrapper } from './EventWrapper';
 import { AcceptTosView } from './AcceptTosView';
 import { LegalInfosPage } from '../components/LegalInfosPage';
 import { TitleBar } from '../components/TitleBar';
@@ -47,9 +45,7 @@ const CenteredP = styled.p`
  * @param {boolean} props.apiDisconnected indicates if api is currently disconnected (injected by redux)
  * @param {object} props.desktopAppActions object containing bound desktopAppAction (injected by redux)
  * @param {object} props.history object containing history (injected by router)
- * @param {boolean} props.isActiveEventSet indicates if an event is selected and set active (injected by redux)
  * @param {boolean} props.isDesktopApp indicates if client is run as desktop-app
- * @param {boolean} props.isSwitchActiveEventPending indicates if currently switching active event (injected by redux)
  * @param {boolean} props.userHasAcceptedTos indicates if user has accepted terms of service
  * @param {boolean} props.userLoggedIn indicates if user is logged in (injected by redux)
  */
@@ -59,9 +55,7 @@ class App extends React.Component {
             apiDisconnected: PropTypes.bool.isRequired,
             desktopAppActions: PropTypes.object.isRequired,
             history: PropTypes.object.isRequired,
-            isActiveEventSet: PropTypes.bool.isRequired,
             isDesktopApp: PropTypes.bool.isRequired,
-            isSwitchActiveEventPending: PropTypes.bool.isRequired,
             userHasAcceptedTos: PropTypes.bool.isRequired,
             userLoggedIn: PropTypes.bool.isRequired,
         };
@@ -92,8 +86,7 @@ class App extends React.Component {
      * @private
      */
     _renderContent() {
-        const {apiDisconnected, isActiveEventSet, isSwitchActiveEventPending, 
-            userHasAcceptedTos, userLoggedIn} = this.props;
+        const {apiDisconnected, userHasAcceptedTos, lastActiveEventId, userLoggedIn} = this.props;
 
         if (apiDisconnected)
             return (
@@ -110,32 +103,20 @@ class App extends React.Component {
                 <AcceptTosView/>
             );
 
-        if (isSwitchActiveEventPending)
-            return (
-                <Dimmer
-                    active
-                    page
-                    inverted
-                >
-                    <Loader inverted/>
-                </Dimmer>
-            )
-
-        if (!isActiveEventSet)
-            return ( 
-                <Switch>
-                    <Route exact path='/' render={() => (
+        return ( 
+            <Switch>
+                <Route exact path='/' render={() => (
+                    lastActiveEventId ? (
+                        <Redirect to={`/${lastActiveEventId}`}/>
+                    ) : (
                         <Redirect to='/switchevent'/>
-                    )}/>
-                    <Route path='/join/:eventId' component={JoinEventView}/>
-                    <Route path='/join' component={JoinEventView}/>
-                    <Route path='/switchevent' component={SwitchEventView}/>
-                    <Route path="*" component={NotFoundView} status={404}/>                    
-                </Switch>
-            );
-        
-        return (
-            <ActiveEventView/>
+                    )
+                )}/>
+                <Route path='/searchevents' component={AllEventsView}/>
+                <Route path='/switchevent' component={SwitchEventView}/>
+                <Route path='/settings' component={SettingsView}/>
+                <Route path='/:eventId' component={EventWrapper}/>
+            </Switch>
         );
     }
 
@@ -173,10 +154,9 @@ const mapStateToProps = (state, props) => {
     return {
         apiDisconnected: getConnectionState(state.api) === ApiConnectionStateEnum.DISCONNECTED,
         userHasAcceptedTos: hasAcceptedTos(state.user),
-        isActiveEventSet: !!getActiveEventId(state.events),
         isDesktopApp: isDesktopApp(state.desktopApp),
         isMiniControlViewActive: isMiniControlViewActive(state.desktopApp),
-        isSwitchActiveEventPending: isSwitchActiveEventPending(state.events),
+        lastActiveEventId: getLastActiveEventId(state.user),
         userLoggedIn: getLoginState(state.user) === LoginStateEnum.LOGGED_IN,
     }
 };

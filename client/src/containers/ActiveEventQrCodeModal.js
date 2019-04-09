@@ -70,7 +70,7 @@ class ActiveEventQrCodeModal extends React.Component {
 
     render() {
         const {activeEventId, activeEventName, onClose, trigger} = this.props;
-        const joinUrl = config.baseUrl + 'join/' + activeEventId;
+        const joinUrl = config.baseUrl + '/' + activeEventId;
 
         return (
             <Modal 

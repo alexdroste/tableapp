@@ -33,7 +33,7 @@ class RoleLabel extends React.Component {
     render() {
         const { roleInfo } = this.props;
         const color = roleInfo ? roleInfo.color : undefined;
-        const name = roleInfo ? roleInfo.name : "Keine Rolle";
+        const name = roleInfo ? roleInfo.name : 'Teilnehmer';
 
         return (
             <CustomLabel
