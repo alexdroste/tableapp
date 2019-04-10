@@ -170,7 +170,13 @@ class Client {
         this.on('user/acceptTos',                       this._handleAcceptTos, {
             requiresAuthentication: true
         });
+        this.on('user/changeActiveNotificationTypes',   this._handleChangeActiveNotificationTypes, {
+            requiresAuthentication: true
+        });
         this.on('user/continueSession',                 this._handleContinueSession, {
+        });
+        this.on('user/getActiveNotificationTypes',      this._handleGetActiveNotificationTypes, {
+            requiresAuthentication: true
         });
         this.on('user/login',                           this._handleLogin, {
         });
@@ -815,6 +821,22 @@ class Client {
 
 
     /**
+     * Eventhandler for changing active notifications for user request.
+     * @async
+     * @private
+     * @function
+     * @param {object} data 
+     * @param {Array<NotificationTypesEnum>} data.emailNotifications array of activated email notification types
+     * @param {Array<NotificationTypesEnum>} data.inAppNotifications array of activated in-app notification types
+     * @returns {Promise}
+     */
+    async _handleChangeActiveNotificationTypes({ emailNotifications, inAppNotifications }) {
+        await userController.changeActiveNotificationTypes(this.userId, emailNotifications, inAppNotifications);
+        this._logActivity('user/changeActiveNotificationTypes');
+    }
+
+
+    /**
      * Eventhandler for continue session request.
      * @async
      * @private
@@ -832,6 +854,18 @@ class Client {
             err.statusCode = statusCodes.UNAUTHORIZED;
             throw err;
         }
+    }
+
+
+    /**
+     * Eventhandler for retrieving active notifications for user request.
+     * @async
+     * @private
+     * @function
+     * @returns {Promise<object>} resolves to object containing emailNotifications and inAppNotifications
+     */
+    async _handleGetActiveNotificationTypes() {
+        return await userController.getActiveNotificationTypes(this.userId);
     }
 
 

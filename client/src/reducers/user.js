@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import * as eventsActionTypes from '../actiontypes/events';
 import * as userActionTypes from '../actiontypes/user';
 
@@ -22,21 +23,143 @@ export const LoginStateEnum = Object.freeze({
  * Shape of user reducers state.
  * Default values are the initial state.
  * @typedef {object} UserState
- * @property {boolean} [hasAcceptedTos=false] indicates if logged in user has accepted terms of service
+ * @property {boolean} [acceptedTos=false] indicates if logged in user has accepted terms of service
  * @property {(string|null)} [id=null] logged in users id
  * @property {(string|null)} [lastActiveEventId] id of last active event (on auth), null if no event was reported last active
  * @property {LoginStateEnum} [loginState=LoginStateEnum.LOGGED_OUT] indicates login-state
  * @property {(string|null)} [name=null] logged in users name
+ * @property {object} [notifications={emailNotifications: [], inAppNotifications: []}] object containing activated notification types (emailNotifications, inAppNotifications)
  * @property {(string|null)} [sessionToken=null] on login received sessionToken
  */
 const initialState = {
-    hasAcceptedTos: false,
+    acceptedTos: false,
     id: null,
     lastActiveEventId: null,
     loginState: LoginStateEnum.LOGGED_OUT,
     name: null,
+    notifications: {
+        emailNotifications: [],
+        inAppNotifications: [],
+    },
     sessionToken: null,
-}
+};
+
+
+const acceptedTos = (state = initialState.acceptedTos, action) => {
+    switch (action.type) {
+        case userActionTypes.CONTINUE_SESSION_SUCCESS:
+        case userActionTypes.LOGIN_SUCCESS:
+            return action.result.hasAcceptedTos;
+        case userActionTypes.ACCEPT_TOS_SUCCESS:
+            return true;
+        case userActionTypes.CONTINUE_SESSION_FAILURE:
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.acceptedTos;
+        default:
+            return state;
+    }
+};
+
+
+const id = (state = initialState.id, action) => {
+    switch (action.type) {
+        case userActionTypes.CONTINUE_SESSION_SUCCESS:
+        case userActionTypes.LOGIN_SUCCESS:
+            return action.result.id;
+        case userActionTypes.CONTINUE_SESSION_FAILURE:
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.id;
+        default:
+            return state;
+    }
+};
+
+
+const lastActiveEventId = (state = initialState.lastActiveEventId, action) => {
+    switch (action.type) {
+        case userActionTypes.CONTINUE_SESSION_SUCCESS:
+        case userActionTypes.LOGIN_SUCCESS:
+            return action.result.lastActiveEventId;
+        case eventsActionTypes.JOIN_EVENT_REQUEST:
+        case eventsActionTypes.LEAVE_EVENT_REQUEST:
+        case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
+            return null;
+        case userActionTypes.CONTINUE_SESSION_FAILURE:
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.lastActiveEventId;
+        default:
+            return state;
+    }
+};
+
+
+const loginState = (state = initialState.loginState, action) => {
+    switch (action.type) {
+        // changing to Pending when trying continue session causes remount
+        // => important to announce subscriptions, etc again after reconnect
+        case userActionTypes.CONTINUE_SESSION_REQUEST: 
+        case userActionTypes.LOGIN_REQUEST:
+            return LoginStateEnum.PENDING;
+        case userActionTypes.LOGIN_FAILURE:
+            return LoginStateEnum.FAILED;
+        case userActionTypes.CONTINUE_SESSION_SUCCESS:
+        case userActionTypes.LOGIN_SUCCESS:
+            return LoginStateEnum.LOGGED_IN;
+        case userActionTypes.CONTINUE_SESSION_FAILURE:
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.loginState;
+        default:
+            return state;
+    }
+};
+
+
+const name = (state = initialState.name, action) => {
+    switch (action.type) {
+        case userActionTypes.CONTINUE_SESSION_SUCCESS:
+        case userActionTypes.LOGIN_SUCCESS:
+            return action.result.name;
+        case userActionTypes.CONTINUE_SESSION_FAILURE:
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.name;
+        default:
+            return state;
+    }
+};
+
+
+const notifications = (state = initialState.notifications, action) => {
+    switch (action.type) {
+        case userActionTypes.CHANGE_ACTIVE_NOTIFICATION_TYPES_SUCCESS:
+            return {
+                emailNotifications: action.emailNotifications,
+                inAppNotifications: action.inAppNotifications,
+            };
+        case userActionTypes.GET_ACTIVE_NOTIFICATION_TYPES_SUCCESS:
+            return action.result;
+        case userActionTypes.CONTINUE_SESSION_FAILURE:
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.notifications;
+        default:
+            return state;
+    }
+};
+
+
+const sessionToken = (state = initialState.sessionToken, action) => {
+    switch (action.type) {
+        case userActionTypes.LOGIN_FAILURE:
+            return null;
+        case userActionTypes.CONTINUE_SESSION_SUCCESS:
+        case userActionTypes.LOGIN_SUCCESS:
+            return action.result.sessionToken;
+        case userActionTypes.CONTINUE_SESSION_FAILURE:
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.sessionToken;
+        default:
+            return state;
+    }
+};
 
 
 /**
@@ -45,53 +168,15 @@ const initialState = {
  * @param {UserState} state
  * @param {object} action
  */
-export const user = (state = initialState, action) => {
-    switch (action.type) {
-        // changing to Pending when trying continue session causes remount
-        // => important to announce subscriptions, etc again after reconnect
-        case userActionTypes.CONTINUE_SESSION_REQUEST: 
-        case userActionTypes.LOGIN_REQUEST:
-            return {
-                ...state,
-                loginState: LoginStateEnum.PENDING,
-            };
-        case userActionTypes.LOGIN_FAILURE:
-            return {
-                ...state,
-                loginState: LoginStateEnum.FAILED,
-                sessionToken: null,
-            };
-        case userActionTypes.CONTINUE_SESSION_SUCCESS:
-        case userActionTypes.LOGIN_SUCCESS:
-            return {
-                ...state,
-                hasAcceptedTos: action.result.hasAcceptedTos,
-                id: action.result.id,
-                lastActiveEventId: action.result.lastActiveEventId,
-                loginState: LoginStateEnum.LOGGED_IN,
-                name: action.result.name,
-                sessionToken: action.result.sessionToken,
-            };
-        case userActionTypes.ACCEPT_TOS_SUCCESS:
-            return {
-                ...state,
-                hasAcceptedTos: true,
-            };
-        case eventsActionTypes.JOIN_EVENT_REQUEST:
-        case eventsActionTypes.LEAVE_EVENT_REQUEST:
-        case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
-            return {
-                ...state,
-                lastActiveEventId: null,
-            };
-        case userActionTypes.CONTINUE_SESSION_FAILURE:
-        case userActionTypes.LOGOUT_SUCCESS:
-            return initialState;
-        default:
-            return state;
-    }
-};
-
+export const user = combineReducers({
+    acceptedTos,
+    id,
+    lastActiveEventId,
+    loginState,
+    name,
+    notifications,
+    sessionToken,
+});
 
 // selectors
 
@@ -113,6 +198,16 @@ export const getLastActiveEventId = (state) =>
  */
 export const getLoginState = (state) =>
     state.loginState;
+
+
+/**
+ * Selector to select active notification types from user-state.
+ * @function
+ * @param {UserState} state user-state
+ * @returns {object} object containing activated notification types (emailNotifications, inAppNotifications)
+ */
+export const getActiveNotificationTypes = (state) =>
+    state.notifications;
 
     
 /**
@@ -152,4 +247,4 @@ export const getSessionToken = (state) =>
  * @returns {boolean} indicates if user has accepted terms of service
  */
 export const hasAcceptedTos = (state) =>
-    state.hasAcceptedTos;
+    state.acceptedTos;

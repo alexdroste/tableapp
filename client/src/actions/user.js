@@ -21,6 +21,29 @@ export function acceptTos() {
 
 
 /**
+ * Creates action for changing the active notifications types for authenticated user.
+ * @function
+ * @param {Array<NotificationTypesEnum>} emailNotifications array of activated email notification types
+ * @param {Array<NotificationTypesEnum>} inAppNotifications array of activated in-app notification types
+ * @returns {object} action
+ */
+export function changeActiveNotificationTypes(emailNotifications, inAppNotifications) {
+    return ({
+        type: 'apiCall',
+        apiCall: {
+            key: 'getActiveNotificationTypes',
+            types: [userActionTypes.CHANGE_ACTIVE_NOTIFICATION_TYPES_REQUEST, 
+                userActionTypes.CHANGE_ACTIVE_NOTIFICATION_TYPES_SUCCESS, 
+                userActionTypes.CHANGE_ACTIVE_NOTIFICATION_TYPES_FAILURE],
+            call: (api) => api.request('user/changeActiveNotificationTypes', { emailNotifications, inAppNotifications })
+        },
+        emailNotifications,
+        inAppNotifications,
+    });
+}
+
+
+/**
  * Creates action for continuing a session.
  * @function
  * @param {string} sessionToken sessionToken
@@ -35,6 +58,25 @@ export function continueSession(sessionToken) {
                 userActionTypes.CONTINUE_SESSION_SUCCESS, 
                 userActionTypes.CONTINUE_SESSION_FAILURE],
             call: (api) => api.request('user/continueSession', { sessionToken })
+        }
+    });
+}
+
+
+/**
+ * Creates action for retrieving the active notifications types for authenticated user.
+ * @function
+ * @returns {object} action
+ */
+export function getActiveNotificationTypes() {
+    return ({
+        type: 'apiCall',
+        apiCall: {
+            key: 'getActiveNotificationTypes',
+            types: [userActionTypes.GET_ACTIVE_NOTIFICATION_TYPES_REQUEST, 
+                userActionTypes.GET_ACTIVE_NOTIFICATION_TYPES_SUCCESS, 
+                userActionTypes.GET_ACTIVE_NOTIFICATION_TYPES_FAILURE],
+            call: (api) => api.request('user/getActiveNotificationTypes')
         }
     });
 }

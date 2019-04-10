@@ -12,7 +12,7 @@
 - [ ] notifications
 - [x] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
   - [ ] maybe? log read event for entry/comment in post comment view
-- [ ] notification subscription verwaltung ui
+- [x] notification subscription verwaltung ui
 - [ ] email templates
 - [ ] desktop-app: improve screen selection
 - [ ] survey integration

@@ -3,6 +3,7 @@
 const config = require('../config');
 const db = require('../db').db;
 const LDAPConnection = require('../LDAPConnection');
+const NotificationTypesEnum = require('../NotificationTypesEnum');
 const utils = require('../utils');
 var statusCodes = require('http-status-codes');
 
@@ -47,7 +48,9 @@ async function _createLoginData(dn, sessionToken) {
                 { _id: id },
                 {
                     $setOnInsert: {
+                        emailNotifications: [NotificationTypesEnum.COMMENT_ON_ENTRY, NotificationTypesEnum.REPLY_ON_COMMENT],
                         hasAcceptedTos: false,
+                        inAppNotifications: [NotificationTypesEnum.COMMENT_ON_ENTRY, NotificationTypesEnum.REPLY_ON_COMMENT],
                         lastActiveEventId: null,
                     }
                 },
@@ -107,6 +110,39 @@ exports.acceptTos = acceptTos;
 
 
 /**
+ * Changes the activated email/in-app notifications for a user.
+ * @static
+ * @async
+ * @function
+ * @param {string} userId id of user
+ * @param {Array<NotificationTypesEnum>} emailNotifications array of activated email notification types
+ * @param {Array<NotificationTypesEnum>} inAppNotifications array of activated in-app notification types
+ * @returns {Promise} indicates success
+ */
+async function changeActiveNotificationTypes(userId, emailNotifications, inAppNotifications) {
+    if (!emailNotifications || !inAppNotifications || !Array.isArray(emailNotifications) || !Array.isArray(inAppNotifications))
+        throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+    
+    emailNotifications.sort((a,b) => a-b);
+    inAppNotifications.sort((a,b) => a-b);
+
+    const res = await db().collection('users').updateOne({ _id: userId }, 
+            { 
+                $set: { 
+                    emailNotifications,
+                    inAppNotifications,
+                } 
+            }
+        );
+    if (res.result.ok !== 1)
+        throw utils.createError('error changing active notifications for user', statusCodes.INTERNAL_SERVER_ERROR);                
+    if (res.result.n < 1)
+        throw utils.createError('userId not found', statusCodes.NOT_FOUND);
+}
+exports.changeActiveNotificationTypes = changeActiveNotificationTypes;
+
+
+/**
  * Continue session with supplied sessionToken.
  * @static
  * @async
@@ -146,6 +182,36 @@ exports.continueSession = continueSession;
     
 //     return arr[0].lastActiveEventId;
 // }
+
+
+/**
+ * Retrieves activated notification types for user.
+ * @static
+ * @async
+ * @function
+ * @param {string} userId id of user
+ * @returns {Promise<object>} resolves to object containing emailNotifications and inAppNotifications
+ */
+async function getActiveNotificationTypes(userId) {
+    if (!userId)
+        throw utils.createError('userId must be set', statusCodes.BAD_REQUEST);
+
+    const userDoc = await db().collection('users').findOne(
+            { _id: userId },
+            { projection: {
+                emailNotifications: 1,
+                inAppNotifications: 1,
+            }}
+        );
+    if (!userDoc)
+        throw utils.createError('userId not found', statusCodes.NOT_FOUND);
+
+    return {
+        emailNotifications: userDoc.emailNotifications,
+        inAppNotifications: userDoc.inAppNotifications,
+    };
+}
+exports.getActiveNotificationTypes = getActiveNotificationTypes;
 
 
 /**

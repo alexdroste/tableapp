@@ -145,8 +145,10 @@ A single document is a single log entry and has the following properties:
 
 A single document has the following properties:
 
-| Property          | Type                 | Description                                      |
-| ----------------- | -------------------- | ------------------------------------------------ |
-| _id               | `string`             | id of user                                       |
-| hasAcceptedTos    | `boolean`            | indicates if users accepted the terms of service |
-| lastActiveEventId | `ObjectID`           | id of last active event                          |
+| Property           | Type            | Description                                                  |
+| ------------------ | --------------- | ------------------------------------------------------------ |
+| _id                | `string`        | id of user                                                   |
+| emailNotifications | `Array<number>` | array of activated email notification types (see `NotificationTypesEnum`) |
+| hasAcceptedTos     | `boolean`       | indicates if users accepted the terms of service             |
+| inAppNotifications | `Array<number>` | array of activated in-App notification types (see `NotificationTypesEnum`) |
+| lastActiveEventId  | `ObjectID`      | id of last active event                                      |

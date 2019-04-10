@@ -4,31 +4,10 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
-import { Header, Segment, Button, Form, Table, Checkbox } from 'semantic-ui-react';
-import * as eventsActions from '../actions/events';
-import { getActiveEventName, getActiveEventId, getActiveEventUserPermissionLevel } from '../reducers/events';
-import { getUserRoleId } from '../reducers/eventInfo';
-import { getUserId } from '../reducers/user';
-import { RoleLabel } from './RoleLabel';
-import { PermissionLevelEnum } from '../PermissionLevelEnum';
-import { Confirm } from '../components/Confirm';
-
-
-const ButtonGroupMargin = styled.div`
-    & {
-        margin-top: 1em;
-    }
-
-    &&& > button {
-        margin-top: .5em;
-    }
-`;
-
-
-const HorizontalList = styled.div`
-    display: flex;
-    align-items: center;
-`;
+import { Header, Segment, Table, Checkbox } from 'semantic-ui-react';
+import * as userActions from '../actions/user';
+import { getActiveNotificationTypes } from '../reducers/user';
+import { NotificationTypesEnum } from '../NotificationTypesEnum';
 
 
 class UserSettings extends React.Component {
@@ -47,16 +26,52 @@ class UserSettings extends React.Component {
     }
 
 
-    // constructor(props) {
-    //     super(props);
+    constructor(props) {
+        super(props);
 
-    //     this.state = {
-    //     };
-    // }
+        this.rows = [
+            { 
+                desc: 'Neuer Eintrag',
+                type: NotificationTypesEnum.NEW_ENTRY,
+            },
+            {
+                desc: 'Neuer Kommentar auf abonnierten Eintrag',
+                type: NotificationTypesEnum.COMMENT_ON_ENTRY,
+            },
+            {
+                desc: 'Neue Antwort auf eigenen Kommentar',
+                type: NotificationTypesEnum.REPLY_ON_COMMENT,
+            },
+        ];
+    }
+
+
+    componentWillMount() {
+        this.props.userActions.getActiveNotificationTypes();
+    }
+
+
+    _handleCheckedChange = (which, type) => (e, data) => {
+        const { activeNotificationTypes } = this.props;
+
+        let n = which === 'email' ? activeNotificationTypes.emailNotifications : activeNotificationTypes.inAppNotifications;
+        if(!data.checked) {
+            n = n.filter(t => t !== type);
+        } else {
+            if (!n.includes(type)) {
+                n.push(type);
+                n.sort((a,b) => a-b);
+            }
+        }
+
+        const emailNotifications = which === 'email' ? n : activeNotificationTypes.emailNotifications;
+        const inAppNotifications = which === 'email' ? activeNotificationTypes.inAppNotifications : n;
+        this.props.userActions.changeActiveNotificationTypes(emailNotifications, inAppNotifications);
+    };
 
 
     render() {
-        const { activeEventId, activeEventName, userCanManageActiveEvent, userRoleId } = this.props;
+        const { activeNotificationTypes } = this.props;
 
         return (
             <div>
@@ -73,35 +88,23 @@ class UserSettings extends React.Component {
                         </Table.Header>
 
                         <Table.Body>
-                            <Table.Row>
-                                <Table.Cell>
-                                    <Checkbox/>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <Checkbox/>
-                                </Table.Cell>
-                                <Table.Cell>Neuer Eintrag</Table.Cell>
-                            </Table.Row>
-
-                            <Table.Row>
-                                <Table.Cell>
-                                    <Checkbox/>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <Checkbox/>
-                                </Table.Cell>
-                                <Table.Cell>Neuer Kommentar auf abonnierten Eintrag</Table.Cell>
-                            </Table.Row>
-
-                            <Table.Row>
-                                <Table.Cell>
-                                    <Checkbox/>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <Checkbox/>
-                                </Table.Cell>
-                                <Table.Cell>Neue Antwort auf eigenen Kommentar</Table.Cell>
-                            </Table.Row>
+                            {this.rows.map((r, i) => 
+                                <Table.Row key={i}>
+                                    <Table.Cell>
+                                        <Checkbox
+                                            checked={activeNotificationTypes.inAppNotifications.includes(r.type)}
+                                            onChange={this._handleCheckedChange('inApp', r.type)}
+                                        />
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <Checkbox
+                                            checked={activeNotificationTypes.emailNotifications.includes(r.type)}
+                                            onChange={this._handleCheckedChange('email', r.type)}
+                                        />
+                                    </Table.Cell>
+                                    <Table.Cell>{r.desc}</Table.Cell>
+                                </Table.Row>
+                            )}
                         </Table.Body>
                     </Table>
                 </Segment>
@@ -112,20 +115,15 @@ class UserSettings extends React.Component {
 
 
 const mapStateToProps = (state, props) => {
-    const userId = getUserId(state.user);
-
     return {
-        activeEventId: getActiveEventId(state.events),
-        activeEventName: getActiveEventName(state.events),
-        userCanManageActiveEvent: getActiveEventUserPermissionLevel(state.events) >= PermissionLevelEnum.ADMINISTRATOR,
-        userRoleId: getUserRoleId(state.eventInfo, userId),
-    }
+        activeNotificationTypes: getActiveNotificationTypes(state.user),
+    };
 };
 
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        eventsActions: bindActionCreators(eventsActions, dispatch),
+        userActions: bindActionCreators(userActions, dispatch),
     };
 }
 
