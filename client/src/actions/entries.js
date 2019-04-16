@@ -138,7 +138,6 @@ export function readEntry(entryId, isScrollOver) {
  * @param {boolean} isAnonymous true if posting is anonymous, otherwise false
  * @param {string} content content of comment
  * @param {Array<string>} imageIds array of images (by id) to attach
- * @param {Array<string>} extraQuestion array of question to append (prompts)
  * @returns {object} action
  */
 export function postEntry(isAnonymous, content, imageIds) {

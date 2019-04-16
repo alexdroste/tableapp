@@ -15,7 +15,6 @@ import { FormFieldAction } from '../components/FormFieldAction';
 import { Thumbnails } from './Thumbnails';
 import { getScreenshotIds } from '../reducers/eventScreenshots';
 import { InputImageModal } from './InputImageModal';
-import { CheckboxList } from '../components/CheckboxList';
 
 
 /**
@@ -311,7 +310,7 @@ class UserPostForm extends React.Component {
      * @param {Event} [event]
      */
     _handleSubmitClick = (event) => {
-        this.textAreaRef.current.ref.value = ""; // clear input
+        this.textAreaRef.current.ref.current.value = ""; // clear input
         if (this.props.isComment) {
             this.props.commentsActions.postComment(this.props.replyEntryId, this.props.replyCommentId,
                 this.state.postAnonymously, this.textAreaValue, this.state.selectedImageIds);

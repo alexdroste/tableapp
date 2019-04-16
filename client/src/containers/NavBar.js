@@ -11,6 +11,7 @@ import { isDesktopApp, isWindowAlwaysOnTop, isBroadcastActive, isPresentationmod
 import { PermissionLevelEnum } from '../PermissionLevelEnum';
 import { ActiveEventQrCodeModal } from './ActiveEventQrCodeModal';
 import { MainNavActionSheet } from './MainNavActionSheet';
+import { NotificationsMenuItem } from './NotificationsMenuItem';
 import { ZoomModal } from './ZoomModal';
 
 
@@ -24,9 +25,19 @@ const FixedTop = styled.div`
 `;
 
 
-const CustomMenu = styled(Menu)`
+const CustomMenu = styled(Menu).attrs({
+    color: 'blue',
+    inverted: true,
+    pointing: true,
+    secondary: true,
+})`
     justify-content: center;
     margin: 0 !important;
+    
+    ${props => props['data-maxwidth'] && `
+        padding-left: calc(50% - ${props['data-maxwidth']/2}px);
+        padding-right: calc(50% - ${props['data-maxwidth']/2}px);
+    `}
 
     &&&&& {
         border: none;
@@ -34,7 +45,7 @@ const CustomMenu = styled(Menu)`
     }
 
     &&&&&&&&&& > .item {
-        color: white;
+        color: white !important;
         align-self: auto;
         background: none;
     }
@@ -230,10 +241,7 @@ class NavBar extends React.Component {
                     data-withtitlebar={isDesktopApp}
                 >
                     {isPresentationmodeActive ? ( 
-                        <CustomMenu
-                            pointing
-                            secondary
-                        >
+                        <CustomMenu>
                             <Menu.Item
                                 content="Verkleinerte Ansicht (F8)"
                                 icon="compress"
@@ -271,9 +279,7 @@ class NavBar extends React.Component {
                         </CustomMenu>
                     ) : (
                         <CustomMenu
-                            color="blue"
-                            pointing
-                            secondary
+                            data-maxwidth={600}
                         >
                             {!isDesktop && hasGoBack && 
                                 <MenuItemTitle
@@ -287,9 +293,10 @@ class NavBar extends React.Component {
                                 <MenuItemTitle
                                     onClick={this._handleMainItemClick}
                                 >
+                                    <Icon name="chevron down"/>
+                                    {/* <Icon name="bars"/> */}
                                     {mainContent? mainContent : activeEventName}
                                     {'\u00A0' /* &nbsp; */}
-                                    <Icon name="chevron down"/>
                                     {/* <Icon name="ellipsis horizontal"/> */}
                                 </MenuItemTitle>
                             }
@@ -300,6 +307,7 @@ class NavBar extends React.Component {
                                     onClick={this._handleStartPresentationModeClick}
                                 />
                             }
+                            <NotificationsMenuItem/>
                         </CustomMenu>
                     )}
                 </FixedTop>

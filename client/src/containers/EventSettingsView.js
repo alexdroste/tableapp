@@ -33,7 +33,7 @@ class EventSettingsView extends React.Component {
                 />
                 <Header content="Veranstaltung"/>
                 <ManageEventNameForm/>
-                <ManageEventModulesForm/>
+                {/* <ManageEventModulesForm/> */}
                 <DefineRolesForm/>
                 <ManageRolesForm/>
             </div>

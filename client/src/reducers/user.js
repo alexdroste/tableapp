@@ -85,6 +85,7 @@ const lastActiveEventId = (state = initialState.lastActiveEventId, action) => {
         case eventsActionTypes.SWITCH_ACTIVE_EVENT_REQUEST:
             return null;
         case userActionTypes.CONTINUE_SESSION_FAILURE:
+        case userActionTypes.LOGIN_REQUEST:
         case userActionTypes.LOGOUT_SUCCESS:
             return initialState.lastActiveEventId;
         default:

@@ -189,3 +189,23 @@ async function handleEventScreenshotsUpdated(eventId) {
     }
 }
 exports.handleEventScreenshotsUpdated = handleEventScreenshotsUpdated;
+
+
+// notifications
+async function handleUpdateNotifications(clientNotificationsUserDict) {
+    try {
+        const userIds = Object.keys(clientNotificationsUserDict);
+        _clients.forEach(async (client) => {
+            try {
+                if (!userIds.includes(client.userId))
+                    return;
+                await client.emitUpdateNotificationDict(clientNotificationsUserDict[client.userId]);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    } catch (err) {
+        console.error(err);
+    }
+}
+exports.handleUpdateNotifications = handleUpdateNotifications;

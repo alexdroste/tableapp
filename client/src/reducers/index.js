@@ -7,6 +7,7 @@ import { eventInfo } from './eventInfo';
 import { events } from './events';
 import { eventScreenshots } from './eventScreenshots';
 import { images } from './images';
+import { notifications } from './notifications';
 import { user } from './user';
 
 
@@ -37,5 +38,6 @@ export default combineReducers({
     events,
     eventScreenshots,
     images,
+    notifications,
     user,
 });

@@ -2,8 +2,10 @@
 
 const broker = require('../broker');
 const db = require('../db').db;
+const entriesController = require('./entries');
+const notificationsController = require('./notifications');
+const statusCodes = require('http-status-codes');
 const utils = require('../utils');
-var statusCodes = require('http-status-codes');
 
 
 /**
@@ -215,7 +217,7 @@ async function postComment(eventId, entryId, parentId, userId, isAnonymous, cont
     if (parentId) {
         const parentRes = await db().collection('comments').findOne(
             { _id: parentId, entryId, eventId },
-            { projection : { isDeleted: 1 }}
+            { projection: { isDeleted: 1 }}
         );
         if (!parentRes)
             throw utils.createError('parentId not found', statusCodes.NOT_FOUND);
@@ -256,7 +258,11 @@ async function postComment(eventId, entryId, parentId, userId, isAnonymous, cont
     if (res.insertedCount < 1)
         throw utils.createError('comment could not be posted');
     
+    // automatically follow parent entry after comment-post
+    entriesController.changeUserFollow(eventId, entryId, userId, true);
+
     _onCommentUpdated(eventId, entryId, res.insertedId, true);
+    notificationsController.newCommentPosted(eventId, entryId, res.insertedId, parentId ? parentId : null, userId, isAnonymous);
     return res.insertedId;
 }
 exports.postComment = postComment;

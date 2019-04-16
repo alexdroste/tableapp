@@ -39,7 +39,17 @@ class EntryWrapper extends React.Component {
     // }
 
 
-    componentWillMount() {
+    componentDidMount() {
+        this.props.entriesActions.subscribeEntries([this.props.match.params.entryId]);
+        this.props.commentsActions.subscribeCommentsForEntry(this.props.match.params.entryId);
+    }
+
+    
+    componentDidUpdate(prevProps) {
+        if (prevProps.match.params.entryId === this.props.match.params.entryId)
+            return;
+        this.props.entriesActions.unsubscribeEntries([prevProps.match.params.entryId]);
+        this.props.commentsActions.unsubscribeCommentsForEntry();
         this.props.entriesActions.subscribeEntries([this.props.match.params.entryId]);
         this.props.commentsActions.subscribeCommentsForEntry(this.props.match.params.entryId);
     }

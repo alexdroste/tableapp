@@ -3,6 +3,7 @@ import * as entriesActions from '../../actions/entries';
 import * as eventInfoActions from '../../actions/eventInfo';
 import * as eventsActions from '../../actions/events';
 import * as eventScreenshotActions from '../../actions/eventScreenshots';
+import * as notificationsActions from '../../actions/notifications';
 
 
 /**
@@ -42,6 +43,11 @@ export const setupListeners = (api, dispatch) => {
     const _handleUpdateScreenshotIds = (ids) => {
         dispatch(eventScreenshotActions.updateScreenshotIds(ids));
     };
+    
+    // notifications
+    const _hanldeUpdateNotificationDict = (notificationDict) => {
+        dispatch(notificationsActions.updateNotificationDict(notificationDict))
+    };
 
 
     // listeners
@@ -60,4 +66,7 @@ export const setupListeners = (api, dispatch) => {
 
     // eventScreenshots
     api.on('eventScreenshots/updateScreenshotIds', _handleUpdateScreenshotIds);
+
+    // notifications
+    api.on('notifications/updateNotificationDict', _hanldeUpdateNotificationDict);
 };

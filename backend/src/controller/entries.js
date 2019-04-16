@@ -2,8 +2,9 @@
 
 const broker = require('../broker');
 const db = require('../db').db;
-const utils = require('../utils');
+const notificationsController = require('./notifications');
 var statusCodes = require('http-status-codes');
+const utils = require('../utils');
 
 
 /**
@@ -441,7 +442,7 @@ async function postEntry(eventId, userId, isAnonymous, content, imageDataArr) {
         content,
         downvotes: [],
         eventId,
-        following: [],
+        following: [userId], // automatically follow (own) posted entry
         imageIds,
         isDeleted: false,
         isLiveAnswered: false,
@@ -454,6 +455,7 @@ async function postEntry(eventId, userId, isAnonymous, content, imageDataArr) {
         throw utils.createError('entry could not be posted');
     
     _onEntryUpdated(eventId, res.insertedId);
+    notificationsController.newEntryPosted(eventId, res.insertedId, userId, isAnonymous);
     return res.insertedId;
 }
 exports.postEntry = postEntry;

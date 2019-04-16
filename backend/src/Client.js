@@ -10,6 +10,7 @@ const entriesController = require('./controller/entries');
 const eventsController = require('./controller/events');
 const eventScreenshotsController = require('./controller/eventScreenshots');
 const imagesController = require('./controller/images');
+const notificationsController = require('./controller/notifications');
 const sessionLogController = require('./controller/sessionLog');
 const userController = require('./controller/user');
 const broker = require('./broker');
@@ -166,6 +167,11 @@ class Client {
             requiresAuthentication: true
         });
 
+        // notifications
+        this.on('notifications/readNotification',       this._handleReadNotification, {
+            requiresAuthentication: true
+        });
+
         // user
         this.on('user/acceptTos',                       this._handleAcceptTos, {
             requiresAuthentication: true
@@ -298,6 +304,7 @@ class Client {
         this.userId = loginData.id;
         this._logActivity('user/beginSession', { ip: this.ip, userAgent: this.userAgent });
         this.emitUpdateEventDict(await eventsController.getEventDict(this.userId));
+        this.emitUpdateNotificationDict(await notificationsController.getUnreadInAppClientNotificationDict(this.userId));
         // if (this.activeEventId)
         //     await this._switchActiveEvent(this.activeEventId);
     }
@@ -717,8 +724,6 @@ class Client {
         eventId = new ObjectID(eventId);
         await eventsController.changeUserPermissionLevelForEvent(
             eventId, this.userId, PermissionLevelEnum.NOT_A_USER);
-        // TODO remove following state from all entries
-        // TODO remove bookmark state from all entries
         this._logActivity('events/leaveEvent', { eventId });
         if (this.activeEventId.equals(eventId))
             await this._switchActiveEvent(null);
@@ -805,6 +810,25 @@ class Client {
 
 
     //#endregion images
+
+    //#region notifications
+    /**
+     * Eventhandler for notification was read by user. 
+     * @async
+     * @private
+     * @function
+     * @param {object} data 
+     * @param {string} data.notificationId id of notification (as string)
+     * @returns {Promise} 
+     */
+    async _handleReadNotification({ notificationId }) {
+        notificationId = new ObjectID(notificationId);
+        await notificationsController.markNotificationIdAsRead(notificationId);
+        this._logActivity('notifications/readNotification', { notificationId });
+    }
+
+
+    //#endregion notifications
 
     //#region user
     /**
@@ -1112,6 +1136,21 @@ class Client {
 
 
     //#endregion eventScreenshots
+
+
+    //#region notifications
+    /**
+     * Sends (Client-)Notifications to client.
+     * @function
+     * @param {NotificationsController~ClientNotificationDict} clientNotificationDict notification dict to send
+     */
+    emitUpdateNotificationDict(clientNotificationDict) {
+        //TODO convert object-ids from array to strings, this should not happen implicitly
+        this._socket.emit('notifications/updateNotificationDict', clientNotificationDict);
+    }
+
+
+    //#endregion notifications
 
     //#endregion public
 }
