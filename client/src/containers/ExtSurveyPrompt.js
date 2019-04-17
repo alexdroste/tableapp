@@ -79,7 +79,7 @@ class ExtSurveyPrompt extends React.Component {
 
     _handleDone = () => {
         this.setState({ open: false });
-        this.props.userActions.addExtSurveyIdDone(this.sId);
+        this.props.userActions.addExtSurveyIdDone(surveyId);
     };
 
 
