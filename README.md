@@ -9,7 +9,6 @@
 
 ### high priority
 
-- [ ] was passiert (durch neues routing) mit laufender Übertragung, wenn die API kurz nicht erreichbar ist?
 - [x] notifications in-app
 - [x] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
   - [ ] maybe? log read event for entry/comment in post comment view
@@ -21,7 +20,7 @@
 - [ ] Zoom!
 - [x] remove prompt-groups
 - [x] fixes:
-  - [ ] fix notification popup: remove hideOnScroll Property from Popup in NotificationsMenuItem after upgrade to semantic-ui 0.87.0 (requires fix: <https://github.com/Semantic-Org/Semantic-UI-React/pull/3532>); then popup should stay fixed at menu item and position should be correct after/before scrolling the page (and opening after page has been scrolled down)
+  - [ ] fix notification popup: remove fix in _handlePopupOpen for Popup in NotificationsMenuItem after upgrade to semantic-ui 0.87.0 (requires fix: <https://github.com/Semantic-Org/Semantic-UI-React/pull/3532>); then popup should stay fixed at menu item and position should be correct after/before scrolling the page (and opening after page has been scrolled down)
   - [x] fix subscription missing, when directly opening new comment form (move subscribeEntryList action from EntriesView to wrapper), e.g. link <https://localhost:3000/552786262cec76ed95fd61d0/5ca6072fe85f2699640ad75f/0/new>
   - [x] write sessionInfos as single documents in another collection (very important!) => continous use WILL break app in future
   - [ ] fix 'after-logout.png'

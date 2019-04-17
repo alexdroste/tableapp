@@ -40,7 +40,7 @@ class NotificationList extends React.Component {
                 selection
             >
                 {notificationIdsSorted.map(id => 
-                    <NotificationItem id={id}/>)}
+                    <NotificationItem key={id} id={id}/>)}
                 {!notificationIdsSorted.length &&
                     <List.Item disabled>
                         Keine neuen Benachrichtigungen.

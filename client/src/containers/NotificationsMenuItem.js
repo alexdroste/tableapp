@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -8,7 +9,7 @@ import { NotificationList } from './NotificationList';
 
 
 const CustomPopup = styled(Popup)`
-    /* position: fixed !important; */
+    position: fixed !important;
 
     &&& {
         padding: 0;
@@ -57,6 +58,14 @@ class NotificationsMenuItem extends React.Component {
 
     _handlePopupOpen = () => {
         this.setState({ isOpen: true });
+        // fixme todo fix to be removed with 0.87.0 semantic-ui
+        setTimeout(() => {
+            if (this.popupRef) {
+                const n = ReactDOM.findDOMNode(this.popupRef);
+                const top = Number(n.style.top.substring(0, n.style.top.length - 2));
+                n.style.top = (top - window.scrollY) + 'px';
+            }
+        }, 100);
     };
 
 
@@ -71,6 +80,7 @@ class NotificationsMenuItem extends React.Component {
 
         return (
             <CustomPopup
+                innerRef={r => this.popupRef = r}
                 trigger={
                     <Menu.Item
                         active={isOpen}
@@ -84,7 +94,6 @@ class NotificationsMenuItem extends React.Component {
                         </IconsMarginFix>
                     </Menu.Item>
                 }
-                hideOnScroll // FIXME TODO remove after 0.87.0 semantic update
                 on='click'
                 open={isOpen}
                 onClick={this._handlePopupClose}
