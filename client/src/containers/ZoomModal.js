@@ -41,6 +41,12 @@ export class ZoomModal extends React.PureComponent {
     };
 
 
+    _handleResetZoom = () => {
+        this._webFrameScaler.setZoomLevel(1.0);
+        this.forceUpdate();
+    };
+
+
     render() {
         const { isOpen, onClose } = this.props;
         const zoomLevel = Math.round(this._webFrameScaler.getZoomLevel() * 100) / 100;
@@ -76,6 +82,11 @@ export class ZoomModal extends React.PureComponent {
                                     onClick={this._handleZoomIn}
                                 />
                             </Button.Group>
+                            <br/><br/>
+                            <Button
+                                content='Zurücksetzen'
+                                onClick={this._handleResetZoom}
+                            />
                         </Container>
                     </Modal.Content>
                     <Modal.Actions>

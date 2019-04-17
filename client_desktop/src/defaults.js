@@ -2,8 +2,8 @@
 module.exports = {
     windowSize: {
         miniControlView: { 
-            width: 140, 
-            height: 140, 
+            width: 150, 
+            height: 190, 
             minWidth: 140,
             minHeight: 140,
         },

@@ -94,6 +94,7 @@ class MiniControlView extends React.Component {
                     color={newEntriesCount ? 'red' : undefined}
                     content={newEntriesCount}
                     size="massive"
+                    style={{ fontSize: '2.5rem' }}
                 />
                 <CustomButton
                     basic
