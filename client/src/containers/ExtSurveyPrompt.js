@@ -77,10 +77,10 @@ class ExtSurveyPrompt extends React.Component {
     _handleClose = () => this.setState({ open: false });
 
 
-    // _handleDone = () => {
-    //     this.setState({ open: false });
-    //     this.props.userActions.addExtSurveyIdDone(this.sId);
-    // };
+    _handleDone = () => {
+        this.setState({ open: false });
+        this.props.userActions.addExtSurveyIdDone(this.sId);
+    };
 
 
     render() {
