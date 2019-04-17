@@ -27,9 +27,26 @@ export class ScreenSelectModal extends React.PureComponent {
 
         this.state = {
             canContinueOnScreenSetupChange: false,
-            selectedIdx: null,
+            manual: false,
+            selectedIdx: 'auto',
         };
     }
+
+
+    _handleAutoClick = () => {
+        this.setState({ 
+            manual: false,
+            selectedIdx: 'auto',
+        });
+    };
+
+
+    _handleManualClick = () => {
+        this.setState({ 
+            manual: true,
+            selectedIdx: null,
+        });
+    };
 
 
     _handleCanContinueOnScreenSetupChangeToggle = () => {
@@ -53,7 +70,7 @@ export class ScreenSelectModal extends React.PureComponent {
 
     render() {
         const { isOpen, onCancel, thumbnails } = this.props;
-        const { canContinueOnScreenSetupChange, selectedIdx } = this.state;
+        const { canContinueOnScreenSetupChange, manual, selectedIdx } = this.state;
 
         return (
             <TransitionablePortal // TODO fix close itself bug
@@ -65,30 +82,49 @@ export class ScreenSelectModal extends React.PureComponent {
                 >
                     <Modal.Header>Bildschirmübertragung starten</Modal.Header>
                     <Modal.Content>
-                        {/* TODO show text "loading" if thumbnails.length == 0*/}
-                        <ThumbnailGroup
-                            isCentered
-                        >
-                            {thumbnails.map((imageData, idx) => 
-                                <Thumbnail
-                                    key={idx}
-                                    alt={idx.toString()}
-                                    isHuge
-                                    isSelectable
-                                    isSelected={idx === selectedIdx}
-                                    onClick={this._handleThumbnailClick(idx)}
-                                    src={imageData}
+                        <Container textAlign='center'>
+                            <Button.Group>
+                                <Button
+                                    active={!manual}
+                                    content="Automatisch"
+                                    onClick={this._handleAutoClick}
                                 />
-                            )}
-                        </ThumbnailGroup>
+                                <Button
+                                    active={manual}
+                                    content="Manuell"
+                                    onClick={this._handleManualClick}
+                                />
+                            </Button.Group>
+                        </Container>
+                        <br/>
+                        {/* TODO show text "loading" if thumbnails.length == 0*/}
+                        {manual &&
+                            <ThumbnailGroup
+                                isCentered
+                            >
+                                {thumbnails.map((imageData, idx) => 
+                                    <Thumbnail
+                                        key={idx}
+                                        alt={idx.toString()}
+                                        isHuge
+                                        isSelectable
+                                        isSelected={idx === selectedIdx}
+                                        onClick={this._handleThumbnailClick(idx)}
+                                        src={imageData}
+                                    />
+                                )}
+                            </ThumbnailGroup>
+                        }
                         <Container
                             textAlign='center'
                         >
-                            <Checkbox
-                                checked={canContinueOnScreenSetupChange}
-                                label="Übertragung automatisch fortsetzen, wenn sich der Bildschirmmodus ändert"
-                                onChange={this._handleCanContinueOnScreenSetupChangeToggle}
-                            />
+                            {manual &&
+                                <Checkbox
+                                    checked={canContinueOnScreenSetupChange}
+                                    label="Übertragung automatisch fortsetzen, wenn sich der Bildschirmmodus ändert"
+                                    onChange={this._handleCanContinueOnScreenSetupChangeToggle}
+                                />
+                            }
                             <br/>
                             <br/>
                             <i>Bitte denken Sie daran, private Inhalte zu schließen und ggf. (System-)Benachrichtigungen auszuschalten.</i>

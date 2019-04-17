@@ -100,7 +100,17 @@ class ScreenBroadcastHelper extends React.Component {
         let { selectedScreenIdx } = this.state;
         const sources = await this._screenCapturer.capture(); 
         // check and correct display to capture
-        if (selectedScreenIdx >= sources.length) {
+        if (selectedScreenIdx === 'auto') {
+            // select external display (!primary)
+            let i = 0;
+            for (let s = 0; s < sources.length; ++s) {
+                if (!sources[s].isPrimary) {
+                    i = s;
+                    break;
+                }
+            }
+            selectedScreenIdx = i;
+        } else if (selectedScreenIdx >= sources.length) {
             if (canContinueOnScreenSetupChange) {
                 selectedScreenIdx = sources.length - 1; // choose display with highest index, if display-switch reduced screen count
             } else {
@@ -142,7 +152,7 @@ class ScreenBroadcastHelper extends React.Component {
             canContinueOnScreenSetupChange,
             isBroadcasting: true,
             isOpen: false,
-            selectedScreenIdx 
+            selectedScreenIdx // can be 'auto'
         });
     };
 

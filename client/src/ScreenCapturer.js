@@ -43,6 +43,10 @@ export class ScreenCapturer {
             window.electron.desktopCapturer.getSources(options, (err, sources) => {
                 if (err)
                     reject(err);
+                const primaryId = 'screen:' + window.electron.screen.getPrimaryDisplay().id;
+                for (let s of sources) {
+                    s.isPrimary = s.id === primaryId;
+                }
                 resolve(sources);
             });
         });
