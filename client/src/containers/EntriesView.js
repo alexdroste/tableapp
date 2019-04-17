@@ -16,6 +16,7 @@ import { NavBar } from './NavBar';
 import { DynamicRow } from './DynamicRow';
 import 'react-virtualized/styles.css';
 import { isPresentationmodeActive } from '../reducers/desktopApp';
+import { ExtSurveyPrompt } from './ExtSurveyPrompt';
 
 
 const HeaderActionButton = styled(Button).attrs({
@@ -254,6 +255,7 @@ class EntriesView extends React.Component {
                         />
                     </Responsive>
                 }
+                <ExtSurveyPrompt/> { /* // extra-code for surveys */ }
                 {!isPresentationmodeActive &&
                     <UserPostForm
                         ref={this._userPostFormRef}

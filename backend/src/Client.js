@@ -176,6 +176,10 @@ class Client {
         this.on('user/acceptTos',                       this._handleAcceptTos, {
             requiresAuthentication: true
         });
+        // extra-code for surveys
+        this.on('user/addExtSurveyIdDone',              this._handleAddExtSurveyIdDone, {
+            requiresAuthentication: true
+        });
         this.on('user/changeActiveNotificationTypes',   this._handleChangeActiveNotificationTypes, {
             requiresAuthentication: true
         });
@@ -841,6 +845,12 @@ class Client {
     async _handleAcceptTos() {
         await userController.acceptTos(this.userId);
         this._logActivity('user/acceptTos');
+    }
+
+
+    // extra-code for surveys
+    async _handleAddExtSurveyIdDone({ extSurveyId }) {
+        await userController.addExtSurveyIdDone(this.userId, extSurveyId);
     }
 
 

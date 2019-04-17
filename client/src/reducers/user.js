@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import * as eventsActionTypes from '../actiontypes/events';
 import * as userActionTypes from '../actiontypes/user';
+import * as utils from '../utils'; // extra-code for surveys
 
 
 /**
@@ -33,6 +34,7 @@ export const LoginStateEnum = Object.freeze({
  */
 const initialState = {
     acceptedTos: false,
+    extSurveys: [], // extra-code for surveys
     id: null,
     lastActiveEventId: null,
     loginState: LoginStateEnum.LOGGED_OUT,
@@ -55,6 +57,23 @@ const acceptedTos = (state = initialState.acceptedTos, action) => {
         case userActionTypes.CONTINUE_SESSION_FAILURE:
         case userActionTypes.LOGOUT_SUCCESS:
             return initialState.acceptedTos;
+        default:
+            return state;
+    }
+};
+
+
+// extra-code for surveys
+const extSurveys = (state = initialState.extSurveys, action) => {
+    switch (action.type) {
+        case userActionTypes.CONTINUE_SESSION_SUCCESS:
+        case userActionTypes.LOGIN_SUCCESS:
+            return action.result.extSurveys || [];
+        case userActionTypes.ADD_EXT_SURVEY_ID_DONE_SUCCESS:
+            return utils.uniqueArray([...state, action.extSurveyId]);
+        case userActionTypes.CONTINUE_SESSION_FAILURE:
+        case userActionTypes.LOGOUT_SUCCESS:
+            return initialState.extSurveys;
         default:
             return state;
     }
@@ -171,6 +190,7 @@ const sessionToken = (state = initialState.sessionToken, action) => {
  */
 export const user = combineReducers({
     acceptedTos,
+    extSurveys, // extra-code for surveys
     id,
     lastActiveEventId,
     loginState,

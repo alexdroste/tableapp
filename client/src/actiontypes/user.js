@@ -5,6 +5,14 @@ export const ACCEPT_TOS_SUCCESS = 'user/ACCEPT_TOS_SUCCESS';
 /** user actiontype: accept tos */
 export const ACCEPT_TOS_FAILURE = 'user/ACCEPT_TOS_FAILURE';
 
+// extra-code for surveys
+/** user actiontype: add ext survey-id done */
+export const ADD_EXT_SURVEY_ID_DONE_REQUEST = 'user/ADD_EXT_SURVEY_ID_DONE_REQUEST';
+/** user actiontype: add ext survey-id done */
+export const ADD_EXT_SURVEY_ID_DONE_SUCCESS = 'user/ADD_EXT_SURVEY_ID_DONE_SUCCESS';
+/** user actiontype: add ext survey-id done */
+export const ADD_EXT_SURVEY_ID_DONE_FAILURE = 'user/ADD_EXT_SURVEY_ID_DONE_FAILURE';
+
 /** user actiontype: change active notification types */
 export const CHANGE_ACTIVE_NOTIFICATION_TYPES_REQUEST = 'user/CHANGE_ACTIVE_NOTIFICATION_TYPES_REQUEST';
 /** user actiontype: change active notification types */

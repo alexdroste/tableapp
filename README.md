@@ -16,10 +16,9 @@
 - [x] notification subscription verwaltung ui
 - [ ] notifications email
 - [ ] desktop-app: improve screen selection
-- [ ] survey integration
-  - [ ] track if user successfully filled survey
+- [x] survey integration
+  - [x] track if user successfully filled survey
 - [ ] Zoom!
-
 - [x] remove prompt-groups
 - [x] fixes:
   - [ ] fix notification popup: remove hideOnScroll Property from Popup in NotificationsMenuItem after upgrade to semantic-ui 0.87.0 (requires fix: <https://github.com/Semantic-Org/Semantic-UI-React/pull/3532>); then popup should stay fixed at menu item and position should be correct after/before scrolling the page (and opening after page has been scrolled down)
@@ -76,6 +75,7 @@
 
 ### normal priority
 
+- [ ] ?? remove extra-code for surveys
 - [ ] presentation-mode view
 - [x] login with kürzel (30min)
 - [ ] optimize desktop-client zoom (track cmd + +/-, add overlay)

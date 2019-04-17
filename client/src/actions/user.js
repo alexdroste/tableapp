@@ -19,6 +19,21 @@ export function acceptTos() {
     });
 }
 
+// extra-code for surveys
+export function addExtSurveyIdDone(extSurveyId) {
+    return ({
+        type: 'apiCall',
+        apiCall: {
+            key: 'addExtSurveyIdDone',
+            types: [userActionTypes.ADD_EXT_SURVEY_ID_DONE_REQUEST, 
+                userActionTypes.ADD_EXT_SURVEY_ID_DONE_SUCCESS, 
+                userActionTypes.ADD_EXT_SURVEY_ID_DONE_FAILURE],
+            call: (api) => api.request('user/addExtSurveyIdDone', { extSurveyId })
+        },
+        extSurveyId,
+    });
+}
+
 
 /**
  * Creates action for changing the active notifications types for authenticated user.

@@ -17,6 +17,7 @@ var statusCodes = require('http-status-codes');
 /**
  * Login data object.
  * @typedef {object} LoginData
+ * @property {Array<string>} extSurveys // extra-code for surveys
  * @property {boolean} hasAcceptedTos indicates if user accepted the terms of service
  * @property {string} id id of user
  * @property {(ObjectID|null)} lastActiveEventId id of last active event, null if no event is active
@@ -49,6 +50,7 @@ async function _createLoginData(dn, sessionToken) {
                 {
                     $setOnInsert: {
                         emailNotifications: [NotificationTypesEnum.COMMENT_ON_ENTRY, NotificationTypesEnum.REPLY_ON_COMMENT],
+                        extSurveys: [], // extra-code for surveys
                         hasAcceptedTos: false,
                         inAppNotifications: [NotificationTypesEnum.COMMENT_ON_ENTRY, NotificationTypesEnum.REPLY_ON_COMMENT],
                         lastActiveEventId: null,
@@ -63,6 +65,7 @@ async function _createLoginData(dn, sessionToken) {
         const userDoc = await db().collection('users').findOne(
                 { _id: id },
                 { projection: {
+                    extSurveys: 1, // extra-code for surveys
                     hasAcceptedTos: 1,
                     lastActiveEventId: 1,
                 }}
@@ -71,6 +74,7 @@ async function _createLoginData(dn, sessionToken) {
             throw utils.createError('userId not found', statusCodes.NOT_FOUND);
 
         return {
+            extSurveys: userDoc.extSurveys, // extra-code for surveys
             hasAcceptedTos: userDoc.hasAcceptedTos,
             id,
             lastActiveEventId: userDoc.lastActiveEventId,
@@ -107,6 +111,21 @@ async function acceptTos(userId) {
         throw utils.createError('userId not found', statusCodes.NOT_FOUND);
 }
 exports.acceptTos = acceptTos;
+
+
+// extra-code for surveys
+async function addExtSurveyIdDone(userId, extSurveyId) {
+    if (!extSurveyId || !userId)
+        throw utils.createError('extSurveyId & userId params must be set', statusCodes.BAD_REQUEST);
+
+    const res = await db().collection('users')
+        .updateOne({ _id: userId }, { $addToSet: { extSurveys: extSurveyId } });
+    if (res.result.ok !== 1)
+        throw utils.createError('error setting extSurvey-id done for user', statusCodes.INTERNAL_SERVER_ERROR);                
+    if (res.result.n < 1)
+        throw utils.createError('userId not found', statusCodes.NOT_FOUND);
+}
+exports.addExtSurveyIdDone = addExtSurveyIdDone;
 
 
 /**
