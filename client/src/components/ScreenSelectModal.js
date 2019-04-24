@@ -26,7 +26,7 @@ export class ScreenSelectModal extends React.PureComponent {
         super(props);
 
         this.state = {
-            canContinueOnScreenSetupChange: false,
+            canContinueOnScreenSetupChange: true,
             manual: false,
             selectedIdx: 'auto',
         };
@@ -64,7 +64,8 @@ export class ScreenSelectModal extends React.PureComponent {
 
 
     _handleSelectClick = (e) => {
-        this.props.onSelect(this.state.selectedIdx, this.state.canContinueOnScreenSetupChange, e);
+        const canContinue = this.state.manual ? this.state.canContinueOnScreenSetupChange : true;
+        this.props.onSelect(this.state.selectedIdx, canContinue, e);
     };
 
 
