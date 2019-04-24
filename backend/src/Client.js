@@ -823,12 +823,14 @@ class Client {
      * @function
      * @param {object} data 
      * @param {string} data.notificationId id of notification (as string)
+     * @param {boolean} data.inAppClick indicates if read was triggered by in-app click or indirect (e.g. mail-link)
      * @returns {Promise} 
      */
-    async _handleReadNotification({ notificationId }) {
+    async _handleReadNotification({ notificationId, inAppClick }) {
+        // todo catch invalid notificationId -> throw bad-request
         notificationId = new ObjectID(notificationId);
         await notificationsController.markNotificationIdAsRead(notificationId);
-        this._logActivity('notifications/readNotification', { notificationId });
+        this._logActivity('notifications/readNotification', { notificationId, inAppClick });
     }
 
 

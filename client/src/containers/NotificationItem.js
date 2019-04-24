@@ -96,7 +96,7 @@ class NotificationItem extends React.Component {
 
 
     _handleClick = () => {
-        this.props.notificationsActions.readNotification(this.props.id);
+        this.props.notificationsActions.readNotification(this.props.id, true);
     };
 
 

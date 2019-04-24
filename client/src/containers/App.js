@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as desktopAppActions from '../actions/desktopApp';
+import * as notificationsActions from '../actions/notifications';
+import * as qs from 'query-string';
 import { withRouter, Route, Switch, Redirect, Link } from 'react-router-dom';
 import { getConnectionState } from '../reducers/api';
 import { LoginStateEnum, getLoginState, hasAcceptedTos, getLastActiveEventId } from '../reducers/user';
@@ -78,6 +80,25 @@ class App extends React.Component {
             this.props.history.replace('/');
         }
     }
+
+
+    componentDidMount() {
+        this._readNotification();
+    }
+
+
+    componentDidUpdate() {
+        this._readNotification();
+    }
+
+    _lastNId = undefined;
+    _readNotification = () => {
+        const o = qs.parse(this.props.location.search);
+        if (o.nId === undefined || this._lastNId === o.nId)
+            return;
+        this._lastNId = o.nId;
+        this.props.notificationsActions.readNotification(o.nId, false);
+    };
 
 
     /**
@@ -165,6 +186,7 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         desktopAppActions: bindActionCreators(desktopAppActions, dispatch),
+        notificationsActions: bindActionCreators(notificationsActions, dispatch),
     };
 }
 
