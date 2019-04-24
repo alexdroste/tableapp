@@ -262,10 +262,26 @@ exports.newCommentPosted = newCommentPosted;
 
 
 async function newEntryPosted(eventId, entryId, senderId, isSenderAnonymous) {
+    const eventsArr = await db().collection('events')
+        .find({ _id: eventId })
+        .project({ users: 1 })
+        .toArray();
+
+    if (eventsArr < 1)
+        throw utils.createError('eventId not found', statusCodes.NOT_FOUND);
+    
+    const joinedUserIds = [];
+    Object.keys(eventsArr[0].users).forEach(uId => {
+        if (eventsArr[0].users[uId].permissionLevel > PermissionLevelEnum.NOT_A_USER)
+            joinedUserIds.push(uId);
+    });
+
     const users = await db().collection('users').find(
-        { $expr: { $or: [ 
-            { $in: [NotificationTypesEnum.NEW_ENTRY, '$inAppNotifications']},
-            { $in: [NotificationTypesEnum.NEW_ENTRY, '$emailNotifications']},
+        { 
+            _id: { $in: joinedUserIds },
+            $expr: { $or: [ 
+                { $in: [NotificationTypesEnum.NEW_ENTRY, '$inAppNotifications']},
+                { $in: [NotificationTypesEnum.NEW_ENTRY, '$emailNotifications']},
         ]}},
         { projection: { inAppNotifications: 1, emailNotifications: 1 }}
     ).toArray();
