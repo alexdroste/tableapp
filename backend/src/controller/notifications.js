@@ -5,6 +5,8 @@ const config = require('../config');
 const db = require('../db').db;
 const LDAPConnection = require('../LDAPConnection');
 const ldapUtils = require('../ldapUtils');
+const mail = require('../mail');
+const mailtemplates = require('../mailtemplates');
 const NotificationTypesEnum = require('../NotificationTypesEnum');
 const ObjectID = require('mongodb').ObjectID;
 const PermissionLevelEnum = require('../PermissionLevelEnum');
@@ -26,10 +28,62 @@ const utils = require('../utils');
 // --------- Private ---------
 
 async function _createAndSendMails(notifications) {
-    console.error("MAIL NOTIFICATIONS NOT IMPLEMENTED YET");
     if (!notifications.length) 
         return;
-    // todo
+    const ldap = new LDAPConnection(config.ldap.dn, config.ldap.password);
+
+    const eventTitleCache = {};
+    const eventTitleCacheQuery = async (eventId) => {
+        const res = await db().collection('events').findOne(
+            { _id: eventId },
+            { projection: { _id: 0, name: 1 } }
+        );
+        return res ? res.name : 'Unknown Event';
+    };
+
+    try {
+        await ldap.open();
+        const promises = notifications.map(async (n) => {
+            try {
+                if (!n.isEmail)
+                    return;
+
+                const eIdStr = n.data.eventId.toString();
+                if (!eventTitleCache.hasOwnProperty(eIdStr)) 
+                    eventTitleCache[eIdStr] = eventTitleCacheQuery(n.data.eventId);
+                const eventName = await eventTitleCache[eIdStr];
+
+                const to = await ldapUtils.getEmailFromUserIdWithCache(ldap, n.userId);
+                const name = await ldapUtils.getNameFromUserIdWithCache(ldap, n.userId);
+                let sender;
+                if (n.senderId) 
+                    sender = await ldapUtils.getNameFromUserIdWithCache(ldap, n.senderId);
+
+                let m;
+                switch (n.type) {
+                    case NotificationTypesEnum.COMMENT_ON_ENTRY:
+                        m = mailtemplates.commentOnEntry(name, sender, eventName, n.data, n._id);
+                        break;
+                    case NotificationTypesEnum.REPLY_ON_COMMENT:
+                        m = mailtemplates.replyOnComment(name, sender, eventName, n.data, n._id);
+                        break;
+                    case NotificationTypesEnum.NEW_ENTRY:
+                        m = mailtemplates.newEntry(name, sender, eventName, n.data, n._id);
+                        break;
+                }
+
+                await mail.sendMail(to, m.subject, m.html);
+            } catch (e) {
+                console.error(e);
+                console.error(utils.createError('Could not send mail', statusCodes.INTERNAL_SERVER_ERROR));
+            }
+        });
+        await Promise.all(promises);
+    } catch (err) {
+        throw err;
+    } finally {
+        ldap.close();
+    }
 }
 
 

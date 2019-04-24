@@ -17,6 +17,12 @@ const config = {
      */
     loglevel: 'debug',
     /**
+     * Base-URL of client. Needs to end with a slash.
+     * Requires overwrite.
+     * @type {string}
+     */
+    baseUrl: 'https://localhost:3000/',
+    /**
      * SSL config values.
      */
     ssl: {
