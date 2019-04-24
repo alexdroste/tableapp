@@ -32,7 +32,7 @@ async function _createAndSendMails(notifications) {
         return;
     const ldap = new LDAPConnection(config.ldap.dn, config.ldap.password);
 
-    const eventTitleCache = {};
+    // const eventTitleCache = {};
     const eventTitleCacheQuery = async (eventId) => {
         const res = await db().collection('events').findOne(
             { _id: eventId },
@@ -48,10 +48,11 @@ async function _createAndSendMails(notifications) {
                 if (!n.isEmail)
                     return;
 
-                const eIdStr = n.data.eventId.toString();
-                if (!eventTitleCache.hasOwnProperty(eIdStr)) 
-                    eventTitleCache[eIdStr] = eventTitleCacheQuery(n.data.eventId);
-                const eventName = await eventTitleCache[eIdStr];
+                // const eIdStr = n.data.eventId.toString();
+                // if (!eventTitleCache.hasOwnProperty(eIdStr)) 
+                //     eventTitleCache[eIdStr] = eventTitleCacheQuery(n.data.eventId);
+                // const eventName = await eventTitleCache[eIdStr];
+                const eventName = await eventTitleCacheQuery(n.data.eventId);
 
                 const to = await ldapUtils.getEmailFromUserIdWithCache(ldap, n.userId);
                 const name = await ldapUtils.getNameFromUserIdWithCache(ldap, n.userId);
