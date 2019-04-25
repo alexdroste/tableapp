@@ -136,10 +136,10 @@ async function _insertNotifications(notifications) {
 }
 
 
-async function _onNotificationUpdated(notificationId) {
+async function _onNotificationsUpdated(notificationIds) {
     try {
         const n = await db().collection('notifications').find(
-            { _id: notificationId, isInApp: true },
+            { _id: { $in: notificationIds }, isInApp: true },
             { projection: { data: 1, isRead: 1, senderId: 1, timestamp: 1, type: 1, userId: 1 }}
         ).toArray();
         broker.handleUpdateNotifications(await _createClientNotificationUserDict(n));
@@ -162,6 +162,33 @@ async function getUnreadInAppClientNotificationDict(userId) {
 exports.getUnreadInAppClientNotificationDict = getUnreadInAppClientNotificationDict;
 
 
+async function markAllUnreadInAppNotificationsAsRead(userId) {
+    const findRes = await db().collection('notifications').find(
+        { userId, isRead: false, isInApp: true },
+        { projection: { _id: 1 }}
+    ).toArray();
+
+    if (!findRes.length)
+        return;
+
+    const nIds = [];
+    findRes.forEach(r => { 
+        nIds.push(r._id);
+    });
+
+    const res = await db().collection('notifications').updateMany(
+        { _id: { $in: nIds }},
+        { $set: { isRead: true } }
+    );
+
+    if (res.result.ok !== 1)
+        throw utils.createError('error changing isRead state for notification', statusCodes.INTERNAL_SERVER_ERROR);
+    if (res.result.nModified > 0)
+        _onNotificationsUpdated(nIds);
+}
+exports.markAllUnreadInAppNotificationsAsRead = markAllUnreadInAppNotificationsAsRead;
+
+
 async function markNotificationIdAsRead(notificationId) {
     const res = await db().collection('notifications')
         .updateOne({ _id: notificationId }, { $set: { isRead: true } });
@@ -171,7 +198,7 @@ async function markNotificationIdAsRead(notificationId) {
     if (res.result.n < 1)
         throw utils.createError('notificationId not found', statusCodes.NOT_FOUND);
     if (res.result.nModified > 0)
-        _onNotificationUpdated(notificationId);
+        _onNotificationsUpdated([notificationId]);
 }
 exports.markNotificationIdAsRead = markNotificationIdAsRead;
 

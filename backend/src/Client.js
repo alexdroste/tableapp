@@ -168,6 +168,9 @@ class Client {
         });
 
         // notifications
+        this.on('notifications/markUnreadNotifications',this._handleMarkUnreadNotifications, {
+            requiresAuthentication: true
+        });
         this.on('notifications/readNotification',       this._handleReadNotification, {
             requiresAuthentication: true
         });
@@ -816,6 +819,19 @@ class Client {
     //#endregion images
 
     //#region notifications
+    /**
+     * Eventhandler for marking all unread notification as read by user. 
+     * @async
+     * @private
+     * @function
+     * @returns {Promise} 
+     */
+    async _handleMarkUnreadNotifications() {
+        await notificationsController.markAllUnreadInAppNotificationsAsRead(this.userId);
+        this._logActivity('notifications/markAllUnreadNotificationsAsRead');
+    }
+
+
     /**
      * Eventhandler for notification was read by user. 
      * @async

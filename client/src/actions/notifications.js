@@ -2,6 +2,24 @@ import * as notificationsActionTypes from '../actiontypes/notifications';
 
 
 /**
+ * Creates an action for marking all unread notification as read by user.
+ * @function
+ * @returns {object} action
+ */
+export function markAllUnreadNotificationsAsRead() {
+    return ({
+        type: 'apiCall',
+        apiCall: {
+            types: [notificationsActionTypes.MARK_UNREAD_NOTIFICATIONS_REQUEST,
+                notificationsActionTypes.MARK_UNREAD_NOTIFICATIONS_SUCCESS,
+                notificationsActionTypes.MARK_UNREAD_NOTIFICATIONS_FAILURE],
+            call: api => api.request('notifications/markUnreadNotifications')
+        }
+    });
+}
+
+
+/**
  * Creates an action for marking/logging an notification as read by user.
  * @function
  * @param {string} notificationId id of notification

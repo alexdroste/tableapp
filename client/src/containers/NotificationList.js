@@ -2,9 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as notificationsActions from '../actions/notifications';
 import { List } from 'semantic-ui-react';
 import { getNotificationIdsSorted } from '../reducers/notifications';
 import { NotificationItem } from './NotificationItem';
+
+
+const ListContentNoMargin = styled(List.Content)`
+    &&&&&&&&&& {
+        margin: 0;
+    }
+`;
 
 
 class NotificationList extends React.Component {
@@ -29,6 +38,11 @@ class NotificationList extends React.Component {
     //     this.state = {
     //     };
     // }
+    
+
+    _handleMarkAllAsRead = () => {
+        this.props.notificationsActions.markAllUnreadNotificationsAsRead();
+    };
 
 
     render() {
@@ -39,6 +53,17 @@ class NotificationList extends React.Component {
                 divided
                 selection
             >
+                {!!notificationIdsSorted.length && 
+                    <List.Item
+                        as='a'
+                        onClick={this._handleMarkAllAsRead}
+                    >
+                        <ListContentNoMargin floated='right'>
+                            Alle als gelesen markieren
+                        </ListContentNoMargin>
+                        <List.Icon name='envelope open'/>
+                    </List.Item>
+                }
                 {notificationIdsSorted.map(id => 
                     <NotificationItem key={id} id={id}/>)}
                 {!notificationIdsSorted.length &&
@@ -61,7 +86,7 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // TODO
+        notificationsActions: bindActionCreators(notificationsActions, dispatch),
     };
 }
 
