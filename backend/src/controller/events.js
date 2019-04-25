@@ -76,6 +76,17 @@ const utils = require('../utils');
  * Internal method that triggers update handlers.
  * @private
  * @function
+ * @param {ObjectID} eventId id of updated event
+ */
+function _onEventUpdated(eventId) {
+    broker.handleEventUpdated(eventId);
+}
+
+
+/**
+ * Internal method that triggers update handlers.
+ * @private
+ * @function
  * @param {ObjectID} eventId id of event which users have been updated
  * @param {Array<string>} userIds array of updated/affected userIds
  */
@@ -85,6 +96,33 @@ function _onEventUsersUpdated(eventId, userIds) {
 
 
 // --------- Public ---------
+
+/**
+ * Changes an events name/title.
+ * @static
+ * @async
+ * @function
+ * @param {ObjectID} eventId id of event 
+ * @param {string} newName new name/title of event
+ * @returns {Promise} indicates success
+ */
+async function changeEventName(eventId, newName) {
+    if (!eventId || !newName)
+        throw utils.createError('all params must be set', statusCodes.BAD_REQUEST);
+
+    const res = await db().collection('events').updateOne(
+        { _id: eventId }, 
+        { $set: { name: newName }}
+    );
+    if (res.result.ok !== 1)
+        throw utils.createError('error changing name of event', statusCodes.INTERNAL_SERVER_ERROR);
+    if (res.result.n < 1)
+        throw utils.createError('eventId not found', statusCodes.NOT_FOUND);
+    if (res.result.nModified > 0)
+        _onEventUpdated(eventId);
+}
+exports.changeEventName = changeEventName;
+
 
 /**
  * Changes a users permission level for a specific event.

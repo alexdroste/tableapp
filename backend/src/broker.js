@@ -121,6 +121,31 @@ exports.handleEntryUpdated = handleEntryUpdated;
 
 // events
 /**
+ * Eventhandler for updated event-data.
+ * @static
+ * @async
+ * @function
+ * @param {ObjectID} eventId id of event which users have been updated
+ * @returns {Promise} indicates success
+ */
+async function handleEventUpdated(eventId) {
+    try {
+        _clients.forEach(async (client) => {
+            try {
+                if (client.userId)
+                    await client.updateEventDict([eventId]);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    } catch (err) {
+        console.error(err);
+    }
+}
+exports.handleEventUpdated = handleEventUpdated;
+
+
+/**
  * Eventhandler for updated user data (of event).
  * @static
  * @async

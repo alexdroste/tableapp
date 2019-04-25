@@ -3,6 +3,26 @@ import { getActiveEventId } from '../reducers/events';
 
 
 /**
+ * Creates action for changing an events name/title.
+ * @function
+ * @param {string} eventId id of event
+ * @param {string} newName name/title to change to
+ * @returns {object} action
+ */
+export function changeEventName(eventId, newName) {
+    return ({
+        type: 'apiCall',
+        apiCall: { 
+            types: [eventsActionTypes.CHANGE_EVENT_NAME_REQUEST,
+                eventsActionTypes.CHANGE_EVENT_NAME_SUCCESS,
+                eventsActionTypes.CHANGE_EVENT_NAME_FAILURE],
+            call: (api) => api.request('events/changeEventName', { eventId, newName })
+        },
+    });
+}
+
+
+/**
  * Creates action for subscribing to full EventDict (containing all events).
  * @function
  * @returns {object} action

@@ -1,3 +1,10 @@
+/** events actiontype: change an events title */
+export const CHANGE_EVENT_NAME_REQUEST = 'events/CHANGE_EVENT_NAME_REQUEST';
+/** events actiontype: change an events title */
+export const CHANGE_EVENT_NAME_SUCCESS = 'events/CHANGE_EVENT_NAME_SUCCESS';
+/** events actiontype: change an events title */
+export const CHANGE_EVENT_NAME_FAILURE = 'events/CHANGE_EVENT_NAME_FAILURE';
+
 /** events actiontype: subscribe to full event-dict */
 export const SUBSCRIBE_FULL_EVENT_DICT_REQUEST = 'events/SUBSCRIBE_FULL_EVENT_DICT_REQUEST';
 /** events actiontype: subscribe to full event-dict */

@@ -146,6 +146,9 @@ class Client {
         });
         
         // events
+        this.on('events/changeEventName',               this._handleChangeEventName, {
+            requiresAuthentication: true
+        });
         this.on('events/subscribeFullEventDict',        this._handleSubscribeFullEventDict, {
             requiresAuthentication: true
         });
@@ -677,6 +680,27 @@ class Client {
     //#endregion entries
 
     //#region events
+    /**
+     * Eventhandler for change event name/title request.
+     * @async
+     * @private
+     * @function
+     * @param {object} data 
+     * @param {string} data.eventId eventId (as string)
+     * @param {string} data.newName new name of event
+     * @returns {Promise}
+     */
+    async _handleChangeEventName({ eventId, newName }) {
+        eventId = new ObjectID(eventId);
+        const event = (await eventsController.getEventDict(
+            this.userId, true, [eventId]))[eventId];
+        if (event.permissionLevel < PermissionLevelEnum.ADMINISTRATOR)
+            throw utils.createError('unsufficient rights to change title of event', statusCodes.FORBIDDEN);
+        eventsController.changeEventName(eventId, newName)
+        this._logActivity('events/changeEventName', { eventId, newName });
+    }
+
+
     /**
      * Eventhandler for subscribe to full EventDict request.
      * @async
