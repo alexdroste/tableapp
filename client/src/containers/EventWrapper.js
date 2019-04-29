@@ -60,11 +60,20 @@ class EventWrapper extends React.Component {
          * @private
          */
         this._entriesViewDynamicRowsCache = new DynamicRowsCache();
+
+        /**
+         * Indicates if render call is first one (during mounting).
+         * Defaults to true.
+         * @type {boolean}
+         * @private
+         */
+        this._isInitialRender = true;
     }
 
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.eventsActions.switchActiveEvent(this.props.match.params.eventId);
+        this._isInitialRender = false;
     }
 
 
@@ -89,7 +98,14 @@ class EventWrapper extends React.Component {
         const userNotJoined = activeEventUserPermissionLevel < PermissionLevelEnum.USER;
         const userCanManageActiveEvent = activeEventUserPermissionLevel >= PermissionLevelEnum.ADMINISTRATOR;
 
-        if (isSwitchActiveEventPending)
+        // For the first render-call always show Loader in order to
+        // prevent components like EntriesView from mounting (and subscribing to 
+        // entry-list for instance) BEFORE switchActiveEvent could be called in
+        // componentDidMount (and therefore before isSwitchActiveEventPending 
+        // could be set to true). This prevents race-conditions where e.g.
+        // subscribeEntryList would be called before switchActiveEvent would be
+        // complete. A bit of a mess, but it works.
+        if (isSwitchActiveEventPending || this._isInitialRender)
             return (
                 <Dimmer
                     active

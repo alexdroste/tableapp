@@ -92,6 +92,10 @@ class EntriesView extends React.Component {
 
 
     componentDidUpdate(prevProps) {
+        // resub to list if eventId changed somehow without this component remounting
+        if (this.props.eventId !== prevProps.eventId)
+            this.props.entriesActions.subscribeEntryList(
+                EntryListTypeEnum.RECENT, this.props.hasListOnlyBookmarked);
         // trigger row-load when bookmarked filter state changed 
         // and no items are loaded (stopIndex = 0)
         if (prevProps.hasListOnlyBookmarked !== this.props.hasListOnlyBookmarked) {
