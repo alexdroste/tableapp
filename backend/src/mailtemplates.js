@@ -9,13 +9,15 @@ function commentOnEntry(name, sender, eventName, data, notificationId) {
         subject: `[table] Neuer Kommentar auf Eintrag - ${eventName}`,
         html: 
 `Hallo ${name},
-<br/><br>
+<br/><br/>
 ${sender || 'Jemand'} hat in table in der Veranstaltung \"${eventName}\" einen Eintrag kommentiert, dem du folgst.
-<br/><br>
+<br/><br/>
 Klicke auf folgenden Link, um direkt zu dem Eintrag zu gelangen:
 <br/>
 <a href=\"${link}\">${link}</a>
-<br/><br>
+<br/><br/>
+Klicke <a href=\"${config.baseUrl}settings\">hier</a>, um die Benachrichtigungseinstellungen anzupassen.
+<br/><br/>
 == table - talk about lecture ==
 `,
     };
@@ -29,13 +31,15 @@ function replyOnComment(name, sender, eventName, data, notificationId) {
         subject: `[table] Neue Antwort auf deinen Kommentar - ${eventName}`,
         html: 
 `Hallo ${name},
-<br/><br>
+<br/><br/>
 ${sender || 'Jemand'} hat in table in der Veranstaltung \"${eventName}\" auf deinen Kommentar geantwortet.
-<br/><br>
+<br/><br/>
 Klicke auf folgenden Link, um direkt zu dem Eintrag zu gelangen:
 <br/>
 <a href=\"${link}\">${link}</a>
-<br/><br>
+<br/><br/>
+Klicke <a href=\"${config.baseUrl}settings\">hier</a>, um die Benachrichtigungseinstellungen anzupassen.
+<br/><br/>
 == table - talk about lecture ==
 `,
     };
@@ -49,13 +53,15 @@ function newEntry(name, sender, eventName, data, notificationId) {
         subject: `[table] Neuer Eintrag - ${eventName}`,
         html: 
 `Hallo ${name},
-<br/><br>
+<br/><br/>
 ${sender || 'Jemand'} hat in table in der Veranstaltung \"${eventName}\" einen neuen Eintrag verfasst.
-<br/><br>
+<br/><br/>
 Klicke auf folgenden Link, um direkt zu dem Eintrag zu gelangen:
 <br/>
 <a href=\"${link}\">${link}</a>
-<br/><br>
+<br/><br/>
+Klicke <a href=\"${config.baseUrl}settings\">hier</a>, um die Benachrichtigungseinstellungen anzupassen.
+<br/><br/>
 == table - talk about lecture ==
 `,
     };

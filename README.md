@@ -9,6 +9,7 @@
 
 ### high priority
 
+- [x] add link to change notification settings to mail templates
 - [x] notifications in-app
 - [x] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
   - [ ] maybe? log read event for entry/comment in post comment view
@@ -19,7 +20,14 @@
   - [x] track if user successfully filled survey
 - [x] make mini-view larger
 - [x] remove prompt-groups
+- [ ] show url to system somewhere -> maybe QR Code window
+- [ ] desktop-app: during presentation mode, automatically return to miniview when loosing focus
+- [ ] desktop-app: popup to prompt for starting screenshot broadcast
 - [x] fixes:
+  - [ ] fix unsubscribe error on reload (find out how to reproduce?)
+  - [ ] fix race condition ldapUtils + fix similiar problem in email notification eventName lookup
+  - [ ] desktop-client macos: mouse below window during presentation in powerpoint with external display
+  - [ ] desktop-client: automatic screen broadcast wrong screen when in powerpoint presentation with external display (only mac?)
   - [x] ScreenBroadcastHelper: enable automatic switching when in automatic mode & select it by default for manual
   - [ ] fix notification popup: remove fix in _handlePopupOpen for Popup in NotificationsMenuItem after upgrade to semantic-ui 0.87.0 (requires fix: <https://github.com/Semantic-Org/Semantic-UI-React/pull/3532>); then popup should stay fixed at menu item and position should be correct after/before scrolling the page (and opening after page has been scrolled down)
   - [x] fix subscription missing, when directly opening new comment form (move subscribeEntryList action from EntriesView to wrapper), e.g. link <https://localhost:3000/552786262cec76ed95fd61d0/5ca6072fe85f2699640ad75f/0/new>
@@ -63,12 +71,12 @@
 - [ ] fully implement manage-event view
 - [ ] automation scripts / or view for creating/removing events, etc.
 - [x] opt-in/opt-out
-- [ ] client-desktop: show last broadcasted pic
+- [x] client-desktop: show last broadcasted pic
 - [ ] save all screenshots, link them in db
 - [ ] desktop-client: easier window-move
 - [x] desktop-client: toggle mini control with global shortcut
 - [x] desktop-client: remember table position on extend->mirror->extend change (per monitor save)
-- [ ] desktop-client: show thumb in minicontrolview if monitor-setup changes
+- [ ] desktop-client: show thumb in minicontrolview if monitor-setup changes?
 - [x] desktop-client: check for screen border on restore
 - [x] sign-out
 
