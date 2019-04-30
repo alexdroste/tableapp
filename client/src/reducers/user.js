@@ -125,6 +125,8 @@ const loginState = (state = initialState.loginState, action) => {
         case userActionTypes.CONTINUE_SESSION_SUCCESS:
         case userActionTypes.LOGIN_SUCCESS:
             return LoginStateEnum.LOGGED_IN;
+        // TODO case userActionTypes.LOGIN_FAILURE:
+        case userActionTypes.LOGOUT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_FAILURE:
         case userActionTypes.LOGOUT_SUCCESS:
             return initialState.loginState;
@@ -173,6 +175,8 @@ const sessionToken = (state = initialState.sessionToken, action) => {
         case userActionTypes.CONTINUE_SESSION_SUCCESS:
         case userActionTypes.LOGIN_SUCCESS:
             return action.result.sessionToken;
+        // needed to prevent automatic session continue after logout action
+        case userActionTypes.LOGOUT_REQUEST:
         case userActionTypes.CONTINUE_SESSION_FAILURE:
         case userActionTypes.LOGOUT_SUCCESS:
             return initialState.sessionToken;

@@ -67,6 +67,12 @@ class UserLoginView extends React.Component {
     };
 
 
+    handleKeyPress = (e) => {
+        if (e.key === 'Enter')
+            this.handleSubmit();
+    };
+
+
     handlePasswordChange = (e, data) => {
         this.setState({
             password: data.value
@@ -116,6 +122,7 @@ class UserLoginView extends React.Component {
                         loading={isLoginPending}
                         error={hasLoginFailed}
                         onSubmit={this.handleSubmit}
+                        onKeyPress={this.handleKeyPress}
                     >
                         <Form.Field>
                             <Header 

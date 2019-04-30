@@ -82,7 +82,7 @@ export function generateUUID() { // Public Domain/MIT
  */
 export function isTextAnEmailAddress(text) 
 {
-    var re = /\S+@\S+/;
+    var re = /\S*@\S+/;
     return re.test(text);
 }
 
