@@ -112,7 +112,7 @@ class WindowManager {
         if (alwaysOnTop) {
             if (electron.app.dock) // macOS
                 electron.app.dock.hide();
-            this.browserWindow.setAlwaysOnTop(true, 'floating', 99999);
+            this.browserWindow.setAlwaysOnTop(true, 'floating');
             this.browserWindow.setVisibleOnAllWorkspaces(true);
             this.browserWindow.setFullScreenable(false);
             if (electron.app.dock) // macOS

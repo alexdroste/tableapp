@@ -23,10 +23,12 @@
 - [ ] show url to system somewhere -> maybe QR Code window
 - [ ] desktop-app: during presentation mode, automatically return to miniview when loosing focus
 - [ ] desktop-app: popup to prompt for starting screenshot broadcast
+- [ ] desktop-app: presentation mode rename?
+- [ ] desktop-app: drag & drop area in mini-mode
 - [x] fixes:
   - [ ] fix unsubscribe error on reload (find out how to reproduce?)
   - [ ] fix race condition ldapUtils + fix similiar problem in email notification eventName lookup
-  - [ ] desktop-client macos: mouse below window during presentation in powerpoint with external display
+  - [x] desktop-client macos: mouse below window during presentation in powerpoint with external display
   - [ ] desktop-client: automatic screen broadcast wrong screen when in powerpoint presentation with external display (only mac?)
   - [x] ScreenBroadcastHelper: enable automatic switching when in automatic mode & select it by default for manual
   - [ ] fix notification popup: remove fix in _handlePopupOpen for Popup in NotificationsMenuItem after upgrade to semantic-ui 0.87.0 (requires fix: <https://github.com/Semantic-Org/Semantic-UI-React/pull/3532>); then popup should stay fixed at menu item and position should be correct after/before scrolling the page (and opening after page has been scrolled down)
