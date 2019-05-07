@@ -101,13 +101,13 @@ class ScreenBroadcastHelper extends React.Component {
         const sources = await this._screenCapturer.capture(); 
         // check and correct display to capture
         if (selectedScreenIdx === 'auto') {
-            // select external display (!primary)
+            // select external display
+            // FIXME selection is based on the assumption that 
+            // the display with the lowest id is the internal display
             let i = 0;
             for (let s = 0; s < sources.length; ++s) {
-                if (!sources[s].isPrimary) {
+                if (parseInt(sources[i].display_id) < parseInt(sources[s].display_id))
                     i = s;
-                    break;
-                }
             }
             selectedScreenIdx = i;
         } else if (selectedScreenIdx >= sources.length) {
@@ -178,7 +178,6 @@ class ScreenBroadcastHelper extends React.Component {
 
     _updateThumbnails = async () => {
         const sources = await this._screenCapturer.capture(); 
-        console.dir(sources);
         this.setState({ 
             thumbnails: sources.map(source => source.thumbnail.toDataURL()),
         });
