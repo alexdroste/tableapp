@@ -17,7 +17,7 @@ In order to build/deploy/run a project you need to install the dependencies (nod
 
 To install the `node_modules` execute: `yarn install` (inside the project-directory).
 
-#### Configure Backend / Client
+#### Configure Backend / Client / Desktop-Client
 
 See: [Configuration](configuration.md).
 
@@ -103,10 +103,10 @@ Please look at the [Single-Server Docker Configuration](#single-server-docker-co
 
 ## Desktop-Client
 
-#### Build (macOS only atm)
+#### Build
 
-* Make sure that the `client_desktop` and `client` folders are next to each other. Also ensure that the `client` is prepared to get build.
-* Build the Client that gets wrapped by the Desktop-App by executing: `yarn prebuild`
+* ~~Make sure that the `client_desktop` and `client` folders are next to each other. Also ensure that the `client` is prepared to get build.~~
+* ~~Build the Client that gets wrapped by the Desktop-App by executing: `yarn prebuild`~~
 * Build the app by executing: `yarn dist`
 * The ready to ship app hides inside the `dist`-directory.
 
