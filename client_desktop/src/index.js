@@ -1,23 +1,19 @@
 const electron = require('electron');
 const path = require('path');
-const url = require('url');
 const isDev = require('electron-is-dev');
 const setupIpc = require('./ipc');
-const serve = require('electron-serve');
 const setupGlobalShortcut = require('./globalShortcut');
 const WindowManager = require('./WindowManager');
+const config = require('./config');
 const defaults = require('./defaults');
 const log = require('./log');
 
 log.info("App started");
 
-let loadUrl;
 let mainWindow;
+const appURL = isDev ? 'https://localhost:3000/' : config.deploymentURL;
 
 electron.app.commandLine.appendSwitch("ignore-certificate-errors");
-
-if (!isDev)
-    loadUrl = serve({directory: 'app'});
 
 
 // TODO only hide window on close to keep app running in bg (on osx only)
@@ -53,10 +49,22 @@ function createWindow() {
     setupIpc(mainWindow, windowManager);
     setupGlobalShortcut(mainWindow);
 
-    if (isDev)
-        mainWindow.loadURL('https://localhost:3000/');
-    else
-        loadUrl(mainWindow);
+    mainWindow.webContents.on("did-fail-load", function() {
+        const btn = electron.dialog.showMessageBox(mainWindow, {
+            type: 'error',
+            buttons: ['Erneut Versuchen', 'App beenden'],
+            defaultId: 0,
+            title: 'Server nicht erreichbar',
+            message: 'Server nicht erreichbar unter:\n' + appURL + '\nEventuell funktioniert die Internetverbindung nicht.'
+        });
+        if (btn == 0) {
+            mainWindow.loadURL(appURL);
+        } else {
+            electron.app.quit();
+        }
+    });
+
+    mainWindow.loadURL(appURL);
 
     mainWindow.on('closed', () => mainWindow = null);
 
