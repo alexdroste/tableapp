@@ -54,26 +54,27 @@ class EventWrapper extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            /**
+             * Indicates if render call is first one (during mounting).
+             * Defaults to true.
+             * @type {boolean}
+             */
+            isInitialRender: true,
+        };
+
         /**
          * Rows cache for entries view
          * @type {DynamicRowsCache}
          * @private
          */
         this._entriesViewDynamicRowsCache = new DynamicRowsCache();
-
-        /**
-         * Indicates if render call is first one (during mounting).
-         * Defaults to true.
-         * @type {boolean}
-         * @private
-         */
-        this._isInitialRender = true;
     }
 
 
     componentDidMount() {
         this.props.eventsActions.switchActiveEvent(this.props.match.params.eventId);
-        this._isInitialRender = false;
+        this.setState({ isInitialRender: false });
     }
 
 
@@ -105,7 +106,7 @@ class EventWrapper extends React.Component {
         // could be set to true). This prevents race-conditions where e.g.
         // subscribeEntryList would be called before switchActiveEvent would be
         // complete. A bit of a mess, but it works.
-        if (isSwitchActiveEventPending || this._isInitialRender)
+        if (isSwitchActiveEventPending || this.state.isInitialRender)
             return (
                 <Dimmer
                     active

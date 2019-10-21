@@ -9,7 +9,7 @@
 
 ### high priority
 
-- [ ] fix navigation bug: when switching to last active event, loader spins endless
+- [x] fix navigation bug: when switching to last active event, loader spins endless
 - [x] set default mail notifications for new entries
 - [x] add link to change notification settings to mail templates
 - [x] notifications in-app
