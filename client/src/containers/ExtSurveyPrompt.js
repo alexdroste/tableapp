@@ -9,7 +9,8 @@ import { getUserId } from '../reducers/user';
 import { getActiveEventId } from '../reducers/events';
 
 
-const surveyId = 'pre-1-a';
+const surveyId = 'pre-ws1920-a';
+const surveyDeadline = new Date('2019-12-01');
 
 
 const CustomContent = styled(Modal.Content)`
@@ -87,10 +88,10 @@ class ExtSurveyPrompt extends React.Component {
         const { activeEventId, extSurveys, userId } = this.props;
         const { open } = this.state;
 
-        if (extSurveys.includes(surveyId))
+        if (extSurveys.includes(surveyId) || new Date() > surveyDeadline)
             return null;
 
-        const url = `https://survey.progmem.de/index.php/767942?userId=${userId}&eventId=${activeEventId}&newtest=Y`;
+        const url = `https://survey.progmem.de/index.php/73869?userId=${userId}&eventId=${activeEventId}&newtest=Y`;
 
         return (
             <Card fluid color='red'>
@@ -98,12 +99,12 @@ class ExtSurveyPrompt extends React.Component {
                     <Card.Header>Schau her!</Card.Header>
                     <Card.Description>
                         <p>
-                        Ich brauche deine Hilfe.
+                        Wir brauchen deine Hilfe.
                         </p>
                         <p>
-                        Bitte fülle meine nachfolgende (kurze) Umfrage aus,
-                        um mir dabei zu helfen, das System zu verbessern und dem Ziel näher zu kommen,
-                        es bald TU-weit einsetzen zu können.
+                        Bitte fülle die nachfolgende (kurze) Umfrage aus,
+                        um uns dabei zu helfen, das System zu optimieren und dem Ziel näher zu kommen,
+                        unsere Lehre zu verbessern.
                         Ohne deine Teilnahme ist das nicht möglich.
                         </p>
                         <p>
