@@ -9,6 +9,8 @@
 
 ### high priority
 
+- [ ] fix navigation bug: when switching to last active event, loader spins endless
+- [x] set default mail notifications for new entries
 - [x] add link to change notification settings to mail templates
 - [x] notifications in-app
 - [x] fix routing/links (entry, comment): parent-paths should wrap subpaths to manage data-subscriptions (entries/comments) [=> ability for permalinks]
@@ -20,6 +22,7 @@
   - [x] track if user successfully filled survey
 - [x] make mini-view larger
 - [x] remove prompt-groups
+- [ ] desktop-app: what happens if links are posted an user clicks them? (=> link should open in browser not in-app)
 - [ ] show url to system somewhere -> maybe QR Code window
 - [ ] desktop-app: during presentation mode, automatically return to miniview when loosing focus
 - [ ] desktop-app: popup to prompt for starting screenshot broadcast

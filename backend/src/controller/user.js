@@ -49,10 +49,10 @@ async function _createLoginData(dn, sessionToken) {
                 { _id: id },
                 {
                     $setOnInsert: {
-                        emailNotifications: [NotificationTypesEnum.COMMENT_ON_ENTRY, NotificationTypesEnum.REPLY_ON_COMMENT],
+                        emailNotifications: [NotificationTypesEnum.COMMENT_ON_ENTRY, NotificationTypesEnum.REPLY_ON_COMMENT, NotificationTypesEnum.NEW_ENTRY],
                         extSurveys: [], // extra-code for surveys
                         hasAcceptedTos: false,
-                        inAppNotifications: [NotificationTypesEnum.COMMENT_ON_ENTRY, NotificationTypesEnum.REPLY_ON_COMMENT],
+                        inAppNotifications: [NotificationTypesEnum.COMMENT_ON_ENTRY, NotificationTypesEnum.REPLY_ON_COMMENT, NotificationTypesEnum.NEW_ENTRY],
                         lastActiveEventId: null,
                     }
                 },
