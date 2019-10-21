@@ -2,7 +2,7 @@ const db = require('../db').db;
 const utils = require('../utils');
 
 
-module.exports = async (eventId, fromTime, toTime) => {
+module.exports = async (eventId, fromTime, toTime, tutorUserIds) => {
     const users = {};
     const checkId = (userId) => {
         if (users[userId]) return;
@@ -13,6 +13,8 @@ module.exports = async (eventId, fromTime, toTime) => {
         users[userId].uniqueOverscrollReadCount = 0;
         users[userId].readCount = 0;
         users[userId].uniqueReadCount = 0;
+        users[userId].sessionCount = 0;
+        users[userId].totalSessionDuration = 0;
     }
     
     // count entries
@@ -104,15 +106,37 @@ module.exports = async (eventId, fromTime, toTime) => {
     });
 
 
+    const sessionRes = await db().collection('sessionlog').aggregate([
+        { 
+            $match: { $and: [ 
+                { from: { $gte: fromTime } }, 
+                { from: { $lte: toTime } },
+            ]}
+        },
+        {
+            $project: { userId: 1, from: 1, to: 1, _id: 0  }
+        },
+    ]).toArray();
+
+    sessionRes.forEach(e => {
+        checkId(e.userId);
+        users[e.userId].sessionCount++;
+        users[e.userId].totalSessionDuration += e.to - e.from;
+    });
+
+
     return Object.keys(users).map(u => {
         return { 
             userId: utils.destoryUid(u),
+            isTutor: tutorUserIds.includes(u) ? 'yes' : 'no',
             entryCount: users[u].entryCount,
             commentCount: users[u].commentCount,
             readCount: users[u].readCount,
             uniqueReadCount: users[u].uniqueReadCount,
             overscrollReadCount: users[u].overscrollReadCount,
             uniqueOverscrollReadCount: users[u].uniqueOverscrollReadCount,
+            sessionCount: users[u].sessionCount,
+            totalSessionDurationMin: Math.round(users[u].totalSessionDuration / 1000 / 60 * 10) / 10,
         };
     });
 };

@@ -3,7 +3,7 @@ const utils = require('../utils');
 
 
 // todo check for specific event not global (scan activity, ...)
-module.exports = async (timeslots) => {
+module.exports = async (timeslots, tutorUserIds) => {
     const output = [];
     
     for(let i = 0; i < timeslots.length; ++i) {
@@ -36,6 +36,7 @@ module.exports = async (timeslots) => {
                 from: utils.timestampToString(timeslots[i][0]),
                 to: utils.timestampToString(timeslots[i][1]),
                 userId: utils.destoryUid(u),
+                isTutor: tutorUserIds.includes(u) ? 'yes' : 'no',
                 sessionCount: users[u].sessionCount,
                 totalDurationMin: Math.round(users[u].totalDuration / 1000 / 60 * 10) / 10,
             });

@@ -21,9 +21,25 @@ const TIMESLOTS_STR = [
 ];
 
 
+const TUTOR_UIDS = [
+    'avd15',
+    'amac15',
+    'ob16',
+    'mpr16',
+    'mj08',
+    'mbar13',
+    'ano13',
+    'lbu16',
+    'sbar14', 
+    'mgo16',
+];
+
+
 const csvExport = require('./csvExport');
 const db = require('./db');
 const ObjectID = require('mongodb').ObjectID;
+const utils = require('./utils');
+const singlePosts = require('./generators/singlePosts');
 const timeslotAllUsers = require('./generators/timeslotAllUsers');
 const timeslotSingleUsers = require('./generators/timeslotSingleUsers');
 const timeslotUserActivity = require('./generators/timeslotUserActivity');
@@ -52,19 +68,30 @@ db.connect().then(async () => {
         ]);
     });
 
+    // convert tutor uids to system userIds
+    const tutorUserIds = [];
+    TUTOR_UIDS.forEach(u => {
+        tutorUserIds.push(utils.base64encode(`uid=${u},ou=people,dc=tu-clausthal,dc=de`));
+    });
+
+    const fromTime = timeslots[0][0];
+    const toTime = timeslots[timeslots.length-1][1] + 7 * 24 * 60 * 60 * 1000;
+
     // generate stats
     const a1 = await timeslotAllUsers(timeslots);
     csvExport('timeslotAllUsers', a1);
-    const a2 = await timeslotSingleUsers(timeslots);
+    const a2 = await timeslotSingleUsers(timeslots, tutorUserIds);
     csvExport('timeslotSingleUsers', a2);
-    const a3 = await userActivity(eventId, timeslots[0][0], timeslots[timeslots.length-1][1] + 7 * 24 * 60 * 60 * 1000);
+    const a3 = await userActivity(eventId, fromTime, toTime, tutorUserIds);
     csvExport('userActivity', a3);
-    const a4 = await timeslotUserActivity(eventId, timeslots);
+    const a4 = await timeslotUserActivity(eventId, timeslots, tutorUserIds);
     csvExport('timeslotUserActivity', a4);
     const a5 = await mobileVsDesktop();
     csvExport('mobileVsDesktop', a5);
     const a6 = await timeslotMobileVsDesktop(timeslots);
     csvExport('timeslotMobileVsDesktop', a6);
+    const a7 = await singlePosts(eventId, fromTime, toTime, timeslots, tutorUserIds);
+    csvExport('singlePosts', a7);
 
     process.exit();
 });
