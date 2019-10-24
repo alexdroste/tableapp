@@ -44,7 +44,8 @@ function createWindow() {
     //     console.dir(args);
     //     mainWindow.setBounds2(args);
     // };
-    mainWindow.setMenu(null);
+    // mainWindow.setMenu(null);
+    mainWindow.removeMenu();
     const windowManager = new WindowManager(mainWindow);
     setupIpc(mainWindow, windowManager);
     setupGlobalShortcut(mainWindow);

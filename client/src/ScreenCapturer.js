@@ -19,12 +19,12 @@ export class ScreenCapturer {
     // call with null to unregister
     onScreenSetupChanged(cb) {
         if (this._onScreenSetupChangedCallback) {
-            window.electron.screen.removeListener("display-added", this._onScreenSetupChanged);
-            window.electron.screen.removeListener("display-removed", this._onScreenSetupChanged);
+            window.electron.remote.screen.removeListener("display-added", this._onScreenSetupChanged);
+            window.electron.remote.screen.removeListener("display-removed", this._onScreenSetupChanged);
         }
         if (cb) {
-            window.electron.screen.on("display-added", this._onScreenSetupChanged);
-            window.electron.screen.on("display-removed", this._onScreenSetupChanged);
+            window.electron.remote.screen.on("display-added", this._onScreenSetupChanged);
+            window.electron.remote.screen.on("display-removed", this._onScreenSetupChanged);
         } 
         this._onScreenSetupChangedCallback = cb;
     }
@@ -39,12 +39,7 @@ export class ScreenCapturer {
             },
         };
 
-        return new Promise((resolve, reject) => {
-            window.electron.desktopCapturer.getSources(options, (err, sources) => {
-                if (err)
-                    reject(err);
-                resolve(sources);
-            });
-        });
+
+        return window.electron.desktopCapturer.getSources(options);
     }
 }
