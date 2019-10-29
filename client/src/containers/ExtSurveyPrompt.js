@@ -7,25 +7,12 @@ import { Card, Button, Modal } from 'semantic-ui-react';
 import * as userActions from '../actions/user';
 import { getUserId } from '../reducers/user';
 import { getActiveEventId } from '../reducers/events';
+import { withRouter } from 'react-router-dom';
+import * as qs from 'query-string';
 
 
 const surveyId = 'pre-ws1920-a';
 const surveyDeadline = new Date('2019-12-01');
-
-
-const CustomContent = styled(Modal.Content)`
-    &&&&& {
-        padding: 0 !important;
-    }
-`;
-
-
-const ParticipatedDiv = styled.div`
-    font-size: 10px;
-    color: #777;
-    cursor: pointer;
-    margin-top: -14px;
-`;
 
 
 // extra-code for surveys
@@ -44,49 +31,30 @@ class ExtSurveyPrompt extends React.Component {
     //     };
     // }
 
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            open: false,
-        };
-    }
-
-
     componentDidMount() {
-        window.addEventListener('message', this._handleIframeMessage, false);
+        this._handleDone();
+    }
+
+    componentDidUpdate() {
+        this._handleDone();
     }
 
 
-    componentWillUnmount() {
-        window.removeEventListener('message', this._handleIframeMessage, false);
-    }
-
-
-    _handleIframeMessage = (e) => {
-        if (e.data !== 'survey_table_done_event')
+    _handleDone = (e) => {
+        const o = qs.parse(this.props.location.search);
+        if (o.extSurveyIdDone === undefined || this.props.extSurveys.includes(surveyId) || o.extSurveyIdDone !== surveyId)
             return;
-        this.setState({ open: false });
         this.props.userActions.addExtSurveyIdDone(surveyId);
     };
 
 
-    _handleOpen = () => this.setState({ open: true });
-
-
-    _handleClose = () => this.setState({ open: false });
-
-
-    _handleDone = () => {
-        this.setState({ open: false });
-        this.props.userActions.addExtSurveyIdDone(surveyId);
+    _handleOpen = url => () => {
+        window.location = url;
     };
 
 
     render() {
         const { activeEventId, extSurveys, userId } = this.props;
-        const { open } = this.state;
 
         if (extSurveys.includes(surveyId) || new Date() > surveyDeadline)
             return null;
@@ -110,33 +78,11 @@ class ExtSurveyPrompt extends React.Component {
                         <p>
                         gez. Alexander D., Entwickler, HCIS
                         </p>
-                        <Modal
-                            basic
-                            size='fullscreen'
-                            trigger={
-                                <Button
-                                    content='Umfrage starten (3 min)'
-                                    positive
-                                    onClick={this._handleOpen}
-                                />
-                            }
-                            closeIcon
-                            open={open}
-                            onClose={this._handleClose}
-                        >
-                            <CustomContent>
-                                <ParticipatedDiv 
-                                    onClick={this._handleDone}
-                                >
-                                    Bereits teilgenommen?
-                                </ParticipatedDiv>
-                                <iframe 
-                                    src={url}
-                                    style={{ width: '100%', height: '100%', minHeight: '80vh' }}
-                                    title='limesurvey'
-                                />
-                            </CustomContent>
-                        </Modal>
+                        <Button
+                            content='Umfrage starten (3 min)'
+                            positive
+                            onClick={this._handleOpen(url)}
+                        />
                     </Card.Description>
                 </Card.Content>
             </Card>
@@ -161,5 +107,5 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-const ConnectedExtSurveyPrompt = connect(mapStateToProps, mapDispatchToProps)(ExtSurveyPrompt);
+const ConnectedExtSurveyPrompt = withRouter(connect(mapStateToProps, mapDispatchToProps)(ExtSurveyPrompt));
 export { ConnectedExtSurveyPrompt as ExtSurveyPrompt };
