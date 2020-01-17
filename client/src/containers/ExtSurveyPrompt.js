@@ -11,8 +11,8 @@ import { withRouter } from 'react-router-dom';
 import * as qs from 'query-string';
 
 
-const surveyId = 'pre-ws1920-a';
-const surveyDeadline = new Date('2019-12-01');
+const surveyId = 'post-ws1920-a';
+const surveyDeadline = new Date('2020-02-16');
 
 
 // extra-code for surveys
@@ -59,24 +59,25 @@ class ExtSurveyPrompt extends React.Component {
         if (extSurveys.includes(surveyId) || new Date() > surveyDeadline)
             return null;
 
-        const url = `https://survey.progmem.de/index.php/73869?userId=${userId}&eventId=${activeEventId}&newtest=Y`;
+        const url = `https://survey.progmem.de/index.php/37423?userId=${userId}&eventId=${activeEventId}&newtest=Y`;
 
         return (
             <Card fluid color='red'>
                 <Card.Content>
-                    <Card.Header>Schau her!</Card.Header>
+                    <Card.Header>Huhu!</Card.Header>
                     <Card.Description>
                         <p>
-                        Wir brauchen deine Hilfe.
+                        Wir brauchen nochmal deine Hilfe.
                         </p>
                         <p>
+                        Wie angekündigt gibt es jetzt zum Ende des Semesters noch eine zweite Umfrage.
                         Bitte fülle die nachfolgende (kurze) Umfrage aus,
                         um uns dabei zu helfen, das System zu optimieren und dem Ziel näher zu kommen,
                         unsere Lehre zu verbessern.
                         Ohne deine Teilnahme ist das nicht möglich.
                         </p>
                         <p>
-                        gez. Alexander D., Entwickler, HCIS
+                        gez. Alexander D., Entwickler, Institut für Informatik, Human-Centered Information Systems
                         </p>
                         <Button
                             content='Umfrage starten (3 min)'
