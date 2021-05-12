@@ -19,7 +19,7 @@
     "jsonwebtoken": "^8.2.1",
     "ldapjs": "^1.0.2",
     "mongodb": "^3.0.7",
-    "nodemailer": "^5.1.1",
+    "nodemailer": "^6.4.16",
     "nodemon": "^1.17.3",
     "socket.io": "^2.1.0"
   }
